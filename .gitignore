@@ -1,0 +1,19 @@
+# Quarto
+.quarto/
+/.quarto/
+*_files/
+*_cache/
+*.utf8.md
+*.knit.md
+
+# R / RStudio
+.Rproj.user/
+.Rhistory
+.RData
+.Ruserdata
+
+# Development scratch (notes, todos, not part of course materials)
+dev/
+
+# OS
+.DS_Store

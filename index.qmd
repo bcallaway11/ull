@@ -1,0 +1,47 @@
+---
+title: "Difference-in-Differences and Shift-Share Designs"
+subtitle: "Short Course at the University of Louisiana at Lafayette"
+author:
+  - name: Brantly Callaway
+    affiliations:
+      - University of Georgia
+    email: brantly.callaway@uga.edu
+date: September 18, 2026
+date-format: long
+format:
+  html:
+    theme: united
+    embed-resources: true
+    toc: false
+---
+
+<!--
+=============================================================================
+Title: Course landing page
+Description: Landing page for the short course at the University of Louisiana
+             at Lafayette. Renders to index.html, which serves as the entry
+             point for the GitHub Pages site (once the repo is made public).
+Author: Brant Callaway
+Last update: 2026-09-10
+Date created: 2026-09-10
+=============================================================================
+-->
+
+## Sessions
+
+**1. Difference-in-Differences with a Continuous Treatment**  
+[[Slides](01_continuous-treatment.html)]
+
+**2. Assessing the Plausibility of Strong Parallel Trends using Close Comparison Groups**  
+[[Slides](02_comparison-groups.html)]
+
+**3. Shift-Share Instruments**  
+[[Slides](03_shift-share.html)]
+
+## Additional Materials
+
+* "Difference-in-Differences: A Practitioner's Guide" ([arXiv](https://arxiv.org/pdf/2503.13323)), forthcoming at the *Journal of Economic Literature*
+
+* The `did` R package: [documentation](https://bcallaway11.github.io/did)
+
+* The `contdid` R package (difference-in-differences with a continuous treatment): [GitHub](https://github.com/bcallaway11/contdid)

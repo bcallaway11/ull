@@ -1,0 +1,287 @@
+/*-- scss:defaults --*/
+
+// United theme colors
+$uga-red: #BA0C2F;
+$text-color: #000; // main text color
+$heading-color: #000; // color of title and headers
+$slide-bg-color: #eeeeee; // slide background color
+$info-color: #336699; // text color for info
+$warning-color: $uga-red; // text color for warning or alerts
+$success-color: #4B8B3B; // text color for success messages
+$link-color: #00A3AD;
+$title-color: #5D0618;
+$slide-title-color: #5D0618;
+$united-citation-link-color: $text-color;
+
+// Load fonts
+@import url("https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Merriweather:wght@400;700&family=Roboto+Mono:wght@400;700&display=swap");
+$font-family-sans-serif: "Lato", sans-serif !default;
+$font-family-serif: "Merriweather", serif !default;
+$font-family-mono: "Roboto Mono", monospace !default;
+
+// Presentation fonts
+$presentation-font-size-root: 27px; // Adjusted font size for presentations
+// $presentation-heading-font: "Merriweather", serif !default;
+// $presentation-heading-font-weight: 700; // Heavier for better readability
+$title-font-size: 1.5em;
+$h1-font-size: 1.25em;
+$h2-font-size: 1.25em;
+$h3-font-size: 1.1em;
+$h4-font-size: 1.0em;
+
+// CSS
+
+.reveal a {
+  line-height: 1.5em;
+  color: $link-color;
+  text-decoration: underline;
+}
+
+.citation a {
+  color: $link-color;
+  font-size: 0.75em;
+  text-decoration: none;
+  font-family: $font-family-mono;
+}
+
+.reveal p,
+.reveal li {
+  line-height: 1.6em;
+  max-width: 100%;
+  margin-top: 0.5em !important;
+}
+
+.reveal p {
+  font-weight: 300;
+  font-family: $font-family-sans-serif;
+  margin-top: 1.5em !important;
+}
+
+// Title and headings
+
+#title-slide {
+  text-align: left;
+
+  .title {
+    color: $heading-color;
+    font-weight: 100;
+    margin-bottom: 0em;
+    font-size: $title-font-size !important;
+    font-family: $font-family-mono !important;
+  }
+
+  .subtitle {
+    color: $heading-color;
+    margin-top: 0.4em;
+    margin-bottom: 2em;
+    font-family: $font-family-mono !important;
+  }
+
+  .institute,
+  .quarto-title-affiliation,
+  .quarto-title-author-email {
+    font-size: 85%;
+    color: $text-color;
+    margin: 0em !important;
+    padding: 0em !important;
+    line-height: 1em !important;
+  }
+
+  .author,
+  .quarto-title-author-name {
+    color: $text-color;
+    margin: 0em !important;
+    padding: 0em !important;
+    margin-top: 3em !important;
+    margin-bottom: 0.5em !important;
+    line-height: 1em !important;
+  }
+
+  .quarto-title-authors {
+    display: flex;
+    justify-content: left;
+
+    .quarto-title-author {
+      padding-left: 0em;
+      padding-right: 0em;
+      width: 100%;
+    }
+  }
+}
+
+.reveal h1,
+.reveal h2,
+.reveal h3,
+.reveal h4 {
+  font-family: $font-family-serif;
+  font-weight: 100;
+}
+
+// main title and sections font
+.reveal h1 {
+  font-size: $h1-font-size !important;
+  color: $title-color;
+  font-family: $font-family-mono !important;
+  font-weight: 700 !important;
+}
+
+// slide titles
+.reveal h2 {
+  color: $text-color !important;
+  text-align: center;
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+  margin-bottom: 2em;
+  font-size: $h2-font-size !important;
+  color: $slide-title-color;
+  font-family: $font-family-mono !important;
+  font-weight: 700 !important;
+}
+
+// unused?
+.reveal h3 {
+  color: $info-color;
+  font-style: italic;
+  font-size: $h3-font-size;
+}
+
+// unused?
+.reveal h4 {
+  //margin-top: $h4-font-size;
+}
+
+// Alerts and callouts
+
+.alert {
+  color: $warning-color;
+  font-weight: 700;
+  font-family: $font-family-mono !important;
+}
+
+.alert-blue {
+  color: $info-color;
+  font-weight: 700;
+  font-family: $font-family-mono !important;
+}
+
+.alert-green {
+  color: $success-color;
+  font-weight: 700;
+  font-family: $font-family-mono !important;
+}
+
+.subtle-emphasis {
+  color: $text-color;
+  font-weight: 550;
+  font-family: $font-family-mono !important;
+}
+
+.callout-title p {
+  font-family: "Merriweather", serif;
+  font-size: 1.5em;
+  font-weight: 700;
+  color: $text-color;
+  margin-top: 1em !important;
+}
+
+.callout-content p {
+  font-family: $font-family-sans-serif;
+  font-size: 1.4em;
+}
+
+// Lists
+
+.reveal ul {
+  font-weight: 300;
+  padding-left: 16px;
+  list-style-type: disc;
+  font-family: $font-family-sans-serif;
+  margin-top: 0em !important;
+  padding-top: 0em !important;
+  display: block !important;
+
+  li::marker {
+    color: $text-color;
+  }
+}
+
+.reveal ol {
+  font-weight: 300;
+  padding-left: 16px;
+  list-style-type: decimal;
+  font-family: $font-family-sans-serif;
+  margin-top: 0em !important;
+  padding-top: 0em !important;
+  display: block !important;
+
+  li::marker {
+    color: $text-color;
+  }
+}
+
+// Buttons
+
+.button {
+  display: inline-block;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 400;
+  background-color: $text-color;
+  border: 1px solid $text-color;
+  color: #fff !important;
+  text-decoration: none;
+  border-radius: 4px;
+  transition: all 0.2s ease-in-out;
+}
+
+.button:hover {
+  background-color: darken($text-color, 10%);
+  border-color: darken($text-color, 15%);
+}
+
+.button::before {
+  content: "▶";
+  margin-right: 5px;
+}
+
+// Math
+
+.math.inline,
+.math.display {
+  font-size: 85%;
+  font-weight: 100;
+  font-family: $font-family-sans-serif;
+}
+
+// Code blocks
+/* Increase inline code size */
+.reveal code {
+  font-size: 1.1em;
+}
+
+/* Increase code block size */
+.reveal pre code {
+  font-size: 1.3em;
+}
+
+/* Optional: Add some extra line spacing for better readability */
+.reveal pre code {
+  line-height: 1.4;
+}
+
+// Miscellaneous
+
+.bg {
+  background-color: var(--col, $slide-bg-color);
+  padding: 0.1em;
+  border-radius: 5px;
+  display: inline-block;
+  border: 1px solid $text-color;
+}
+
+.highlight-box {
+  background-color: #fce5e8;
+  padding: 0.75em;
+  border-left: 5px solid #ba0c2f;
+  font-weight: bold;
+}
