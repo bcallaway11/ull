@@ -89,7 +89,7 @@ This narrows our focus and rules out:
     * See de Chaisemartin and D'Haultfoueille (2018) and @miyaji-2025
 
 <span style="display: none;">[@chaisemartin-dhaultfoeuille-pasquier-sow-vazquez-2025]</span>
-<span style="display: none;">[@chaisemartin-dhaultfoeuille-vazquez-2024]</span>
+<span style="display: none;">[@chaisemartin-dhaultfoeuille-vazquez-2024-AEAPP]</span>
 <span style="display: none;">[@chaisemartin-dhaultfoeuille-2018]</span>
 
 ## Today's Talk

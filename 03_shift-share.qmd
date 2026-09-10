@@ -18,6 +18,7 @@ date: September 18, 2026
 bibliography:
   - refs.bib
   - extra-refs.bib
+  - empirical_refs.bib
 knitr:
   opts_chunk:
     echo: true
@@ -26,9 +27,10 @@ knitr:
 <!--
 =============================================================================
 Title: Session 3 --- Shift-share instruments
-Description: Slides for the third session of the ULL short course. Placeholder
-             structure only at this stage; related materials to be uploaded and
-             content filled in.
+Description: Slides for the third session of the ULL short course. Emphasis is
+             on the "exogenous shares" path to identification, which is the one
+             that connects most directly to DiD with a continuous treatment
+             (session 1). Running example is Downes (2024).
 Author: Brant Callaway
 Last update: 2026-09-10
 Date created: 2026-09-10
@@ -52,70 +54,464 @@ $\newcommand{\E}{\mathbb{E}}
 \renewcommand{\P}{\mathrm{P}}
 \newcommand{\independent}{{\perp\!\!\!\perp}}
 \newcommand{\indicator}[1]{ \mathbf{1}\{#1\} }
-\newcommand{\ATT}{\text{ATT}}$
+\newcommand{\ATT}{\text{ATT}}
+\newcommand{\ACR}{\text{ACR}}$
 
-[Shift-share (Bartik) instruments]{.alert} are widely used in applied work
+[Shift-share]{.alert} (or [Bartik]{.alert}) instruments are everywhere in applied work
 
-* An instrument is constructed by combining [shares]{.alert-blue} (local
-  exposure to some set of sectors) with [shifts]{.alert-blue} (aggregate,
-  sector-level changes)
+* Combine [shares]{.alert-blue} --- how exposed each unit is to each sector --- with [shifts]{.alert-blue} --- aggregate, sector-level shocks
 
-[This session:]{.alert} what identifies a shift-share design, how it relates
-to the panel data arguments from the first two sessions, and what to be
-careful about
+* About one-eighth of all instruments in NBER working papers are explicitly described as shift-share [@borusyak-hull-jaravel-2025]
+
+<br>
+
+[This session:]{.alert} shift-share designs are much [closer to the DiD material from Session 1]{.alert-blue} than they might first appear
+
+* In fact, one of the two main paths to identification is *literally* a DiD design with a continuous treatment
+
+## Why this belongs in this course
+
+Recall the "what's not included" slide from Session 1:
+
+* We ruled out [fuzzy DiD]{.alert} --- binary treatment, aggregate data, policy changes used as an instrument
+
+* We ruled out [heterogeneous adoption designs]{.alert}
+
+<br>
+
+. . .
+
+Shift-share designs sit close to both
+
+* And the [interpretation problems]{.alert} we spent Session 1 on --- weights, selection bias across doses, strong parallel trends --- [do not go away]{.alert-blue} when you call the design an instrument instead of a treatment
 
 ## Plan for this Session
 
-<br> <br> <br>
+<br> <br>
 
-1. Setup and notation
+1. Setup, notation, and a running example
 
-2. Where does the identifying variation come from?
+2. Two paths to identification: shares vs. shifts
 
-3. Connections to difference-in-differences
+3. The exogenous-shares path *is* DiD with a continuous treatment
 
-4. Practical recommendations
+4. Rotemberg weights: which comparisons are actually driving the estimate?
 
-# 1. Setup and notation {visibility="uncounted"}
+5. Inference
 
-## The Shift-Share Instrument
+6. Practical recommendations
 
-*[Placeholder --- construction of the instrument from shares and shifts.]*
+# 1. Setup, notation, and a running example {visibility="uncounted"}
 
-## Running Example
+## Notation
 
-*[Placeholder --- application to be added.]*
+- [Units:]{.alert} $i = 1, \ldots, n$ (e.g., counties, commuting zones)
 
-# 2. Where does the identifying variation come from? {visibility="uncounted"}
+- [Sectors:]{.alert} $j = 1, \ldots, J$ (e.g., industries)
 
-## Exogenous Shares
+- [Shares:]{.alert} $z_{ij}$ --- unit $i$'s exposure to sector $j$, usually [predetermined]{.alert-blue}, with $\sum_j z_{ij} = 1$
 
-*[Placeholder --- the shares-based view.]*
+- [Shifts:]{.alert} $g_j$ --- an aggregate shock to sector $j$
 
-## Exogenous Shifts
+. . .
 
-*[Placeholder --- the shocks-based view.]*
+<br>
 
-# 3. Connections to difference-in-differences {visibility="uncounted"}
+The [shift-share instrument]{.alert} is
+$$B_i = \sum_{j=1}^J z_{ij} \, g_j$$
 
-## Shift-Share as a Panel Data Design
+. . .
 
-*[Placeholder --- how the identification arguments line up with sessions 1
-and 2, including the continuous-treatment/differential-exposure connection.]*
+used to instrument for an endogenous treatment $X_i$ in
+$$Y_i = \beta_0 X_i + \varepsilon_i$$
 
-## Interpreting the Estimand
+## Where You Have Seen This Before
 
-*[Placeholder --- weights and what is actually being averaged.]*
+| Application | Shares $z_{ij}$ | Shifts $g_j$ |
+|---|---|---|
+| @bartik-1991, @blanchard-katz-1992 | Local industry employment | National industry growth |
+| @card-2001 | Immigrant enclaves by origin | National inflows by origin |
+| @autor-dorn-hanson-2013 | Local industry employment | Chinese import growth |
+| @downes-2024 | 1910 local industry shares | National unionization by industry |
 
-# 4. Practical recommendations {visibility="uncounted"}
+. . .
+
+<br>
+
+The structure is [always the same]{.alert}: a common set of shocks, and units that differ in [how exposed]{.alert-blue} they are to each one
+
+## The Same Design, Different Labels
+
+Two things worth noticing about that table:
+
+* [The shares are almost always predetermined]{.alert} --- employment shares in a base year, enclaves before the inflow, industry composition decades earlier
+
+* [The shifts are almost always few and aggregate]{.alert} --- one policy, one trade shock, a handful of sectors doing most of the work
+
+. . .
+
+<br>
+
+<mark>Which is to say: most of these are exposure designs, whether or not the authors describe them that way</mark>
+
+* @jaeger-ruist-stuhler-2018 make a related point in the immigration setting --- if past and current inflows are correlated, the enclave instrument confounds short-run and long-run responses
+
+## Running Example: @downes-2024
+
+[Question:]{.alert} Did the expansion of labor unions contribute to the American Baby Boom?
+
+[Setting:]{.alert} The 1935 National Labor Relations Act (NLRA) --- the largest expansion of unionism in U.S. history
+
+* [Treatment $X_{it}$:]{.alert-blue} county-level union membership rate
+
+* [Outcome $Y_{it}$:]{.alert-blue} county-level birth rates (also completed fertility)
+
+. . .
+
+[Endogeneity concern:]{.alert} tight labor markets raise unionization *and* may raise fertility directly
+
+## Running Example: The Instrument
+
+@downes-2024 constructs
+
+$$SSIV_{it} = \sum_{j=1}^J \underbrace{\textrm{NatlUnionRate}_{jt}}_{\textrm{shift}} \times \underbrace{\textrm{IndShare}^{1910}_{ij}}_{\textrm{share}}$$
+
+. . .
+
+* [Shifts:]{.alert-blue} national, industry-level union membership rates over time
+
+* [Shares:]{.alert-blue} local industry composition, measured in [1910]{.alert} --- decades before the NLRA
+
+. . .
+
+[Relevance:]{.alert} some industries were far more amenable to unionization than others (long-lived capital, scarce skilled labor, spatial isolation)
+
+## Running Example: The Comparison Being Made
+
+@downes-2024 gives a concrete two-county example:
+
+* [Cameron County, PA]{.alert-blue} and [Forest County, PA]{.alert-blue} --- similar 1930 population ($\approx 5{,}200$), neither unionized before the NLRA
+
+* But Cameron had more transportation, more coal mining, and more of the manufacturing subindustries that later unionized heavily
+
+. . .
+
+<br>
+
+[The instrument predicts Cameron should unionize more.]{.alert} It did: by 1960, union membership was 26.3% in Cameron vs. 7.7% in Forest
+
+. . .
+
+<mark>Note what this comparison looks like: two units, differing in *how much* they were exposed to a common shock</mark>
+
+# 2. Two paths to identification {visibility="uncounted"}
+
+## Where does the identifying variation come from?
+
+The instrument is built from two ingredients, so there are two ways to argue it is valid
+
+. . .
+
+[Path 1 --- Exogenous shares]{.alert} &nbsp; [@goldsmith-sorkin-swift-2020]
+
+* Few shocks, but lots of variation in exposure to them
+
+* Identification comes from the [shares]{.alert-blue} being as-good-as-randomly assigned (conditional on controls)
+
+. . .
+
+[Path 2 --- Exogenous shifts]{.alert} &nbsp; [@borusyak-hull-jaravel-2022; @adao-kolesar-morales-2019]
+
+* Many shocks, treated as quasi-randomly assigned
+
+* Shares are allowed to be [endogenous]{.alert-blue}
+
+## Which path are you on?
+
+This is a [substantive]{.alert} choice, not a technical one --- and it determines which assumptions you defend, which diagnostics you run, and how you do inference
+
+. . .
+
+@goldsmith-sorkin-swift-2020 suggest you are likely on the [shares]{.alert} path if you:
+
+1. Describe your design as [differential exogenous exposure to common shocks]{.alert-blue}
+
+2. Motivate it with a [two-unit example]{.alert-blue}
+
+3. Emphasize shocks to [specific]{.alert-blue} sectors as central
+
+. . .
+
+<br>
+
+<mark>@downes-2024 does all three --- and says so explicitly: identification "follows from the exogeneity of the shares, rather than the shifts"</mark>
+
+## Why the shares path, here?
+
+Two features of the setting push toward shares:
+
+* [One big shock, not many:]{.alert} the NLRA is essentially a single national event. The "many shocks" asymptotics behind the shifts path are not a good description
+
+* [Shares are genuinely predetermined:]{.alert} 1910 industry composition, 25 years before the policy
+
+. . .
+
+<br>
+
+[This is the case that connects to Session 1]{.alert-blue} --- so it is where we will spend most of our time
+
+* We will come back to the shifts path briefly at the end
+
+# 3. Exogenous shares *is* DiD with a continuous treatment {visibility="uncounted"}
+
+## The Numerical Equivalence Result
+
+@goldsmith-sorkin-swift-2020 show:
+
+::: {.callout-note}
+## Equivalence
+
+TSLS using the Bartik instrument $B_i = \sum_j z_{ij} g_j$ is [numerically equivalent]{.alert} to GMM using the [shares $z_{i1}, \ldots, z_{iJ}$ as instruments]{.alert}, with a weight matrix built from the shifts $g_j$
+:::
+
+. . .
+
+<br>
+
+[Implication:]{.alert} the exogeneity condition should be stated in terms of the [shares]{.alert-blue}, not the shifts
+
+* The shifts are doing the work of *combining* many instruments, not of *justifying* them
+
+## From shares-as-instruments to DiD
+
+Once the shares are the instruments, the design is an [exposure design]{.alert}: shares measure differential exposure to a common shock
+
+. . .
+
+> "In settings where the researcher has a pre-period, this empirical strategy is just difference-in-differences."
+>
+> --- @goldsmith-sorkin-swift-2020
+
+. . .
+
+And @borusyak-hull-jaravel-2025 describe the same path as
+
+> "pooling together multiple difference-in-differences designs leveraging heterogeneous shock exposure."
+
+## What is the treatment?
+
+Line up the two setups:
+
+| DiD with continuous treatment | Shift-share (shares path) |
+|---|---|
+| Dose $D_i$ | Exposure share $z_{ij}$ |
+| Common timing of treatment | Common shock $g_j$ |
+| $\ATT(d\vert d)$, $\ACR(d)$ | Effect of differential exposure |
+| Untreated units: $D_i = 0$ | Units with $z_{ij} \approx 0$ |
+
+. . .
+
+<br>
+
+<mark>The share *is* a continuous treatment. Everything from Session 1 applies.</mark>
+
+## So what carries over from Session 1?
+
+[Good news:]{.alert} the identification logic is familiar
+
+* Compare changes across units with different exposure
+
+* Pre-periods let you assess parallel trends
+
+. . .
+
+[Less good news:]{.alert} all three Session 1 problems come along
+
+1. [Weak parallel trends]{.alert-blue} identifies $\ATT(d|d)$, but *not* causal responses to dose
+
+2. Comparing across doses adds [selection bias]{.alert-blue} terms
+
+3. [Strong parallel trends]{.alert-blue} is needed to interpret dose comparisons causally --- and it is a strong assumption
+
+## Session 1, restated for this setting
+
+Recall the decomposition from Session 1:
+
+$$\underbrace{\ATT(d_h|d_h) - \ATT(d_l|d_l)}_{\textrm{what a dose comparison gives you}} = \underbrace{\E[Y_{t=2}(d_h) - Y_{t=2}(d_l)|D=d_h]}_{\textrm{Causal Response}} + \underbrace{\ATT(d_l|d_h) - \ATT(d_l|d_l)}_{\textrm{Selection Bias}}$$
+
+. . .
+
+In a shift-share design, "comparing across doses" is [exactly what the estimator does]{.alert}
+
+* High-exposure counties vs. low-exposure counties
+
+* The selection bias term asks: would *high*-exposure counties have responded differently to a *low* dose than low-exposure counties did?
+
+. . .
+
+<mark>Nothing about writing this as an IV makes that term disappear</mark>
+
+## @downes-2024 is careful about this
+
+The paper says so directly:
+
+> "In this setup with continuous treatment and the presumption of heterogeneous treatment effects, the ATE is not identified under the classic ('weak') parallel trends assumption [@callaway-goodman-santanna-2026]. The target parameter is therefore an ATT and I interpret any extrapolations of treatment effects across the support of the treatment dose distribution with caution."
+
+. . .
+
+<br>
+
+[This is the right posture]{.alert-blue} --- and it is unusual. Most shift-share papers do not flag it
+
+# 4. Rotemberg weights {visibility="uncounted"}
+
+## Which comparisons drive the estimate?
+
+@goldsmith-sorkin-swift-2020 build on Rotemberg (1983): the Bartik estimator is a [weighted sum of just-identified IV estimators]{.alert}, one per sector
+
+$$\hat{\beta}_{Bartik} = \sum_{j=1}^J \hat{\alpha}_j \, \hat{\beta}_j$$
+
+where $\hat{\beta}_j$ uses share $z_{ij}$ alone as an instrument, and the [Rotemberg weights]{.alert-blue} $\hat{\alpha}_j$ sum to one
+
+. . .
+
+<br>
+
+[Why you care:]{.alert} the weights tell you which exposure designs --- which concrete comparisons --- your estimate actually rests on
+
+* And therefore which identifying assumptions are worth testing
+
+## Reading the weights
+
+Three diagnostics @goldsmith-sorkin-swift-2020 recommend:
+
+1. [How concentrated are the weights?]{.alert} If five sectors carry 40% of the weight, your design is really about those five sectors
+
+2. [Do the shifts explain the weights?]{.alert} If not, the shocks are a poor guide to your identifying variation
+
+3. [Are any weights negative?]{.alert} Negative weights threaten a LATE-like interpretation under heterogeneous effects
+
+. . .
+
+<br>
+
+<mark>This should feel familiar --- it is the same "what are the weights on?" question we asked about TWFE in Session 1</mark>
+
+## Rotemberg weights in @downes-2024
+
+@downes-2024 reports all three:
+
+* Shifts explain only [~21%]{.alert} of the variation in the Rotemberg weights $\Rightarrow$ identifying variation is coming from the [shares]{.alert-blue}, consistent with the stated design
+
+* Negative weights are [~3%]{.alert} of the total $\Rightarrow$ a LATT-like interpretation is defensible
+
+* Event studies using top-weighted industries as separate instruments support parallel trends
+
+. . .
+
+<br>
+
+[This is a good template for what to report]{.alert-blue}
+
+# 5. Inference {visibility="uncounted"}
+
+## Standard errors are a real problem here
+
+@adao-kolesar-morales-2019 run a placebo exercise: generate [random]{.alert} sectoral shocks, build the shift-share regressor, regress actual outcomes on it
+
+. . .
+
+<br>
+
+[Result:]{.alert} tests at a 5% nominal level reject the null of no effect in [up to 55%]{.alert} of placebo samples
+
+. . .
+
+<br>
+
+[Why:]{.alert} regression residuals are correlated across units with [similar sector shares]{.alert-blue} --- even if those units are geographically far apart. Clustering by region does not fix this
+
+## What to do about it
+
+@adao-kolesar-morales-2019 derive inference methods valid under arbitrary cross-unit correlation of this kind
+
+* In practice: confidence intervals can be [substantially wider]{.alert}
+
+. . .
+
+<br>
+
+[Practical point for this course:]{.alert} this is a distinct issue from everything else we have discussed
+
+* Sessions 1--2 were about [what parameter you identify]{.alert-blue}
+
+* This is about [how uncertain you are about it]{.alert-blue}
+
+* Both can go wrong independently
+
+# 6. The other path, briefly {visibility="uncounted"}
+
+## Exogenous shifts
+
+@borusyak-hull-jaravel-2022 develop the complementary framework:
+
+* Identification from [quasi-random assignment of the shocks]{.alert}
+
+* Shares are allowed to be [endogenous]{.alert-blue}
+
+* Rests on an equivalence result of its own: SSIV coefficients can be recovered from a [shock-level]{.alert-blue} regression, so the conditions to check are shock-level conditions
+
+. . .
+
+<br>
+
+[When is this the right frame?]{.alert} Many shocks, plausibly as-good-as-random, and no credible story for why exposure shares are exogenous
+
+## Why we are not emphasizing it here
+
+Two reasons:
+
+1. [It is a different design.]{.alert} The asymptotics run over shocks, not units. The DiD analogy does not carry over cleanly
+
+2. [Our running example is not in it.]{.alert} @downes-2024 has essentially one shock (the NLRA) and strong grounds for predetermined shares
+
+. . .
+
+<br>
+
+<mark>But: the choice between paths should be made on the economics of your setting, not on which one is more convenient</mark>
+
+* @borusyak-hull-jaravel-2025 provide checklists for both
+
+# 7. Practical recommendations {visibility="uncounted"}
 
 ## Recommendations
 
-*[Placeholder]*
+1. [Say which path you are on]{.alert} --- shares or shifts --- and defend *that* assumption
+
+2. If shares: [treat it as a DiD design]{.alert-blue}. Show pre-trends. Show correlates of the shares. Describe the concrete two-unit comparison
+
+3. [Report Rotemberg weights.]{.alert-blue} Concentration, correlation with shifts, negative weights
+
+4. [Be careful interpreting dose comparisons.]{.alert-blue} Weak parallel trends does not license them
+
+    * @chaisemartin-lei-2023 propose alternative estimators for panel IV designs of this type that are robust to heterogeneous effects
+
+5. [Use appropriate standard errors]{.alert-blue} [@adao-kolesar-morales-2019]
 
 ## Conclusion
 
-*[Placeholder --- takeaways for practice.]*
+* Shift-share designs are not a separate methodological island --- the [exogenous-shares path is a continuous-treatment DiD design]{.alert}
+
+* That means the Session 1 lessons transfer directly: [weights matter]{.alert-blue}, and [comparing across doses requires more than parallel trends]{.alert-blue}
+
+* The literature has good diagnostic tools (Rotemberg weights, pre-trend tests, valid standard errors) --- they are just not used often enough
+
+. . .
+
+<br>
+
+<mark>If you take one thing away: decide whether your identification comes from shares or shifts, say it out loud, and then defend the assumption you actually need</mark>
 
 # Thank you
 
@@ -124,3 +520,6 @@ and 2, including the continuous-treatment/differential-exposure connection.]*
 # Appendix {visibility="uncounted"}
 
 ## References {visibility="uncounted"}
+
+::: {#refs}
+:::

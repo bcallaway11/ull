@@ -15,5 +15,8 @@
 # Development scratch (notes, todos, not part of course materials)
 dev/
 
+# Reference papers -- copyrighted PDFs, not ours to redistribute
+Related Papers/
+
 # OS
 .DS_Store
