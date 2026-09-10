@@ -1,0 +1,126 @@
+---
+title: "Shift-Share Instruments"
+subtitle: "Session 3 --- Short Course at the University of Louisiana at Lafayette"
+format:
+  revealjs:
+    theme: [default, united.scss]
+    menu:
+      side: left
+    slide-number: true
+    date-format: long
+    callout-icon: false
+    embed-resources: true
+author:
+  - name: Brantly Callaway
+    affiliation: University of Georgia
+    email: brantly.callaway@uga.edu
+date: September 18, 2026
+bibliography:
+  - refs.bib
+  - extra-refs.bib
+knitr:
+  opts_chunk:
+    echo: true
+---
+
+<!--
+=============================================================================
+Title: Session 3 --- Shift-share instruments
+Description: Slides for the third session of the ULL short course. Placeholder
+             structure only at this stage; related materials to be uploaded and
+             content filled in.
+Author: Brant Callaway
+Last update: 2026-09-10
+Date created: 2026-09-10
+=============================================================================
+-->
+
+## Introduction
+
+```{r echo=FALSE}
+library(revealEquations)
+```
+
+$\newcommand{\E}{\mathbb{E}}
+\newcommand{\var}{\mathrm{var}}
+\newcommand{\cov}{\mathrm{cov}}
+\newcommand{\Var}{\mathrm{var}}
+\newcommand{\Cov}{\mathrm{cov}}
+\newcommand{\Corr}{\mathrm{corr}}
+\newcommand{\corr}{\mathrm{corr}}
+\newcommand{\L}{\mathrm{L}}
+\renewcommand{\P}{\mathrm{P}}
+\newcommand{\independent}{{\perp\!\!\!\perp}}
+\newcommand{\indicator}[1]{ \mathbf{1}\{#1\} }
+\newcommand{\ATT}{\text{ATT}}$
+
+[Shift-share (Bartik) instruments]{.alert} are widely used in applied work
+
+* An instrument is constructed by combining [shares]{.alert-blue} (local
+  exposure to some set of sectors) with [shifts]{.alert-blue} (aggregate,
+  sector-level changes)
+
+[This session:]{.alert} what identifies a shift-share design, how it relates
+to the panel data arguments from the first two sessions, and what to be
+careful about
+
+## Plan for this Session
+
+<br> <br> <br>
+
+1. Setup and notation
+
+2. Where does the identifying variation come from?
+
+3. Connections to difference-in-differences
+
+4. Practical recommendations
+
+# 1. Setup and notation {visibility="uncounted"}
+
+## The Shift-Share Instrument
+
+*[Placeholder --- construction of the instrument from shares and shifts.]*
+
+## Running Example
+
+*[Placeholder --- application to be added.]*
+
+# 2. Where does the identifying variation come from? {visibility="uncounted"}
+
+## Exogenous Shares
+
+*[Placeholder --- the shares-based view.]*
+
+## Exogenous Shifts
+
+*[Placeholder --- the shocks-based view.]*
+
+# 3. Connections to difference-in-differences {visibility="uncounted"}
+
+## Shift-Share as a Panel Data Design
+
+*[Placeholder --- how the identification arguments line up with sessions 1
+and 2, including the continuous-treatment/differential-exposure connection.]*
+
+## Interpreting the Estimand
+
+*[Placeholder --- weights and what is actually being averaged.]*
+
+# 4. Practical recommendations {visibility="uncounted"}
+
+## Recommendations
+
+*[Placeholder]*
+
+## Conclusion
+
+*[Placeholder --- takeaways for practice.]*
+
+# Thank you
+
+[brantly.callaway@uga.edu](mailto:brantly.callaway@uga.edu)
+
+# Appendix {visibility="uncounted"}
+
+## References {visibility="uncounted"}

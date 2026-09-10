@@ -11,7 +11,7 @@ John Munro Godfrey, Sr. Department of Economics, University of Georgia
 | | Topic | Slides |
 |---|---|---|
 | 1 | Difference-in-Differences with a Continuous Treatment | [`01_continuous-treatment.qmd`](01_continuous-treatment.qmd) |
-| 2 | Assessing the Plausibility of Strong Parallel Trends using Close Comparison Groups | [`02_comparison-groups.qmd`](02_comparison-groups.qmd) |
+| 2 | Assessing the Plausibility of Strong Parallel Trends (close comparison groups) | [`02_comparison-groups.qmd`](02_comparison-groups.qmd) |
 | 3 | Shift-Share Instruments | [`03_shift-share.qmd`](03_shift-share.qmd) |
 
 ## Building the slides

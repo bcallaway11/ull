@@ -1,0 +1,130 @@
+---
+title: "Assessing the Plausibility of Strong Parallel Trends"
+subtitle: "Session 2 --- Short Course at the University of Louisiana at Lafayette"
+format:
+  revealjs:
+    theme: [default, united.scss]
+    menu:
+      side: left
+    slide-number: true
+    date-format: long
+    callout-icon: false
+    embed-resources: true
+author:
+  - name: Brantly Callaway
+    affiliation: University of Georgia
+    email: brantly.callaway@uga.edu
+date: September 18, 2026
+bibliography:
+  - refs.bib
+  - extra-refs.bib
+knitr:
+  opts_chunk:
+    echo: true
+---
+
+<!--
+=============================================================================
+Title: Session 2 --- Assessing strong parallel trends via close comparison groups
+Description: Slides for the second session of the ULL short course. Placeholder
+             structure only at this stage; content to be filled in.
+Author: Brant Callaway
+Last update: 2026-09-10
+Date created: 2026-09-10
+=============================================================================
+-->
+
+## Introduction
+
+```{r echo=FALSE}
+library(revealEquations)
+```
+
+$\newcommand{\E}{\mathbb{E}}
+\newcommand{\var}{\mathrm{var}}
+\newcommand{\cov}{\mathrm{cov}}
+\newcommand{\Var}{\mathrm{var}}
+\newcommand{\Cov}{\mathrm{cov}}
+\newcommand{\Corr}{\mathrm{corr}}
+\newcommand{\corr}{\mathrm{corr}}
+\newcommand{\L}{\mathrm{L}}
+\renewcommand{\P}{\mathrm{P}}
+\newcommand{\independent}{{\perp\!\!\!\perp}}
+\newcommand{\indicator}[1]{ \mathbf{1}\{#1\} }
+\newcommand{\ATT}{\text{ATT}}$
+
+[Session 1:]{.alert} interpreting comparisons across doses as causal effects
+required [strong parallel trends]{.alert-blue} --- a substantially stronger
+assumption than most researchers realize they are invoking
+
+[This session:]{.alert} can we say anything about whether strong parallel
+trends is [plausible]{.alert-blue} in a given application?
+
+* Main idea: use [close comparison groups]{.alert} --- units that ought to
+  behave similarly in the absence of treatment
+
+## Plan for this Session
+
+<br> <br> <br>
+
+1. Why strong parallel trends is hard to assess
+
+2. Close comparison groups
+
+3. What can and cannot be learned
+
+4. Empirical illustration
+
+# 1. Why strong parallel trends is hard to assess {visibility="uncounted"}
+
+## Setup
+
+*[Placeholder --- notation and the assumption to be assessed.]*
+
+## The Core Difficulty
+
+*[Placeholder --- why the usual pre-trends logic does not deliver an
+assessment of strong parallel trends.]*
+
+# 2. Close comparison groups {visibility="uncounted"}
+
+## Definition
+
+*[Placeholder --- what makes a comparison group "close", and why closeness
+is the relevant notion here.]*
+
+## Implications
+
+*[Placeholder --- what closeness buys us.]*
+
+# 3. What can and cannot be learned {visibility="uncounted"}
+
+## Testable Implications
+
+*[Placeholder]*
+
+## Limitations
+
+*[Placeholder]*
+
+# 4. Empirical illustration {visibility="uncounted"}
+
+## Application
+
+*[Placeholder --- application to be added.]*
+
+## Results
+
+*[Placeholder]*
+
+## Conclusion
+
+*[Placeholder --- takeaways for practice.]*
+
+# Thank you
+
+[brantly.callaway@uga.edu](mailto:brantly.callaway@uga.edu)
+
+# Appendix {visibility="uncounted"}
+
+## References {visibility="uncounted"}

@@ -32,7 +32,8 @@ Date created: 2026-09-10
 **1. Difference-in-Differences with a Continuous Treatment**  
 [[Slides](01_continuous-treatment.html)]
 
-**2. Assessing the Plausibility of Strong Parallel Trends using Close Comparison Groups**  
+**2. Assessing the Plausibility of Strong Parallel Trends**  
+Using close comparison groups.  
 [[Slides](02_comparison-groups.html)]
 
 **3. Shift-Share Instruments**  
