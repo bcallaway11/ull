@@ -1,6 +1,6 @@
 ---
-title: "Assessing the Plausibility of Strong Parallel Trends"
-subtitle: "Session 2 --- Short Course at the University of Louisiana at Lafayette"
+title: "Assessing strong parallel trends via close comparison groups"
+subtitle: "Session 2"
 format:
   revealjs:
     theme: [default, united.scss]
@@ -17,22 +17,11 @@ author:
 date: September 18, 2026
 bibliography:
   - refs.bib
-  - extra-refs.bib
+  - this_refs.bib
 knitr:
   opts_chunk:
     echo: true
 ---
-
-<!--
-=============================================================================
-Title: Session 2 --- Assessing strong parallel trends via close comparison groups
-Description: Slides for the second session of the ULL short course. Placeholder
-             structure only at this stage; content to be filled in.
-Author: Brant Callaway
-Last update: 2026-09-10
-Date created: 2026-09-10
-=============================================================================
--->
 
 ## Introduction
 
@@ -52,78 +41,400 @@ $\newcommand{\E}{\mathbb{E}}
 \newcommand{\independent}{{\perp\!\!\!\perp}}
 \newcommand{\indicator}[1]{ \mathbf{1}\{#1\} }
 \newcommand{\ATT}{\text{ATT}}$
-
 [Session 1:]{.alert} interpreting comparisons across doses as causal effects
 required [strong parallel trends]{.alert-blue} --- a substantially stronger
 assumption than most researchers realize they are invoking
 
-[This session:]{.alert} can we say anything about whether strong parallel
-trends is [plausible]{.alert-blue} in a given application?
+* We discussed some (sub-)cases where it might be plausible and/or weakened, but it seemed fundamentally difficult to assess as only untreated potential outcomes are observed in pre-treatment periods
 
-* Main idea: use [close comparison groups]{.alert} --- units that ought to
-  behave similarly in the absence of treatment
+[This session:]{.alert} can we use pre-treatment data to say anything about whether (local) strong parallel trends is plausible in a given application?
+
+* Main idea: check for [close comparison groups]{.alert-green} --- neighboring dose groups that have the same level of outcomes in pre-treatment periods, argue that strong parallel trends is more plausible for these groups
+
+
 
 ## Plan for this Session
 
 <br> <br> <br>
 
-1. Why strong parallel trends is hard to assess
+1. Setup and discussion of strong parallel trends
 
 2. Close comparison groups
 
-3. What can and cannot be learned
+3. Empirical application
 
-4. Empirical illustration
-
-# 1. Why strong parallel trends is hard to assess {visibility="uncounted"}
+# 1. Setup and discussion of strong parallel trends {visibility="uncounted"}
 
 ## Setup
 
-*[Placeholder --- notation and the assumption to be assessed.]*
+Same [staggered panel data continuous treatment design]{.alert} as Session 1:
 
-## The Core Difficulty
+* Two periods $t=1,2$;
+* No one treated at $t=1$;
+* Continuous dose $D_i$ realized at $t=2$
 
-*[Placeholder --- why the usual pre-trends logic does not deliver an
-assessment of strong parallel trends.]*
+## Motivating Parallel Trends
+
+The most common way to "more primitively" motivate the parallel trends assumption is as a combination of the following two assumptions [@ashenfelter-card-1985;@angrist-krueger-1999;@ghanem-santanna-wuthrich-2024; @marx-tamer-tang-2025]:
+
+::: {.callout-note}
+## Latent Unconfoundedness
+
+$$\big( Y_{it=1}(0), Y_{it=2}(0) \big) \;\independent\; \indicator{D_i > 0} \;\mid\; \eta_i$$
+
+where $\eta_i$ is time-invariant unobserved heterogeneity (i.e., a unit fixed effect)
+
+:::
+
+* Latent unconfoundedness says that we could recover $\ATT(d \mid d)$ if we could find units in dose group $d$ and untreated units with the same $\eta_i$ and compare their outcomes
+* The previous comparison is infeasible, though, because $\eta_i$ is unobserved
+
+## Motivating Parallel Trends {visibility="uncounted"}
+
+The most common way to "more primitively" motivate the parallel trends assumption is as a combination of the following two assumptions [@ashenfelter-card-1985;@angrist-krueger-1999;@ghanem-santanna-wuthrich-2024; @marx-tamer-tang-2025]:
+
+::: {.callout-note}
+## Latent Unconfoundedness
+
+$$\big( Y_{it=1}(0), Y_{it=2}(0) \big) \;\independent\; \indicator{D_i > 0} \;\mid\; \eta_i$$
+
+where $\eta_i$ is time-invariant unobserved heterogeneity (i.e., a unit fixed effect)
+
+:::
+
+* Alternatively, you can view this as "selection into being treated on time-invariant unobservables":
+$$ \indicator{D_i > 0} = m_0(\eta_i) + u_i \text{ with } u_i \independent \eta_i $$
+* No restrictions on selection into a particular dose at all
+
+## Motivating Parallel Trends {visibility="uncounted"}
+
+The most common way to "more primitively" motivate the parallel trends assumption is as a combination of the following two assumptions [@ashenfelter-card-1985;@angrist-krueger-1999;@ghanem-santanna-wuthrich-2024; @marx-tamer-tang-2025]:
+
+::: {.callout-note}
+
+## Linear Model for Untreated Potential Outcomes
+
+$$Y_{it}(0) = \theta_t + \eta_i + e_{it}$$
+
+:::
+
+* Under linearity of untreated potential outcomes, difference out $\eta_i$ and then parallel trends holds immediately by latent unconfoundedness
+* However, these assumptions do not imply strong parallel trends---notice that the assumptions do not restrict potential outcomes $Y_{it=2}(d)$ for $d>0$ at all.
+
+## Motivating Strong Parallel Trends
+
+We can extend the notion of latent unconfoundedness as follows:
+
+::: {.callout-note}
+## Latent Unconfoundedness for Dose
+
+$$\big\{Y_{i,t=1}(0),\, Y_{i,t=2}(d) : d \in \mathcal{D}\big\} \;\independent\; D_i \;\mid\; \eta_i$$
+:::
+
+* Extends latent unconfoundedness to holds for all potential outcomes, not just untreated ones
+* Up to $\eta_i$ being unobserved, it is exactly the same assumption that you would see in the literature on continous treatment and dose response functions [@hirano-imbens-2004]
+* "Selection into dose on time-invariant unobservables"
+
+## Motivating Strong Parallel Trends
+
+We can also consider linear models for all potential outcomes:
+
+::: {.callout-note}
+## Linear Model for Potential Outcomes
+
+$$Y_{i,t}(d) = \theta_{t,d} + \beta_{t,d} \,\eta_i + e_{i,t}(d)$$
+:::
+
+* Additive separability for parallel trends
+* Coefficient on $\eta_i$ can vary with $d$, just like we would do in a linear model for untreated potential outcomes if $\eta_i$ were observed
+* No tricks
+* Parallel trends needs that $\theta_{t=2,d=0} = \theta_{t=1,d=0}$ and $\beta_{t=2,d=0} = \beta_{t=1,d=0}$. What about strong parallel trends?
+
+## School Closures Example
+
+Back to Session 1's running example where $dose$ = length of Covid school closure, $outcome$ = test scores
+
+* $\eta_i$: school's [unobserved student ability]{.alert-blue}
+
+* $\theta_{t=2,d}$: the [ability-neutral]{.alert} part of the dose response, e.g., the component of lost instructional time/disruption that hits *any* school closed for length $d$, regardless of its students' baseline ability
+
+* $\beta_{t=2,d}$: how strongly baseline ability $\eta_i$ [translates into]{.alert-green} test scores, *given* closure length $d$ --- i.e., varies with $d$ if high ability schools respond differently to different lengths of closures than low ability schools
+  * Would be increasing in $d$ if high ability schools are more resilient to long closures than low ability schools.
+
+```{r echo=FALSE, results="asis"}
+
+title <- "Does strong parallel trends hold in this model?"
+
+before <- "Consider $\\Delta Y(d) := Y_{t=2}(d) - Y_{t=1}(0)$.  Taking $\\E[\\cdot \\mid D=l]$:
+
+. . .
+"
+
+eqlist <- list("\\E[\\Delta Y(d) \\mid D=l] &= \\big(\\theta_{t=2,d}-\\theta_{t=1,0}\\big) + \\big(\\beta_{t=2,d}-\\beta_{t=1,0}\\big)\\,\\E[\\eta \\mid D=l] + \\E[\\Delta e(d) \\mid D=l] \\hspace{60pt}",
+  "&= \\big(\\theta_{t=2,d}-\\theta_{t=1,0}\\big) + \\big(\\beta_{t=2,d}-\\beta_{t=1,0}\\big)\\,\\E[\\eta \\mid D=l]")
+
+after <- "
+
+. . .
+
+Strong parallel trends requires the RHS not to depend on $l$
+
+This holds if and only if, for every $d$:
+
+* $\\beta_{t=2,d} = \\beta_{t=1,0}$ (coefficient on $\\eta_i$ same as at $t=1$), [or]{.alert-blue}
+* $\\E[\\eta \\mid D=l]$ does not vary with $l$ (no selection on $\\eta_i$)
+
+Neither of these seems likely to hold...
+
+"
+
+step_by_step_eq(eqlist = eqlist,
+  before = before,
+  after = after,
+  title = title)
+```
+
+
+## Does strong parallel trends hold in this model?
+
+Appyling the same argument as in Session 1:
+$$
+  \begin{aligned}
+    \E[\Delta Y \mid D=d_h] - \E[\Delta Y \mid D=d_l] &= \ATT(d_h|d_h) - \ATT(d_l|d_l) \\
+    &=  \underbrace{(\theta_{t=2,d_h} - \theta_{t=2,d_l}) + (\beta_{t=2,d_h} - \beta_{t=2,d_l}) \E[\eta \mid D=d_h]}_{\textrm{Causal Response}} \\
+    &+ \underbrace{\beta_{t=2,d_l} \Big( \E[\eta \mid D=d_h] - \E[\eta \mid D=d_l] \Big)}_{\textrm{Selection Bias}}
+  \end{aligned}
+$$
+
+* Learning about $\beta_{t=2,d_l}$ directly does not seem possbile---e.g., $\E[\Delta Y \mid D=d_l] - \E[\Delta Y \mid D=0]$ includes $\beta_{t=2,d_l}$ but also differences in $\E[\eta \mid D=d_l]$ and $\E[\eta \mid D=0]$, which are unobserved
+
+* Making assumptions about $\beta_{t=2,d_l}$ would also be difficult to justify and infeasible to check in practice
+
+## Does strong parallel trends hold in this model? {visibility="uncounted"}
+
+Appyling the same argument as in Session 1:
+$$
+  \begin{aligned}
+    \E[\Delta Y \mid D=d_h] - \E[\Delta Y \mid D=d_l] &= \ATT(d_h|d_h) - \ATT(d_l|d_l) \\
+    &=  \underbrace{(\theta_{t=2,d_h} - \theta_{t=2,d_l}) + (\beta_{t=2,d_h} - \beta_{t=2,d_l}) \E[\eta \mid D=d_h]}_{\textrm{Causal Response}} \\
+    &+ \underbrace{\beta_{t=2,d_l} \Big( \E[\eta \mid D=d_h] - \E[\eta \mid D=d_l] \Big)}_{\textrm{Selection Bias}}
+  \end{aligned}
+$$
+
+* Instead, we will think about trying to determine the plausibility of "no selection" holding (i.e., $\E[\eta \mid D=d_h] - \E[\eta \mid D=d_l] = 0$).
+
 
 # 2. Close comparison groups {visibility="uncounted"}
 
-## Definition
+## Background
 
-*[Placeholder --- what makes a comparison group "close", and why closeness
-is the relevant notion here.]*
+In @callaway-dyal-santanna-tsyawo-2025, we introduce a notion of "close comparison groups"
+
+* Setting of that paper: binary treatment, multiple pre-treatment periods, multiple comparison groups, looking for a way to relax the parallel trends assumption, and we look for pockets of simple identification
+
+* Groups that are "alike" in terms of pre-treatment levels of outcomes are "close comparison groups"
+
+* If you can find such groups, you can get very robust identification of causal effects (i.e., robustness to the identification strategy)
+
+
+## CCGs adapted to a continuous treatment setting
+
+As discussed above, difference-in-differences attempts to allow for selection on time-invariant unobservables by differencing them out.
+
+But we can look at the level of pre-treatment outcomes to inform us about the distribution of unobservables across dose groups.
+
+
+```{r echo=FALSE, results="asis"}
+
+title <- "Same Pre-Treatment Mean Implies Same Mean of \\boldsymbol{\\eta}"
+
+before <- "For some dose group $l$, its mean of untreated potential outcomes is given by:
+
+. . .
+"
+
+eqlist <- list("\\E[Y_{t=1} \\mid D=l] &= \\E[Y_{t=1}(0) \\mid D=l] \\hspace{150pt}", "&= \\theta_1 + \\E[\\eta \\mid D=l]")
+
+after <- "
+
+. . .
+
+Since $\\theta_1$ is the same for every $l$:
+
+$$\\E[Y_{t=1} \\mid D=l] = \\E[Y_{t=1} \\mid D=d] \\quad\\iff\\quad \\E[\\eta \\mid D=l] = \\E[\\eta \\mid D=d]$$
+
+In other words, dose groups with the same pre-treatment mean of outcomes have the same mean of unobservables $\\eta_i$...
+
+If they have the same mean of $\\eta_i$, then the selection-bias terms above vanish, and strong parallel trends holds (at least locally)
+
+"
+
+step_by_step_eq(eqlist = eqlist,
+  before = before,
+  after = after,
+  title = title)
+```
 
 ## Implications
 
-*[Placeholder --- what closeness buys us.]*
+In a similar fashion to using pre-treatment periods to validate the parallel trends assumption, we can use pre-treatment periods to validate the "no selection"
 
-# 3. What can and cannot be learned {visibility="uncounted"}
+* We can do this globally,
+* Find regions where the pre-treatment mean is flat, or
+* Find regions where the pre-treatment mean is flat conditional on covariates
 
-## Testable Implications
+It rationalizes interpreting those regions as being regions where strong parallel trends is plausible, and suggests that we can recover locally comparable causal effects in those regions, e.g., $ACR(d)$ in these regions.
 
-*[Placeholder]*
+<!--
 
-## Limitations
+## Two More Realistic Versions of the Same Argument
 
-*[Placeholder]*
+Rather than "no selection at all," two weaker, more defensible versions deliver the same conclusion locally:
+
+1. A [two-stage selection process]{.alert}: units select (or are sorted into) a coarse *category*, and dose only varies *within* category for reasons unrelated to $\eta_i$
+
+2. Selection [on observables]{.alert}, some of which proxy for $\eta_i$: condition on $X_i$ and hope no *residual* selection on $\eta_i$ remains
+
+## Version 1: Category, Then Noise
+
+$D_i = d(C_i,\nu_i)$, where category $C_i$ carries the selection on $\eta_i$, and $\nu_i \independent \eta_i \mid C_i$ generates variation *within* category
+
+* Two units with [different realized doses but the same category]{.alert-blue} are close comparison groups for each other --- regardless of the numeric gap between their doses
+
+* Plausible whenever the dose isn't really a fine continuum in practice: a district picks a closure *stance* (short vs.\ extended remote learning), and the exact number of weeks within that stance is closer to scheduling noise; a state picks a minimum-wage *stance*, and the exact cents-per-hour within it is closer to legislative happenstance
+
+* Less plausible for a genuinely continuous, deliberately-chosen dose
+
+## Version 2: Covariates
+
+Condition on observed $X_i$ (some of which may proxy for $\eta_i$) and define closeness *within* $X$-cells
+
+* Same idea as before, but comparing $Y_{i,t=1} \mid D=l, X=x$ to $Y_{i,t=1} \mid D=d, X=x$
+
+* Requires only that whatever selection on $\eta_i$ remains, it is absorbed by $X_i$ --- the familiar motivation behind [conditional]{.alert-blue} parallel trends, now stated as a within-cell closeness condition instead
+
+## Side Comment: Does the Selection Model Match the Application?
+
+A model like $D_i = m(\eta_i)+\nu_i$ presumes unit $i$ *actively chooses* its dose based on its own type --- often the wrong mental model
+
+* For "exposure to a policy" designs (e.g., a hospital's dose = its *historical* Medicare share), $D_i$ is more mechanical/pre-determined than chosen --- better to directly ask about [balance of $\eta$]{.alert} across dose groups in the outcome model than to write down a choice model for $D_i$
+
+## Side Comment: Aggregation Mismatch {visibility="uncounted"}
+
+Many DiD applications observe disaggregated units, but the policy is chosen at a *more aggregated* level
+
+* Example: Georgia raises its minimum wage more than Alabama. That choice is political, made at the [state]{.alert-blue} level --- e.g., GA having a large city may make pro-increase politicians more likely to be elected --- and has nothing *directly* to do with any one GA county's $\eta_i$
+
+* It's plausible that, [conditional on a coarse covariate]{.alert} like rural/urban status, the distribution of $\eta$ across GA and AL *counties* is similar --- even though the state-level policy choice is clearly related to state-level characteristics
+
+-->
 
 # 4. Empirical illustration {visibility="uncounted"}
 
 ## Application
 
-*[Placeholder --- application to be added.]*
+Same empirical setting as Session 1: [Acemoglu and Finkelstein (2008)]{.alert-blue} --- the 1983 Medicare PPS reform. Dose = hospital's pre-reform Medicare share; outcome = capital-labor ratio (depreciation share)
 
-## Results
+[A departure from Session 1 (and from the paper itself):]{.alert} there, pre/post periods were *averaged* into two periods --- pre = avg(1980-83), post = avg(1984-86)
 
-*[Placeholder]*
+Here, use single [adjacent years]{.alert-blue} instead, anchored at 1982 as a base period:
 
-## Conclusion
+* 1982 vs.\ 1983, 1984, 1985, 1986
+* plus two more placebos marching up to 1982: 1980 vs.\ 1981, 1981 vs.\ 1982
 
-*[Placeholder --- takeaways for practice.]*
+## Results: ATT(d|d) {visibility="uncounted"}
 
-# Thank you
+<center><img src="img/s2_att_1982_1984.png" width=80%/></center>
 
-[brantly.callaway@uga.edu](mailto:brantly.callaway@uga.edu)
+## Results: ATT(d|d) {visibility="uncounted"}
+
+<center><img src="img/s2_att_1982_1985.png" width=80%/></center>
+
+## Results: ATT(d|d) {visibility="uncounted"}
+
+<center><img src="img/s2_att_1982_1986.png" width=80%/></center>
+
+## Results: ACR(d)
+
+<center><img src="img/s2_acr_1982_1984.png" width=80%/></center>
+
+## Results: ACR(d) {visibility="uncounted"}
+
+<center><img src="img/s2_acr_1982_1985.png" width=80%/></center>
+
+## Results: ACR(d) {visibility="uncounted"}
+
+<center><img src="img/s2_acr_1982_1986.png" width=80%/></center>
+
+## Pre-Test: ATT(d|d)
+
+<center><img src="img/s2_att_1980_1981.png" width=80%/></center>
+
+## Pre-Test: ATT(d|d) {visibility="uncounted"}
+
+<center><img src="img/s2_att_1981_1982.png" width=80%/></center>
+
+## Pre-Test: ATT(d|d) {visibility="uncounted"}
+
+<center><img src="img/s2_att_1982_1983.png" width=80%/></center>
+
+## Pre-Test: ATT(d|d) {visibility="uncounted"}
+
+[Two of three fail]{.alert} --- 1980-81 is close to 0, but 1981-82 ($\widehat{ATT}=-0.22$) and 1982-83 ($\widehat{ATT}=+0.20$) are both significant, in *opposite* directions
+
+* 1982-83 could reflect anticipation: PPS was legislated in April 1983, months before its October 1983 effective date
+* 1981-82 has no such story --- both years are firmly pre-treatment. This looks like genuine year-to-year instability, not just anticipation
+
+## Pre-Test: Same Pre-Treatment Levels
+
+Next, we check for regions of close comparison groups
+
+## Pre-Test: Same Pre-Treatment Levels {visibility="uncounted"}
+
+<center><img src="img/s2_flat_1980.png" width=80%/></center>
+
+## Pre-Test: Same Pre-Treatment Levels {visibility="uncounted"}
+
+<center><img src="img/s2_flat_1981.png" width=80%/></center>
+
+## Pre-Test: Same Pre-Treatment Levels {visibility="uncounted"}
+
+<center><img src="img/s2_flat_1982.png" width=80%/></center>
+
+## Pre-Test: Same Pre-Treatment Levels {visibility="uncounted"}
+
+[The flat region is remarkably stable]{.alert} across three separate years: roughly dose $0.35$ to $0.70$ in every one of 1980, 1981, and 1982
+
+* This is what we'd expect if the flatness reflects a persistent hospital characteristic ($\eta_i$), not a fluke of any one year
+* Use 1982's (largest) flat region as a single canonical "close comparison group" definition, applied everywhere next
+
+## ACR(d): Close Comparison Region
+
+Same ACR(d) curves as before, now with the canonical region (dose $0.35$-$0.70$) highlighted, plus its density-weighted average  (i.e., a local $ACR$ in the close comparison region)
+
+## ACR(d): Close Comparison Region {visibility="uncounted"}
+
+<center><img src="img/s2_acr_1980_1981_shaded.png" width=80%/></center>
+
+## ACR(d): Close Comparison Region {visibility="uncounted"}
+
+<center><img src="img/s2_acr_1981_1982_shaded.png" width=80%/></center>
+
+## ACR(d): Close Comparison Region {visibility="uncounted"}
+
+<center><img src="img/s2_acr_1982_1983_shaded.png" width=80%/></center>
+
+## ACR(d): Close Comparison Region {visibility="uncounted"}
+
+<center><img src="img/s2_acr_1982_1984_shaded.png" width=80%/></center>
+
+## ACR(d): Close Comparison Region {visibility="uncounted"}
+
+<center><img src="img/s2_acr_1982_1985_shaded.png" width=80%/></center>
+
+## ACR(d): Close Comparison Region {visibility="uncounted"}
+
+<center><img src="img/s2_acr_1982_1986_shaded.png" width=80%/></center>
 
 # Appendix {visibility="uncounted"}
 

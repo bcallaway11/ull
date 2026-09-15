@@ -1,6 +1,6 @@
 ---
 title: "Shift-Share Instruments"
-subtitle: "Session 3 --- Short Course at the University of Louisiana at Lafayette"
+subtitle: "Session 3"
 format:
   revealjs:
     theme: [default, united.scss]

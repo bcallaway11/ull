@@ -18,5 +18,8 @@ dev/
 # Reference papers -- copyrighted PDFs, not ours to redistribute
 Related Papers/
 
+# Application data -- large/derived files pulled in from source repos
+applications/
+
 # OS
 .DS_Store

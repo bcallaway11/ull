@@ -23,7 +23,7 @@ author:
 date: September 18, 2026
 bibliography:
   - refs.bib
-  - extra-refs.bib
+  - this_refs.bib
 knitr:
   opts_chunk:
     echo: true
@@ -782,3 +782,13 @@ Dose is "exposure" to the policy
 <center> <img src="img/cdd_new_estimator_att.JPG" width=90% /> </center>
 
 $\widehat{ATT}^o = 0.80~~(\textrm{s.e}.=0.05)$ [Back](#empirical-application-short)
+
+## Other Related Work
+
+* **Haddad, Huber, and Zhang (2024)** study DiD with time-varying continuous treatments and multiple periods.
+
+* Their approach compares two nonzero treatment doses and allows for covariate adjustment and past treatment histories.
+
+* They use kernel-based estimators combined with double/debiased machine learning, allowing flexible, data-adaptive adjustment for covariates.
+
+* Their framework is complementary to the two-period panel-data setting considered here. [@haddad-huber-zhang-2024]
