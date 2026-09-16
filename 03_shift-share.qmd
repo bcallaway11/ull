@@ -17,25 +17,12 @@ author:
 date: September 18, 2026
 bibliography:
   - refs.bib
-  - extra-refs.bib
+  - this_refs.bib
   - empirical_refs.bib
 knitr:
   opts_chunk:
     echo: true
 ---
-
-<!--
-=============================================================================
-Title: Session 3 --- Shift-share instruments
-Description: Slides for the third session of the ULL short course. Emphasis is
-             on the "exogenous shares" path to identification, which is the one
-             that connects most directly to DiD with a continuous treatment
-             (session 1). Running example is Downes (2024).
-Author: Brant Callaway
-Last update: 2026-09-10
-Date created: 2026-09-10
-=============================================================================
--->
 
 ## Introduction
 
@@ -56,105 +43,36 @@ $\newcommand{\E}{\mathbb{E}}
 \newcommand{\indicator}[1]{ \mathbf{1}\{#1\} }
 \newcommand{\ATT}{\text{ATT}}
 \newcommand{\ACR}{\text{ACR}}$
+[Shift-share]{.alert} (aka Bartik) designs
 
-[Shift-share]{.alert} (or [Bartik]{.alert}) instruments are everywhere in applied work
+* [Shares]{.alert-blue} --- how exposed each unit is to each sector
+* [Shifts]{.alert-green} --- aggregate, sector-level shocks
 
-* Combine [shares]{.alert-blue} --- how exposed each unit is to each sector --- with [shifts]{.alert-blue} --- aggregate, sector-level shocks
+[This session:]{.alert} An overview of shift-share designs for causal inference
 
-* About one-eighth of all instruments in NBER working papers are explicitly described as shift-share [@borusyak-hull-jaravel-2025]
-
-<br>
-
-[This session:]{.alert} shift-share designs are much [closer to the DiD material from Session 1]{.alert-blue} than they might first appear
-
-* In fact, one of the two main paths to identification is *literally* a DiD design with a continuous treatment
-
-## Why this belongs in this course
-
-Recall the "what's not included" slide from Session 1:
-
-* We ruled out [fuzzy DiD]{.alert} --- binary treatment, aggregate data, policy changes used as an instrument
-
-* We ruled out [heterogeneous adoption designs]{.alert}
-
-<br>
-
-. . .
-
-Shift-share designs sit close to both
-
-* And the [interpretation problems]{.alert} we spent Session 1 on --- weights, selection bias across doses, strong parallel trends --- [do not go away]{.alert-blue} when you call the design an instrument instead of a treatment
+* Emphasize that there are strong connections between shift-share and difference-in-differences with a continuous treatment from previous sessions.
 
 ## Plan for this Session
 
-<br> <br>
-
-1. Setup, notation, and a running example
-
-2. Two paths to identification: shares vs. shifts
-
-3. The exogenous-shares path *is* DiD with a continuous treatment
-
-4. Rotemberg weights: which comparisons are actually driving the estimate?
-
-5. Inference
-
-6. Practical recommendations
-
-# 1. Setup, notation, and a running example {visibility="uncounted"}
-
-## Notation
-
-- [Units:]{.alert} $i = 1, \ldots, n$ (e.g., counties, commuting zones)
-
-- [Sectors:]{.alert} $j = 1, \ldots, J$ (e.g., industries)
-
-- [Shares:]{.alert} $z_{ij}$ --- unit $i$'s exposure to sector $j$, usually [predetermined]{.alert-blue}, with $\sum_j z_{ij} = 1$
-
-- [Shifts:]{.alert} $g_j$ --- an aggregate shock to sector $j$
-
-. . .
-
 <br>
 
-The [shift-share instrument]{.alert} is
-$$B_i = \sum_{j=1}^J z_{ij} \, g_j$$
+1. Introduction to shift-share designs and an application
 
-. . .
+2. Constructing shift-share variables
 
-used to instrument for an endogenous treatment $X_i$ in
-$$Y_i = \beta_0 X_i + \varepsilon_i$$
+3. Causal effects
 
-## Where You Have Seen This Before
+4. Extensions
 
-| Application | Shares $z_{ij}$ | Shifts $g_j$ |
-|---|---|---|
-| @bartik-1991, @blanchard-katz-1992 | Local industry employment | National industry growth |
-| @card-2001 | Immigrant enclaves by origin | National inflows by origin |
-| @autor-dorn-hanson-2013 | Local industry employment | Chinese import growth |
-| @downes-2024 | 1910 local industry shares | National unionization by industry |
+# 1. Introduction to shift-share designs and an application {visibility="uncounted"}
 
-. . .
+## Main reference papers
 
-<br>
+1. @goldsmith-sorkin-swift-2020
 
-The structure is [always the same]{.alert}: a common set of shocks, and units that differ in [how exposed]{.alert-blue} they are to each one
+2. @chaisemartin-lei-2023
 
-## The Same Design, Different Labels
-
-Two things worth noticing about that table:
-
-* [The shares are almost always predetermined]{.alert} --- employment shares in a base year, enclaves before the inflow, industry composition decades earlier
-
-* [The shifts are almost always few and aggregate]{.alert} --- one policy, one trade shock, a handful of sectors doing most of the work
-
-. . .
-
-<br>
-
-<mark>Which is to say: most of these are exposure designs, whether or not the authors describe them that way</mark>
-
-* @jaeger-ruist-stuhler-2018 make a related point in the immigration setting --- if past and current inflows are correlated, the enclave instrument confounds short-run and long-run responses
+3. @borusyak-hull-jaravel-2025
 
 ## Running Example: @downes-2024
 
@@ -162,356 +80,320 @@ Two things worth noticing about that table:
 
 [Setting:]{.alert} The 1935 National Labor Relations Act (NLRA) --- the largest expansion of unionism in U.S. history
 
-* [Treatment $X_{it}$:]{.alert-blue} county-level union membership rate
+* [Treatment $D_{it}$:]{.alert-blue} county-level union membership rate
 
-* [Outcome $Y_{it}$:]{.alert-blue} county-level birth rates (also completed fertility)
+* [Outcome $Y_{it}$:]{.alert-blue} county-level birth rates
 
-. . .
+[Target Parameter:]{.alert-green} Not always clear in the literature (i.e., often stated as a regression coefficient), but something like $\ACR(d) = \frac{\partial \E[Y_{it}(d)]}{\partial d}$---how much a marginal increase in unionization would raise fertility
 
-[Endogeneity concern:]{.alert} tight labor markets raise unionization *and* may raise fertility directly
+## Other Empirical Examples
 
-## Running Example: The Instrument
+@downes-2024 is representative of many shift-share papers, but let me mention a few more well known ones:
 
-@downes-2024 constructs
+<br>
 
-$$SSIV_{it} = \sum_{j=1}^J \underbrace{\textrm{NatlUnionRate}_{jt}}_{\textrm{shift}} \times \underbrace{\textrm{IndShare}^{1910}_{ij}}_{\textrm{share}}$$
+::: {style="font-size: 0.65em;"}
 
-. . .
+| Paper | Unit | Treatment $D$ | Outcome $Y$ |
+|---|---|---|---|
+| @bartik-1991, @blanchard-katz-1992 | Region | $\Delta$ local employment | $\Delta$ local wages |
+| @card-2001 | City $\times$ skill group | Immigrant inflows | Native wages and employment |
+| @autor-dorn-hanson-2013 | Commuting zone | $\Delta$ exposure to Chinese imports | $\Delta$ manufacturing employment |
+| @nunn-qian-2014 | Country | US food aid (wheat) received | Civil conflict |
+| @greenstone-mas-nguyen-2020 | County | $\Delta$ bank credit supply | $\Delta$ employment |
+| @xu-2022 | Region | Exposure to bank failures | $\Delta$ exports |
+| @franklin-imbert-abebe-mejia-mantilla-2024 | Local labor market | Exposure to public works program | Wages |
 
-* [Shifts:]{.alert-blue} national, industry-level union membership rates over time
+:::
 
-* [Shares:]{.alert-blue} local industry composition, measured in [1910]{.alert} --- decades before the NLRA
+## Common Features of These Applications
 
-. . .
+* [Aggregated data]{.alert}, e.g., counties, commuting zones, regions, countries
+  * This probably creates issues for defining potential outcomes, e.g., writing $Y_{it}(d)$ for a county probably violates SUTVA as the birth rate in a county likely depends on who exactly gets unionized not just the unionization rate in a county.
+  * The literature seems to ignore this, so we will too
 
-[Relevance:]{.alert} some industries were far more amenable to unionization than others (long-lived capital, scarce skilled labor, spatial isolation)
+* Some of these papers are interested in the effect of ["exposure"]{.alert-blue} but where the notion of exposure is more complicated than the examples we discussed earlier for DiD with a continuous treatment
+  * In these cases, you can think of the shift-share variable not so much as an instrument, but as a way to reduce exposure from a high-dimensional object into a single number
 
-## Running Example: The Comparison Being Made
+* Other papers are primarily worried about [endogeneity]{.alert-green} of the treatment, and will use the shift-share variable as an instrument
+
+##
+
+![](img/downes/downes-figa1.png){fig-align="center"}
+
+##
+
+![](img/downes/downes-fig1.png){fig-align="center"}
+
+##
+
+![](img/downes/downes-fig4.png){fig-align="center"}
+
+##
+
+![](img/downes/downes-fig5.png){fig-align="center"}
+
+## Simplified Setting
+
+Start with a simplified setting similar to the one we have been considering:
+
+* Two periods: $t=1$ (pre-NLRA) and $t=2$ (post-NLRA)
+* No units treated in the first period---this almost holds in the application, but not quite
+  * Important to relax later as many shift-share applications involve aggregated data where it is uncommon for there to be a period where units are fully untreated.
+
+## @downes-2024's main concern
+
+[Endogeneity:]{.alert} locations with tight labor markets may experience higher unionization *but* a tight labor market may also affect the trend in county fertility even without unionization.
+
+This is directly related to our earlier discussion of continuous treatments.  Here the worry is that parallel trends and/or strong parallel trends is violated:
+
+$\text{Parallel Trends: } \E[\Delta Y(0) \mid D=d] \neq \E[\Delta Y(0) \mid D=0]$
+
+or
+
+$\text{Strong Parallel Trends: } \E[\Delta Y(d) \mid D=d'] \neq \E[\Delta Y(d) \mid D=d]$
+
+
+# 2. Constructing shift-share variables {visibility="uncounted"}
+
+
+## Constructing a shift-share variable
+
+To start with, notice that
+
+$$ D_{it=2} = \sum_{j=1}^J s_{ijt=2} \times r_{ijt=2}$$
+
+where
+
+* $D_{it=2}$ is the unionization rate in county $i$ at time $t=2$ (post-NLRA)
+* $s_{ijt=2}$ is the share of county $i$'s employment in industry $j$ at time $t=2$
+* $r_{ijt=2}$ is the unionization rate in county $i$ for industry $j$ at time $t=2$
+
+This is a decomposition and holds by definition.
+
+## Constructing a shift-share variable
+
+Next, we can decompose the industry share variable $s_{ijt=2}$ and the industry unionization rate $r_{ijt=2}$ as follows:
+
+$$s_{ijt=2} = s_{ijt=1} + \Delta s_{ij}$$
+
+where $s_{ijt=1}$ is the share of county $i$'s employment in industry $j$ at time $t=1$ (pre-NLRA) and $\Delta s_{ij}$ is the change in that share from $t=1$ to $t=2$.
+
+$$r_{ijt=2} = r_{jt=2} + \tilde{r}_{ijt=2}$$
+
+where $r_{jt=2}$ is the national unionization rate in industry $j$ at time $t=2$ and $\tilde{r}_{ijt=2}$ is the unionization rate remainder in county $i$ for industry $j$ at time $t=2$.
+
+Roughly, the idea of a shift-share variable is that $s_{ijt=1}$ and/or $r_{jt=2}$ are more likely to be exogenous than the treatment $D_{it=2}$ itself.
+
+## Constructing a shift-share variable
+
+We can now construct a shift-share variable as follows:
+$$ B_{i} = \sum_{j=1}^J s_{ijt=1} \times r_{jt=2} $$
+
+(this is following the notation in @goldsmith-sorkin-swift-2020, you can think of $B$ standing for "Bartik")
+
+## Constructing a shift-share variable
+
+@downes-2024 writes the same equation as:
+$$SSIV_{it} = \sum_{j=1}^J \underbrace{\textrm{IndShare}^{1910}_{ij}}_{\textrm{share}} \times \underbrace{\textrm{NatlUnionRate}_{jt}}_{\textrm{shift}}$$
+
+* [Shifts:]{.alert} national, industry-level union membership rates over time
+
+* [Shares:]{.alert-blue} local industry composition, measured in 1910, before the NLRA
+
+## Constructing a shift-share variable
+
+$B_i$ represents the "exposure" of different counties to unionization:
+
+* Some industries were far more amenable to unionization than others (long-lived capital, scarce skilled labor, spatial isolation)
+* Some counties had more of those industries than others
+
+##
+
+![](img/downes/downes-fig7a.png){fig-align="center"}
+
+##
+
+![](img/downes/downes-fig7b.png){fig-align="center"}
+
+
+## Variation in $B_i$: An example
 
 @downes-2024 gives a concrete two-county example:
 
-* [Cameron County, PA]{.alert-blue} and [Forest County, PA]{.alert-blue} --- similar 1930 population ($\approx 5{,}200$), neither unionized before the NLRA
+* Cameron County, PA and Forest County, PA --- similar 1930 population ($\approx 5{,}200$), neither unionized before the NLRA
 
 * But Cameron had more transportation, more coal mining, and more of the manufacturing subindustries that later unionized heavily
 
-. . .
+This implies that these two counties were differently exposed to the NLRA shock.
 
-<br>
+##
 
-[The instrument predicts Cameron should unionize more.]{.alert} It did: by 1960, union membership was 26.3% in Cameron vs. 7.7% in Forest
+![](img/downes/downes-figa4.png){fig-align="center"}
 
-. . .
+# 3. Causal effects {visibility="uncounted"}
 
-<mark>Note what this comparison looks like: two units, differing in *how much* they were exposed to a common shock</mark>
+## What does the shift-share being exogenous mean?
 
-# 2. Two paths to identification {visibility="uncounted"}
+The way that @goldsmith-sorkin-swift-2020 discuss exogeneity of the shift-share variable is through [exogeneity of the shares]{.alert}.
 
-## Where does the identifying variation come from?
+For simplicity, think about the case with two industries $j=1,2$:
 
-The instrument is built from two ingredients, so there are two ways to argue it is valid
+[Notation:]{.alert-blue}
 
-. . .
+* $D(s_{1}, s_{2})$---the unionization rate in a particular county in the second period if the shares were set to $s_{1}$ and $s_{2}$.
+* $Y_{it=2}(d,s_{1},s_{2})$---the potential outcome for county $i$ at time $t=2$ if the treatment were set to $d$ and the shares were set to $s_{1}$ and $s_{2}$.
 
-[Path 1 --- Exogenous shares]{.alert} &nbsp; [@goldsmith-sorkin-swift-2020]
+## What does the shift-share being exogenous mean?
 
-* Few shocks, but lots of variation in exposure to them
+The way that @goldsmith-sorkin-swift-2020 discuss exogeneity of the shift-share variable is through [exogeneity of the shares]{.alert}.
 
-* Identification comes from the [shares]{.alert-blue} being as-good-as-randomly assigned (conditional on controls)
+For simplicity, think about the case with two industries $j=1,2$:
 
-. . .
+IV-type assumptions:
 
-[Path 2 --- Exogenous shifts]{.alert} &nbsp; [@borusyak-hull-jaravel-2022; @adao-kolesar-morales-2019]
+* [Exclusion restriction:]{.alert-blue} $Y_{it=2}(d,s_{1},s_{2}) = Y_{it=2}(d)$---shares only affect outcomes through the treatment $D_i$
+* [Independence:]{.alert-green} $\Big(S_{1}, S_{2}\Big) \independent \Big( \Delta Y_{it=2}(d), D(s_1, s_2) \Big)$---the shares are independent of the change in potential outcomes over time and the potential treatment
 
-* Many shocks, treated as quasi-randomly assigned
+These are exactly the same type of assumption as you would see in the IV literature, applied to the shares.
 
-* Shares are allowed to be [endogenous]{.alert-blue}
 
-## Which path are you on?
+## Causal Effects
 
-This is a [substantive]{.alert} choice, not a technical one --- and it determines which assumptions you defend, which diagnostics you run, and how you do inference
+Under exogeneity of the shares, it immediately holds that, e.g.,
 
-. . .
+$$ \E[\Delta Y \mid S_1 = s_1, S_2 = s_2] - \E[\Delta Y \mid S_1 = s_1', S_2 = s_2'] = \underbrace{\E[Y(D(s_1, s_2)) - Y(D(s_1', s_2'))]}_{\text{causal effect of shares}} $$
 
-@goldsmith-sorkin-swift-2020 suggest you are likely on the [shares]{.alert} path if you:
+i.e., we can compare the trend in outcomes across counties with different shares and interpret that as a causal effect of different shares.
 
-1. Describe your design as [differential exogenous exposure to common shocks]{.alert-blue}
+## Causal Effects
 
-2. Motivate it with a [two-unit example]{.alert-blue}
+However, the expression on the previous slide
 
-3. Emphasize shocks to [specific]{.alert-blue} sectors as central
+* Does not use the shift-share variable,
+* Does not really tell us anything about the causal effect of unionization, just the causal effect of different shares,
+* It is hard to operationalize.
 
-. . .
+## Causal Effects
 
-<br>
+Instead consider:
 
-<mark>@downes-2024 does all three --- and says so explicitly: identification "follows from the exogeneity of the shares, rather than the shifts"</mark>
+$$
+\begin{aligned}
+\E[\Delta Y \mid B = b+1] - \E[\Delta Y \mid B = b] &= \E[Y(D(S_1,S_2)) \mid B = b+1] - \E[Y(D(S_1,S_2)) \mid B = b] \\
+\end{aligned}
+$$
 
-## Why the shares path, here?
+This holds and is easy to show from the previous assumptions.  However, the right hand side is not exactly what we want either.  The composition of shares at $B=b+1$ could be much different from the composition of shares at $B=b$, which could explain the difference in outcomes.
 
-Two features of the setting push toward shares:
+We can additionally assume that $D(s_1,s_2) = D(b)$ for all $s_1, s_2$ such that $s_1 r_1 + s_2 r_2 = b$.  i.e., the amount of unionization in a county is invariant to the particular shares, as long as the shift-share variable is the same, in which case we recover
 
-* [One big shock, not many:]{.alert} the NLRA is essentially a single national event. The "many shocks" asymptotics behind the shifts path are not a good description
+$$\E[Y(b+1) - Y(b)]$$
 
-* [Shares are genuinely predetermined:]{.alert} 1910 industry composition, 25 years before the policy
+which is the causal effect of a marginal increase in the shift-share variable.
 
-. . .
+##
 
-<br>
+Then, we can write
 
-[This is the case that connects to Session 1]{.alert-blue} --- so it is where we will spend most of our time
+* $Y_{it=2}(b) := Y_{it=2}(D(b))$ is the potential outcome for county $i$ at time $t=2$ if the shift-share variable were set to $b$
 
-* We will come back to the shifts path briefly at the end
+$\text{Parallel Trends: } \E[\Delta Y(0) \mid B=b] = \E[\Delta Y(0) \mid B=0]$
 
-# 3. Exogenous shares *is* DiD with a continuous treatment {visibility="uncounted"}
+$\text{Strong Parallel Trends: } \E[\Delta Y(b) \mid B=b'] = \E[\Delta Y(b) \mid B=b]$
 
-## The Numerical Equivalence Result
+This means that we can immediately recover the causal effect of the shift-share variable on the outcome, i.e., the causal effect of differential exposure
 
-@goldsmith-sorkin-swift-2020 show:
+##
 
-::: {.callout-note}
-## Equivalence
+![](img/downes/downes-fig8.png){fig-align="center"}
 
-TSLS using the Bartik instrument $B_i = \sum_j z_{ij} g_j$ is [numerically equivalent]{.alert} to GMM using the [shares $z_{i1}, \ldots, z_{iJ}$ as instruments]{.alert}, with a weight matrix built from the shifts $g_j$
-:::
 
-. . .
+## Causal Effects
 
-<br>
+To recover the causal effect of the treatment, a natural estimand is the derivatve version of the Wald estimand:
 
-[Implication:]{.alert} the exogeneity condition should be stated in terms of the [shares]{.alert-blue}, not the shifts
+$$ \tau(b) := \frac{\partial \E[\Delta Y \mid B=b]}{\partial b} \bigg/ \frac{\partial \E[D \mid B=b]}{\partial b} $$
 
-* The shifts are doing the work of *combining* many instruments, not of *justifying* them
+At this point, we need to introduce the other main IV assumptions
 
-## From shares-as-instruments to DiD
+* [Relevance:]{.alert} The treatment $D$ must respond to the shift-share variable $B$ in a non-trivial way, i.e., $\frac{\partial \E[D \mid B=b]}{\partial b} \neq 0$
+* [Monotonicity:]{.alert-blue} $D_i(b)$ is weakly increasing in $b$ for all $i$---being more exposed to unionization should not make a county less unionized
 
-Once the shares are the instruments, the design is an [exposure design]{.alert}: shares measure differential exposure to a common shock
+## Relevance
 
-. . .
+Relevance typically holds in shift-share IV applications (the shift-share variable is typically a strong instrument too).
 
-> "In settings where the researcher has a pre-period, this empirical strategy is just difference-in-differences."
->
-> --- @goldsmith-sorkin-swift-2020
+Returning to the two counties we considered before.  Cameron County was more exposed to the NLRA than Forest County.  By 1960, union membership was 26.3% in Cameron vs. 7.7% in Forest.
 
-. . .
+## Causal Effects
 
-And @borusyak-hull-jaravel-2025 describe the same path as
+Unfortunately, with a continuous treatment and continuous instrument, we know that [@angrist-graddy-imbens-2000],
+$$\tau(b) = \frac{\E[Y'(D(b)) D'(b)]}{\E[D'(b)]} \neq ACR(d)$$
 
-> "pooling together multiple difference-in-differences designs leveraging heterogeneous shock exposure."
+nor is $\E[\tau(B)] = ACR^O$.
 
-## What is the treatment?
+i.e., $\tau(b)$ is a weighted average of the causal response to the treatment (the $Y'$ term in the expression), but the weights are $D'(b)/\E[D'(b)]$, which are not constant across units.
 
-Line up the two setups:
+* The weights are non-negative under monotonicity
+* $\tau(b)$ gives more weight to units that respond more to the shift-share variable.
 
-| DiD with continuous treatment | Shift-share (shares path) |
-|---|---|
-| Dose $D_i$ | Exposure share $z_{ij}$ |
-| Common timing of treatment | Common shock $g_j$ |
-| $\ATT(d\vert d)$, $\ACR(d)$ | Effect of differential exposure |
-| Untreated units: $D_i = 0$ | Units with $z_{ij} \approx 0$ |
+## Causal Effects
 
-. . .
+It is more common in empirical work to run the use $B_i$ as an instrument for $D_i$ and estimate a linear model by two-stage least squares (2SLS).  In this case,
 
-<br>
+$$\beta_{2sls} = \int w(b) \; \tau(b) \; db$$
 
-<mark>The share *is* a continuous treatment. Everything from Session 1 applies.</mark>
+where $w(b)$ is a weight function that depends on the distribution of $B$ and the conditional variance of $D$ given $B$, i.e., $\beta_{2sls}$ is a weighted average of $\tau(b)$.
 
-## So what carries over from Session 1?
+Under the (likely mild and directly testable) condition that $\frac{\partial \E[D \mid B=b]}{\partial b} \geq 0$, $\beta_{2sls}$ is also a weighted average of causal responses, with weights that are all positive.
 
-[Good news:]{.alert} the identification logic is familiar
+##
 
-* Compare changes across units with different exposure
+![](img/downes/downes-tab3.png){fig-align="center"}
 
-* Pre-periods let you assess parallel trends
+# 4. Extensions {visibility="uncounted"}
 
-. . .
+## Extension 1: No Fully Untreated Period
 
-[Less good news:]{.alert} all three Session 1 problems come along
+In settings where units are already treated in the first period, my understanding of the literature is that it has basically replaced $d$ with $\Delta d$ in the potential outcomes and used arguments similar to those I discussed above.
 
-1. [Weak parallel trends]{.alert-blue} identifies $\ATT(d|d)$, but *not* causal responses to dose
+* That said, doing this likely involves strong assumptions  [@chaisemartin-lei-2025] like $Y_{it}(d_1, d_2) = Y_{it}(d_1',d_2')$ whenever $d_2 - d_1 = d_2' - d_1'$
+  * i.e., the potential outcome only depends on the change in treatment, not the level of treatment.
+  * Would birthrates be the same in a county that went from 0% to 10% unionized as if it had gone from 20% to 30% unionized?  This seems like a strong assumption.
 
-2. Comparing across doses adds [selection bias]{.alert-blue} terms
+## Extension 2: Identification through exogenous shifts
 
-3. [Strong parallel trends]{.alert-blue} is needed to interpret dose comparisons causally --- and it is a strong assumption
+I emphasized the "exogenous shares" approach to identification from @goldsmith-sorkin-swift-2020, but this is really only half of the literature.
 
-## Session 1, restated for this setting
+The other main approach is to assume the [shifts are exogenous]{.alert} and the shares are allowed to be endogenous, as in @borusyak-hull-jaravel-2022
 
-Recall the decomposition from Session 1:
+## Should you argue for exogenous shares or shifts?
 
-$$\underbrace{\ATT(d_h|d_h) - \ATT(d_l|d_l)}_{\textrm{what a dose comparison gives you}} = \underbrace{\E[Y_{t=2}(d_h) - Y_{t=2}(d_l)|D=d_h]}_{\textrm{Causal Response}} + \underbrace{\ATT(d_l|d_h) - \ATT(d_l|d_l)}_{\textrm{Selection Bias}}$$
+@borusyak-hull-jaravel-2025 provide a checklist for deciding if you should argue for exogenous shares or shifts.
 
-. . .
+1. Count the shifts---few suggests shares path, while many (dozens+) suggests shifts path
 
-In a shift-share design, "comparing across doses" is [exactly what the estimator does]{.alert}
+2. Are shares tailored or generic?---tailored to this channel suggests shares path, shares that could proxy many shocks suggestsshifts path
 
-* High-exposure counties vs. low-exposure counties
+3. Which story can you say with a straight face: *"each share alone would satisfy parallel trends"* or *"this shock is as-good-as-random and only reaches units through the treatment"*?
 
-* The selection bias term asks: would *high*-exposure counties have responded differently to a *low* dose than low-exposure counties did?
 
-. . .
+## Exogenous shifts example
 
-<mark>Nothing about writing this as an IV makes that term disappear</mark>
+[Example:]{.alert} @autor-dorn-hanson-2013 "China shock"
 
-## @downes-2024 is careful about this
+* The shares here (industry employment composition) are [generic]{.alert-blue}---they proxy exposure to *any* industry shock, not just this one
+* Can't credibly argue "nothing else differential is happening" conditional on this share---too many other unobserved industry shocks load on the same exposure variable
+* The shock side is easier to defend: industry-level China productivity growth (proxied by China's import growth *to other countries*) is driven by forces no single US region could plausibly affect
 
-The paper says so directly:
+## Exogenous shares example
 
-> "In this setup with continuous treatment and the presumption of heterogeneous treatment effects, the ATE is not identified under the classic ('weak') parallel trends assumption [@callaway-goodman-santanna-2026]. The target parameter is therefore an ATT and I interpret any extrapolations of treatment effects across the support of the treatment dose distribution with caution."
+[Example:]{.alert} Card (1990), Mariel Boatlift / immigrant-enclave designs
 
-. . .
-
-<br>
-
-[This is the right posture]{.alert-blue} --- and it is unusual. Most shift-share papers do not flag it
-
-# 4. Rotemberg weights {visibility="uncounted"}
-
-## Which comparisons drive the estimate?
-
-@goldsmith-sorkin-swift-2020 build on Rotemberg (1983): the Bartik estimator is a [weighted sum of just-identified IV estimators]{.alert}, one per sector
-
-$$\hat{\beta}_{Bartik} = \sum_{j=1}^J \hat{\alpha}_j \, \hat{\beta}_j$$
-
-where $\hat{\beta}_j$ uses share $z_{ij}$ alone as an instrument, and the [Rotemberg weights]{.alert-blue} $\hat{\alpha}_j$ sum to one
-
-. . .
-
-<br>
-
-[Why you care:]{.alert} the weights tell you which exposure designs --- which concrete comparisons --- your estimate actually rests on
-
-* And therefore which identifying assumptions are worth testing
-
-## Reading the weights
-
-Three diagnostics @goldsmith-sorkin-swift-2020 recommend:
-
-1. [How concentrated are the weights?]{.alert} If five sectors carry 40% of the weight, your design is really about those five sectors
-
-2. [Do the shifts explain the weights?]{.alert} If not, the shocks are a poor guide to your identifying variation
-
-3. [Are any weights negative?]{.alert} Negative weights threaten a LATE-like interpretation under heterogeneous effects
-
-. . .
-
-<br>
-
-<mark>This should feel familiar --- it is the same "what are the weights on?" question we asked about TWFE in Session 1</mark>
-
-## Rotemberg weights in @downes-2024
-
-@downes-2024 reports all three:
-
-* Shifts explain only [~21%]{.alert} of the variation in the Rotemberg weights $\Rightarrow$ identifying variation is coming from the [shares]{.alert-blue}, consistent with the stated design
-
-* Negative weights are [~3%]{.alert} of the total $\Rightarrow$ a LATT-like interpretation is defensible
-
-* Event studies using top-weighted industries as separate instruments support parallel trends
-
-. . .
-
-<br>
-
-[This is a good template for what to report]{.alert-blue}
-
-# 5. Inference {visibility="uncounted"}
-
-## Standard errors are a real problem here
-
-@adao-kolesar-morales-2019 run a placebo exercise: generate [random]{.alert} sectoral shocks, build the shift-share regressor, regress actual outcomes on it
-
-. . .
-
-<br>
-
-[Result:]{.alert} tests at a 5% nominal level reject the null of no effect in [up to 55%]{.alert} of placebo samples
-
-. . .
-
-<br>
-
-[Why:]{.alert} regression residuals are correlated across units with [similar sector shares]{.alert-blue} --- even if those units are geographically far apart. Clustering by region does not fix this
-
-## What to do about it
-
-@adao-kolesar-morales-2019 derive inference methods valid under arbitrary cross-unit correlation of this kind
-
-* In practice: confidence intervals can be [substantially wider]{.alert}
-
-. . .
-
-<br>
-
-[Practical point for this course:]{.alert} this is a distinct issue from everything else we have discussed
-
-* Sessions 1--2 were about [what parameter you identify]{.alert-blue}
-
-* This is about [how uncertain you are about it]{.alert-blue}
-
-* Both can go wrong independently
-
-# 6. The other path, briefly {visibility="uncounted"}
-
-## Exogenous shifts
-
-@borusyak-hull-jaravel-2022 develop the complementary framework:
-
-* Identification from [quasi-random assignment of the shocks]{.alert}
-
-* Shares are allowed to be [endogenous]{.alert-blue}
-
-* Rests on an equivalence result of its own: SSIV coefficients can be recovered from a [shock-level]{.alert-blue} regression, so the conditions to check are shock-level conditions
-
-. . .
-
-<br>
-
-[When is this the right frame?]{.alert} Many shocks, plausibly as-good-as-random, and no credible story for why exposure shares are exogenous
-
-## Why we are not emphasizing it here
-
-Two reasons:
-
-1. [It is a different design.]{.alert} The asymptotics run over shocks, not units. The DiD analogy does not carry over cleanly
-
-2. [Our running example is not in it.]{.alert} @downes-2024 has essentially one shock (the NLRA) and strong grounds for predetermined shares
-
-. . .
-
-<br>
-
-<mark>But: the choice between paths should be made on the economics of your setting, not on which one is more convenient</mark>
-
-* @borusyak-hull-jaravel-2025 provide checklists for both
-
-# 7. Practical recommendations {visibility="uncounted"}
-
-## Recommendations
-
-1. [Say which path you are on]{.alert} --- shares or shifts --- and defend *that* assumption
-
-2. If shares: [treat it as a DiD design]{.alert-blue}. Show pre-trends. Show correlates of the shares. Describe the concrete two-unit comparison
-
-3. [Report Rotemberg weights.]{.alert-blue} Concentration, correlation with shifts, negative weights
-
-4. [Be careful interpreting dose comparisons.]{.alert-blue} Weak parallel trends does not license them
-
-    * @chaisemartin-lei-2023 propose alternative estimators for panel IV designs of this type that are robust to heterogeneous effects
-
-5. [Use appropriate standard errors]{.alert-blue} [@adao-kolesar-morales-2019]
-
-## Conclusion
-
-* Shift-share designs are not a separate methodological island --- the [exogenous-shares path is a continuous-treatment DiD design]{.alert}
-
-* That means the Session 1 lessons transfer directly: [weights matter]{.alert-blue}, and [comparing across doses requires more than parallel trends]{.alert-blue}
-
-* The literature has good diagnostic tools (Rotemberg weights, pre-trend tests, valid standard errors) --- they are just not used often enough
-
-. . .
-
-<br>
-
-<mark>If you take one thing away: decide whether your identification comes from shares or shifts, say it out loud, and then defend the assumption you actually need</mark>
+* The shares here (historical settlement share by origin country) are [tailored]{.alert-blue} to this specific channel, not generic
+* Natural parallel-trends story: absent the shock, migrant vs.\ native labor demand would have trended similarly across high- and low-exposure enclaves
+* Only one real shift here (a single migration wave) --- too few shifts for the exogenous-shifts approach to even apply
 
 # Thank you
 
