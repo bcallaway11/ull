@@ -1,6 +1,6 @@
 ---
 title: "Difference-in-Differences with a Continuous Treatment"
-subtitle: "Session 1 --- Short Course at the University of Louisiana at Lafayette"
+subtitle: "Session 1"
 format:
   revealjs:
     theme: [default, united.scss]
@@ -14,12 +14,6 @@ author:
   - name: Brantly Callaway
     affiliation: University of Georgia
     email: brantly.callaway@uga.edu
-  - name: Andrew Goodman-Bacon
-    affiliation: Federal Reserve Bank of Minneapolis
-    email: andrew@goodman-bacon.com
-  - name: "Pedro Sant'Anna"
-    affiliation: Emory University
-    email: pedro.santanna@emory.edu
 date: September 18, 2026
 bibliography:
   - refs.bib
@@ -29,7 +23,7 @@ knitr:
     echo: true
 ---
 
-## Introduction
+## Overview for the Course
 
 ```{r echo=FALSE}
 library(revealEquations)
@@ -45,8 +39,29 @@ $\newcommand{\E}{\mathbb{E}}
 \newcommand{\corr}{\mathrm{corr}}
 \newcommand{\L}{\mathrm{L}}
 \renewcommand{\P}{\mathrm{P}}
+\newcommand{\ACR}{\mathrm{ACR}}
+\newcommand{\ATT}{\mathrm{ATT}}
+\newcommand{\ACRT}{\mathrm{ACRT}}
 \newcommand{\independent}{{\perp\!\!\!\perp}}
-\newcommand{\indicator}[1]{ \mathbf{1}\{#1\} }$Most recent work on DiD has focused on settings with a binary, staggered treatment
+\newcommand{\indicator}[1]{ \mathbf{1}\{#1\} }$
+
+1. Difference-in-differences with a continuous treatment
+
+2. Assessing strong parallel trends via close comparison groups
+
+3. Shift-share designs
+
+## This Session
+
+Difference-in-differences with a continuous treatment
+
+Main reference: @callaway-goodman-santanna-2026
+
+
+
+## Introduction
+
+Most recent work on DiD has focused on settings with a binary, staggered treatment
 
 
 [This paper:]{.alert} Move from a setting with a binary treatment case to one with a [continuous treatment]{.alert-blue} ("dose")
@@ -55,46 +70,45 @@ $\newcommand{\E}{\mathbb{E}}
 Some of the arguments involve extending ideas from the binary, staggered treatment case to a setting with continuous treatment
 
 * But we will also face new conceptual issues in this case that do not show up in a setting with a binary treatment
+  
 
-
-<span class="alert">Running Example:</span>
+[Running Example:]{.alert-green} 
 
 * Effect of $\underbrace{\textrm{length of school closures}}_{\textrm{continuous treatment}}$ (during Covid) on $\underbrace{\textrm{students' test scores}}_{\textrm{outcome}}$
+* e.g., @ager-eriksson-karger-nencka-thomasson-2024, @gillitzer-prasas-2023, among others
 
-    * e.g., @ager-eriksson-karger-nencka-thomasson-2024, @gillitzer-prasas-2023, among others
 
-
-## Clarifications about Continuous Treatment - What's Included
+## What exactly is a continuous treatment?
 
 For today, mostly emphasize a continuous treatment, but our results also apply to other settings (with trivial modifications):
 
 * [Multi-valued treatments]{.alert} (e.g., effect of state-level minimum wage policies on employment)
 
-* [Binary policy variable with differential exposure]{.alert} (application in the paper: a binary Medicare policy where different hospitals had more exposure to the policy)
+* [Binary policy variable with differential exposure]{.alert-blue} (application in the paper: a binary Medicare policy where different hospitals had more exposure to the policy)
 
-## Clarifications about Continuous Treatment - What's Not Included
+## What's not a continuous treatment?
 
-We will focus on a setting with a [panel data natural experiment]{.alert}
+[Fuzzy DiD]{.alert} - binary treatment but the researcher observes aggregate data, often using policy changes as an instrument
 
-* No units are treated in the first period, some units become treated, with possibly different doses, in the second period
+* Example: Study union wage-premium (at individual level) using state-level data and exploiting variation in the amount of unionization across different locations
+* See @chaisemartin-dhaultfoeuille-2018 and @miyaji-2025
 
-This narrows our focus and rules out:
+## Narrowing the scope of the talk
 
-1. [Heterogeneous adoption designs]{.alert} - where units are already treated in different amounts in the first period
+We will focus on a setting with a [panel data pre-post research design]{.alert}
 
-    * See de Chaisemartin, D'Haultfoueille, and Vazquez (2024), de Chaisemartin et al. (2025)
+* No units are treated in the first period
+* Some units become treated, with possibly different doses, in the second period
 
-2. [Fuzzy DiD]{.alert} - binary treatment but the researcher observes aggregate data, often using policy changes as an instrument
-    <!--* Example: Study union wage-premium (at individual level) using state-level data and exploiting variation in the amount of unionization across different locations -->
-    * See de Chaisemartin and D'Haultfoueille (2018) and @miyaji-2025
+We will return to extensions where
 
-<span style="display: none;">[@chaisemartin-dhaultfoeuille-pasquier-sow-vazquez-2025]</span>
-<span style="display: none;">[@chaisemartin-dhaultfoeuille-vazquez-2024-AEAPP]</span>
-<span style="display: none;">[@chaisemartin-dhaultfoeuille-2018]</span>
+* More periods
+* All units become treated in the second period
+* Units can be already treated in the first period
 
-## Today's Talk
+## This session
 
-<br> <br> <br>
+<br> <br>
 
 1. Identification: What's the same as for a binary treatment?
 
@@ -103,6 +117,8 @@ This narrows our focus and rules out:
 3. Reverse Engineering TWFE Regressions
 
 4. Empirical Application
+
+5. Extensions
 
 
 # 1. Identification: What's the same as for a binary treatment? {visibility="uncounted"}
@@ -129,11 +145,11 @@ This narrows our focus and rules out:
 
 [Level Effects]{.alert} (Average Treatment Effect on the Treated)
 
-$$ATT(d|d) := \E[Y_{t=2}(d) - Y_{t=2}(0) | D=d]$$
+$$\ATT(d \mid d) := \E[Y_{t=2}(d) - Y_{t=2}(0) \mid D=d]$$
 
 * Interpretation: The average effect of dose $d$ relative to not being treated *local to the group that actually experienced dose $d$*
 
-* This is the natural analogue of $ATT$ in the binary treatment case
+* This is the natural analogue of $\ATT$ in the binary treatment case
 
 
 
@@ -141,27 +157,27 @@ $$ATT(d|d) := \E[Y_{t=2}(d) - Y_{t=2}(0) | D=d]$$
 
 [Slope Effects]{.alert} (Average Causal Response on the Treated)
 
-$$ACRT(d|d) := \frac{\partial ATT(l|d)}{\partial l} \Big|_{l=d}$$
+$$\ACRT(d \mid d) := \frac{\partial \ATT(l \mid d)}{\partial l} \Big|_{l=d}$$
 
-* Interpretation: $ACRT(d|d)$ is the causal effect of a marginal increase in dose *local to units that actually experienced dose $d$*
+* Interpretation: $\ACRT(d \mid d)$ is the causal effect of a marginal increase in dose *local to units that actually experienced dose $d$*
 
 ## Aggregated Parameters
 
-Notice that $ATT(d|d)$ and $ACRT(d|d)$ are functional parameters
+Notice that $\ATT(d \mid d)$ and $\ACRT(d \mid d)$ are functional parameters
 
 * This is different from $Y_{it} = \theta_t + \eta_i + \beta^{twfe} D_{it} + e_{it}$
 
-We can view $ATT(d|d)$ and $ACRT(d|d)$ as the ["building blocks"]{.alert} for a more aggregated parameter.
+We can view $\ATT(d \mid d)$ and $\ACRT(d \mid d)$ as the ["building blocks"]{.alert} for a more aggregated parameter.
 
-[Aggregated versions]{.alert} of these (into a single number) are
+[Aggregated versions]{.alert-blue} of these (into a single number) are
 \begin{align*}
-  ATT^o := \E\Big[ATT(D|D)\Big|D>0\Big] \qquad \qquad ACRT^o := \E\Big[ACRT(D|D)\Big|D>0\Big]
+  \ATT^{\texttt{loc}} := \E\Big[\ATT(D \mid D)\Bigm|D>0\Big] \qquad \qquad \ACRT^{\texttt{loc}} := \E\Big[\ACRT(D \mid D)\Bigm|D>0\Big]
 \end{align*}
 
-* $ATT^o$ averages $ATT(d|d)$ over the population distribution of the dose
+* $\ATT^{\texttt{loc}}$ averages $\ATT(d \mid d)$ over the population distribution of the dose
 
-* $ACRT^o$ averages $ACRT(d|d)$ over the population distribution of the dose
-  * $ACRT^o$ is the natural target parameter for the TWFE regression in this case
+* $\ACRT^{\texttt{loc}}$ averages $\ACRT(d \mid d)$ over the population distribution of the dose
+  * $\ACRT^{\texttt{loc}}$ is the natural target parameter for the TWFE regression in this case
 
 
 ## Identification
@@ -184,21 +200,21 @@ before <- "::: {.callout-note}
 
 For all $d \\in \\mathcal{D}_+$,
 
-$$\\E[\\Delta Y(0) | D=d] = \\E[\\Delta Y(0) | D=0]$$
+$$\\E[\\Delta Y(0) \\mid D=d] = \\E[\\Delta Y(0) \\mid D=0]$$
 
 :::
 
 
-Then,
+Under parallel trends,
 
 . . .
 "
 
-eqlist <- list("ATT(d|d) &= \\E[Y_{t=2}(d) - Y_{t=2}(0) | D=d] \\hspace{150pt}",
-               "&= \\E[Y_{t=2}(d) - Y_{t=1}(0) | D=d] - \\E[Y_{t=2}(0) - Y_{t=1}(0) | D=d]",
-               "&= \\E[\\Delta Y | D=d] - \\E[\\Delta Y | D=0]")
+eqlist <- list("\\ATT(d \\mid d) &= \\E[Y_{t=2}(d) - Y_{t=2}(0) \\mid D=d] \\hspace{150pt}",
+               "&= \\E[Y_{t=2}(d) - Y_{t=1}(0) \\mid D=d] - \\E[Y_{t=2}(0) - Y_{t=1}(0) \\mid D=d]",
+               "&= \\E[\\Delta Y \\mid D=d] - \\E[\\Delta Y \\mid D=0]")
 
-after <- "<mark>This is exactly what you would expect</mark>
+after <- "[This is exactly what you would expect]{.alert}
 
 "
 step_by_step_eq(eqlist=eqlist,
@@ -218,7 +234,7 @@ $$\E[\Delta Y(0) | D=d] = \E[\Delta Y(0) | D=0]$$
 :::
 
 Using similar arguments, you can show
-$$ATT^o = \E[\Delta Y | D>0] - \E[\Delta Y | D=0]$$
+$$\ATT^{\texttt{loc}} = \E[\Delta Y | D>0] - \E[\Delta Y | D=0]$$
 
 
 
@@ -243,7 +259,7 @@ oftentimes, our theory will have implications about effects at different values 
 
 * Average causal response parameters *inherently* involve comparisons across slightly different doses
 
-There are <span class="alert">new issues</span> related to comparing $ATT(d|d)$ at different doses and interpreting these differences as <span class="alert">causal effects</span>
+There are [new issues]{.alert-blue} related to comparing $\ATT(d \mid d)$ at different doses and interpreting these differences as [causal effects]{.alert-green}
 
 <!-- * At a high-level, these issues arise from a tension between empirical researchers wanting to use a quasi-experimental research design (which delivers "local" treatment effect parameters) but (often) wanting to compare these "local" parameters to each other -->
 
@@ -255,17 +271,28 @@ There are <span class="alert">new issues</span> related to comparing $ATT(d|d)$ 
 ```{r echo=FALSE, results="asis"}
 title <- "Interpretation Issues"
 
-before <- "Consider comparing $ATT(d|d)$ for two different doses
+before <- "Consider comparing $\\ATT(d \\mid d)$ for two different doses
 
 . . .
 
 "
 
-eqlist <- list("& ATT(d_h|d_h) - ATT(d_l|d_l) \\hspace{350pt}",
-               "& \\hspace{25pt} = \\E[Y_{t=2}(d_h)-Y_{t=2}(d_l) | D=d_h] + \\E[Y_{t=2}(d_l) - Y_{t=2}(0) | D=d_h] - \\E[Y_{t=2}(d_l) - Y_{t=2}(0) | D=d_l]",
-               "& \\hspace{25pt} = \\underbrace{\\E[Y_{t=2}(d_h) - Y_{t=2}(d_l) | D=d_h]}_{\\textrm{Causal Response}} + \\underbrace{ATT(d_l|d_h) - ATT(d_l|d_l)}_{\\textrm{Selection Bias}}")
+# Shrink only the equation block. step_by_step_eq() emits one slide per step
+# and appends `after` only once, so on intermediate slides the <div> is left
+# unclosed and the browser closes it at the end of the <section>. The tags go
+# in Pandoc raw-HTML blocks (```{=html}) so Pandoc passes them through verbatim
+# instead of parsing <div> as a native Div and trying to balance it -- an
+# unclosed native Div swallows every following slide. Each raw block is built
+# on a single source line because a bare ``` line would end this R chunk.
+open_div  <- "```{=html}\n<div style=\"font-size: 0.8em;\">\n```\n\n"
+close_div <- "```{=html}\n</div>\n```\n\n"
+before <- paste0(before, open_div)
 
-after <- "\n
+eqlist <- list("& \\ATT(d_h \\mid d_h) - \\ATT(d_l \\mid d_l) \\hspace{350pt}",
+               "& \\hspace{25pt} = \\E[Y_{t=2}(d_h)-Y_{t=2}(d_l) \\mid D=d_h] + \\E[Y_{t=2}(d_l) - Y_{t=2}(0) \\mid D=d_h] - \\E[Y_{t=2}(d_l) - Y_{t=2}(0) \\mid D=d_l]",
+               "& \\hspace{25pt} = \\underbrace{\\E[Y_{t=2}(d_h) - Y_{t=2}(d_l) \\mid D=d_h]}_{\\textrm{Causal Response}} + \\underbrace{\\ATT(d_l \\mid d_h) - \\ATT(d_l \\mid d_l)}_{\\textrm{Selection Bias}}")
+
+after <- "
 
 . . .
 
@@ -273,12 +300,10 @@ after <- "\n
 
 * Implication: If you want to interpret differences in treatment effects across different doses, then you will need stronger assumptions than standard parallel trends
 
-* This problem spills over into identifying $ACRT(d|d)$
-
-. . .
-
+* This problem spills over into identifying $\\ACRT(d|d)$
 
 "
+after <- paste0(close_div, after)
 
 step_by_step_eq(eqlist=eqlist,
                 before=before,
@@ -289,20 +314,29 @@ step_by_step_eq(eqlist=eqlist,
 
 ## Interpretation Issues
 
-<span class="alert">Intuition: </span>
+[Intuition]{.alert}
 
-* Difference-in-differences identification strategies result in $ATT(d|d)$ parameters.  These are <span class="highlight">local parameters</span> and difficult to compare to each
+* Difference-in-differences identification strategies result in $\ATT(d|d)$ parameters.  These are <span class="highlight">local parameters</span> and difficult to compare to each
 
 * This explanation is similar to thinking about LATEs with two different instruments
 
-* Thus, comparing $ATT(d|d)$ across different values is tricky and not for free
+* Thus, comparing $\ATT(d \mid d)$ across different values is tricky and not for free
 
-<span class="alert">What can you do?</span>
+[What can you do?]{.alert-blue}
 
-* One idea, just recover $ATT(d|d)$ and interpret it cautiously (interpret it by itself not relative to different values of $d$)
+* One idea, just recover $\ATT(d \mid d)$ and interpret it cautiously (interpret it by itself not relative to different values of $d$)
 
 * If you want to compare them to each other, it will come with the cost of additional (structural) assumptions
 
+## Less local target parameters
+
+To be able to make comparisons across different doses, we need target parameters that are "less local":
+
+$$ \ATT(d) := \E[Y_{t=2}(d) - Y_{t=2}(0) \mid D>0] \qquad \qquad \ACRT(d) := \frac{\partial \ATT(d)}{\partial d} $$
+
+These involve the level effect or slope effect at $d$ (like the previous parameters), but they are causal effect parameters for the entire treated population (not just the local group that actually experienced dose $d$)
+
+We can also consider aggregated versions of these parameters
 
 ## Introduce Stronger Assumptions
 
@@ -310,19 +344,19 @@ step_by_step_eq(eqlist=eqlist,
 
 ## Strong Parallel Trends Assumption
 
-For doses `d` $\in \mathcal{D}$ and `l` $\in \mathcal{D}_+$,
+For all doses `d` $\in \mathcal{D}$
 
-$$\mathbb{E}[Y_{t=2}(d) - Y_{t=1}(0) | D=l] = \mathbb{E}[Y_{t=2}(d) - Y_{t=1}(0) | D=d]$$
+$$\mathbb{E}[Y_{t=2}(d) - Y_{t=1}(0) \mid D>0] = \mathbb{E}[Y_{t=2}(d) - Y_{t=1}(0) \mid D=d]$$
 
 :::
 
 ::: {.fragment}
 
 * This is notably different from "Standard" Parallel Trends
-
+* Non-nested with "Standard" Parallel Trends, but likely stronger
 * It involves potential outcomes for all values of the dose (not just untreated potential outcomes)
-
-* All dose groups would have experienced the same path of outcomes had they been assigned the same dose
+* Allows for selection into the treatment but no selection into the amount of treatment
+* All treated dose groups would have experienced the same path of outcomes had they been assigned the same dose
 
 :::
 
@@ -333,37 +367,31 @@ title <- "Introduce Stronger Assumptions"
 
 before <- "
 
-Strong parallel trends is equivalent to a certain [restriction on treatment effect heterogeneity]{.alert}.  Notice:
+If we maintain standard parallel trends, strong parallel trends is equivalent to a certain [restriction on treatment effect heterogeneity]{.alert}.  Notice:
 
 "
 
-# eqlist <- list("ATT(d|d) &= \\E[Y_{t=2}(d) - Y_{t=2}(0) | D=d] \\hspace{200pt} \\",
-#               "&= \\E[Y_{t=2}(d) - Y_{t=1}(0) | D=d] - \\E[Y_{t=2}(0) - Y_{t=1}(0) | D=d] \\",
-#               "&= \\E[Y_{t=2}(d) - Y_{t=1}(0) | D=l] - \\E[Y_{t=2}(0) - Y_{t=1}(0) | D=l] \\",
-#               "&= \\E[Y_{t=2}(d) - Y_{t=2}(0) | D=l] = ATT(d|l)")
+# eqlist <- list("ATT(d \\mid d) &= \\E[Y_{t=2}(d) - Y_{t=2}(0) \\mid D=d] \\hspace{200pt} \\",
+#               "&= \\E[Y_{t=2}(d) - Y_{t=1}(0) \\mid D=d] - \\E[Y_{t=2}(0) - Y_{t=1}(0) \\mid D=d] \\",
+#               "&= \\E[Y_{t=2}(d) - Y_{t=1}(0) \\mid D=l] - \\E[Y_{t=2}(0) - Y_{t=1}(0) \\mid D=l] \\",
+#               "&= \\E[Y_{t=2}(d) - Y_{t=2}(0) \\mid D=l] = ATT(d|l)")
 
-eqlist <- list("ATT(d|d) &= \\E[Y_{t=2}(d) - Y_{t=1}(0) | D=d] - \\E[Y_{t=2}(0) - Y_{t=1}(0) | D=d] \\hspace{200pt} \\",
-               "&= \\E[Y_{t=2}(d) - Y_{t=1}(0) | D=l] - \\E[Y_{t=2}(0) - Y_{t=1}(0) | D=l] \\",
-               "&= \\E[Y_{t=2}(d) - Y_{t=2}(0) | D=l] = ATT(d|l)")
+eqlist <- list("\\ATT(d|d) &= \\E[Y_{t=2}(d) - Y_{t=1}(0) \\mid D=d] - \\E[Y_{t=2}(0) - Y_{t=1}(0) \\mid D=d] \\hspace{200pt} \\",
+               "&= \\E[Y_{t=2}(d) - Y_{t=1}(0) \\mid D>0] - \\E[Y_{t=2}(0) - Y_{t=1}(0) \\mid D > 0] \\",
+               "&= \\E[Y_{t=2}(d) - Y_{t=2}(0) \\mid D>0] = \\ATT(d)")
 
 after <- "
 
 . . .
 
-Since this holds for all $d$ and $l$, it also implies that
-
-$$ATT(d|d) = ATT(d) = \\E[Y_{t=2}(d) - Y_{t=2}(0)|D>0]$$
-
 Thus, under strong parallel trends, we have that
 
-$$ATT(d) = \\E[\\Delta Y|D=d] - \\E[\\Delta Y|D=0]$$
+$$\\ATT(d) = \\E[\\Delta Y|D=d] - \\E[\\Delta Y|D=0]$$
 
-RHS is exactly the same expression as for $ATT(d|d)$ under \"standard\" parallel trends, but here
+RHS is exactly the same expression as for $\\ATT(d|d)$ under standard PT, but here
 
 * assumptions are different
-
 * parameter interpretation is different
-
 
 "
 
@@ -386,22 +414,22 @@ before <- "ATT(d) parameters do not suffer from the same issues as ATT(d|d) para
 
 "
 
-eqlist <- list("ATT(d_h) - ATT(d_l) &= \\E[Y_{t=2}(d_h) - Y_{t=2}(0) | D>0] - \\E[Y_{t=2}(d_l) - Y_{t=2}(0)|D>0]",
+eqlist <- list("\\ATT(d_h) - \\ATT(d_l) &= \\E[Y_{t=2}(d_h) - Y_{t=2}(0) | D>0] - \\E[Y_{t=2}(d_l) - Y_{t=2}(0)|D>0]",
               "&= \\underbrace{\\E[Y_{t=2}(d_h) - Y_{t=2}(d_l)|D>0]}_{\\textrm{Causal Response}}")
 
 after <- "
 
 . . .
 
-<mark>Thus, recovering $ATT(d)$ side-steps the issues about comparing treatment effects across doses, but it comes at the cost of needing a (potentially very strong) extra assumption</mark>
+<mark>Thus, recovering $\\ATT(d)$ side-steps the issues about comparing treatment effects across doses, but it comes at the cost of needing a (potentially very strong) extra assumption</mark>
 
 . . .
 
-Given that we can compare $ATT(d)$'s across dose, we can recover slope effects in this setting
+Given that we can compare $\\ATT(d)$'s across dose, we can recover slope effects in this setting
 
 $$
 \\begin{aligned}
-  ACR(d) := \\frac{\\partial ATT(d)}{\\partial d} \\qquad &\\textrm{or} \\qquad ACR^o := \\E\\Big[ACR(D) \\Big| D>0\\Big]
+  \\ACRT(d) := \\frac{\\partial \\ATT(d)}{\\partial d} \\qquad &\\textrm{or} \\qquad \\ACRT^{\\texttt{glob}} := \\E\\Big[\\ACRT(D) \\Big| D>0\\Big]
 \\end{aligned}
 $$
 
@@ -413,31 +441,70 @@ step_by_step_eq(eqlist=eqlist,
                 title=title)
 ```
 
-## Additional Comments
+## Additional Discussion
 
-* [Can you relax strong parallel trends?](#can-you-relax-strong-parallel-trends)
+1. Can you relax strong parallel trends?
 
-* [Positive side-comment: No untreated units](#positive-side-comments-no-untreated-units)
+2. No untreated units
 
-* [Positive side-comment: Binarizing the Treatment](#positive-side-comments-alternative-approaches)
+3. Binarizing the Treatment
 
-* [Negative side-comment: Pre-testing](#negative-side-comment-pre-testing)
+4. Pre-testing
 
+## Can you relax strong parallel trends?
+
+Some ideas:
+
+* It could be reasonable to assume that you know the sign of the selection bias.  This can lead to (possibly) informative bounds on differences/derivatives/etc. between $\ATT(d|d)$ parameters
+* If interest is mainly in $\ACRT$'s, then can weaken the assumption to something like "local" strong parallel trends
+* Strong parallel trends may be more plausible after conditioning on some covariates.
+  * For length of school closure, strong parallel trends probably more plausible conditional on being a rural county in the Southeast or conditional on being a college town in the Midwest.
+
+  <!-- this probably does not fully rationalize recovering ATT(d), but could allow for some cross-dose comparisons...-->
+
+
+## No untreated units
+
+It's possible to do some versions of DiD with a continuous treatment without having access to a fully untreated group.
+
+  * In this case, it is not possible to recover level effects like $\ATT(d|d)$.
+
+  * However, notice that $$\begin{aligned}& \E[\Delta Y | D=d_h] - \E[\Delta Y | D=d_l] \\ &\hspace{50pt}= \Big(\E[\Delta Y | D=d_h] - \E[\Delta Y(0) | D=d_h]\Big) - \Big(\E[\Delta Y | D=d_l]-\E[\Delta Y(0) | D=d_l]\Big) \\ &\hspace{50pt}= \ATT(d_h|d_h) - \ATT(d_l|d_l)\end{aligned}$$
+
+  * In words: comparing path of outcomes for those that experienced dose $d_h$ to path of outcomes among those that experienced dose $d_l$ (and not relying on having an untreated group) delivers the difference between their $\ATT$'s.
+
+  * Still face issues related to selection bias / strong parallel trends though
+
+
+## Binarizing the Treatment
+
+Strategies like binarizing the treatment can still work (though be careful!)
+
+  * If you classify units as being treated or untreated, you can recover the $\ATT^o$ by comparing mean outcome for treated relative to untreated.
+
+  * On the other hand, if you classify units as being "high" treated, "low" treated, or untreated &mdash; our arguments imply that selection bias terms can come up when comparing effects for "high" to "low"
+
+
+## Pre-testing
+
+That the expressions for $\ATT(d)$ and $\ATT(d|d)$ are exactly the same also means that we cannot use pre-treatment periods to try to distinguish between "standard" and "strong" parallel trends.
+
+Or, alternatively, we only observe untreated potential outcomes in pre-treatment periods, so pre-treatment periods do not seem useful for validating strong parallel trends.
 
 ## Summarizing
 
-It is straightforward/familiar to identify ATT(d|d) parameters with a multi-valued or continuous dose
+It is straightforward/familiar to identify $\ATT(d \mid d)$ parameters with a multi-valued or continuous dose
 
-However, comparison of ATT(d|d) parameters across different doses are hard to interpret
+However, comparison of $\ATT(d\mid d)$ parameters across different doses are hard to interpret
 
 - They include selection bias terms
 - This issues extends to identifying ACRT parameters
 - These issues extend to TWFE regressions
 
-This suggests targeting ATT(d) parameters
+This suggests targeting $\ATT(d)$ parameters
 
 - Comparisons across doses do not contain selection bias terms
-- But identifying ATT(d) parameters requires stronger assumptions
+- But identifying $\ATT(d)$ parameters requires stronger assumptions
 
 # 3. Reverse Engineering TWFE Regressions {visibility="uncounted"}
 
@@ -451,17 +518,14 @@ We show that
 \begin{align*}
   \beta^{twfe} = \int_{\mathcal{D}_+} w(l) m'_\Delta(l) \, dl
 \end{align*}
-where $m_\Delta(l) := \E[\Delta Y|D=l] - \E[\Delta Y|D=0]$ and $w(l)$ are weights
+where $m_\Delta(l) := \E[\Delta Y \mid D=l] - \E[\Delta Y \mid D=0]$ and $w(l)$ are weights
 
-* Under standard parallel trends, $m'_{\Delta}(l) = ACRT(l|l) + \textrm{local selection bias}$
-
-  <!--$\implies$ issues related to selection bias continue to show up here-->
-
-* Under strong parallel trends, $m'_{\Delta}(l) = ACR(l)$.
+* Under standard parallel trends, $m'_{\Delta}(l) = \ACRT(l\mid l) + \textrm{local selection bias}$
+* Under strong parallel trends, $m'_{\Delta}(l) = \ACRT(l)$.
 
 About the weights: they are all positive, but have some strange properties (e.g., always maximized at $l = \E[D]$ (even if this is not a common value for the dose))
 
-* $\implies$ even under strong parallel trends, $\beta^{twfe} \neq ACR^o$.
+* $\implies$ even under strong parallel trends, $\beta^{twfe} \neq \ACRT^{\texttt{glob}}$.
 
 
 ## TWFE Regressions in this Context
@@ -476,53 +540,21 @@ Other issues can arise in more complicated cases
 
 [Level Effects]{.alert} - no issues related to selection bias
 
-* [For $ATT^o$:]{.alert-blue} Binarize treatment, $ATT^o = \E[\Delta Y | D > 0] - \E[\Delta Y | D=0]$.
-
-* [For $ATT(d|d)$:]{.alert-blue} Nonparametrically estimate $m_\Delta(d) = \E[\Delta Y|D=d]-\E[\Delta Y|D=0]$
-
-    * This is not actually too hard to estimate.  No curse-of-dimensionality, etc.
+* [For $\ATT^{\texttt{loc}}$:]{.alert-blue} Binarize treatment, $\ATT^o = \E[\Delta Y \mid D > 0] - \E[\Delta Y \mid D=0]$.
+* [For $\ATT(d \mid d)$:]{.alert-blue} Nonparametrically estimate $m_\Delta(d) = \E[\Delta Y \mid D=d]-\E[\Delta Y \mid D=0]$
+  * This is not actually too hard to estimate.  No curse-of-dimensionality, etc.
 
 [Slope Effects]{.alert} - must deal with selection bias
 
 * Nonparametrically estimate derivative of $m_\Delta(d)$
+* [For $\ACRT(d)$:]{.alert-blue} Under strong parallel trends, derivative is equal to $\ACRT(d)$
+* [For $\ACRT^{\texttt{glob}}$:]{.alert-blue} Average $\ACRT(D)$ over $D>0$; i.e., $\ACRT^{\texttt{glob}} = \E[\ACRT(D)|D>0]$
 
-* [For $ACR(d)$:]{.alert-blue} Under strong parallel trends, derivative is equal to $ACR(d)$
+## Additional Comments about Estimation
 
-* [For $ACR^o$:]{.alert-blue} Average $ACR(D)$ over $D>0$; i.e., $ACR^o = \E[ACR(D)|D>0]$
-
-. . .
-
-[Additional Comments:]{.alert}
-
-1. Changing the estimation strategy helps with the weights, but it does not fix the issues related to standard vs. strong parallel trends
-
-<!--[Back](#twfe-short)-->
-
-## Estimation - What should you do? {visibility="uncounted"}
-
-[Level Effects]{.alert} - no issues related to selection bias
-
-* [For $ATT^o$:]{.alert-blue} Binarize treatment, $ATT^o = \E[\Delta Y | D > 0] - \E[\Delta Y | D=0]$.
-
-* [For $ATT(d|d)$:]{.alert-blue} Nonparametrically estimate $m_\Delta(d) = \E[\Delta Y|D=d]-\E[\Delta Y|D=0]$
-
-    * This is not actually too hard to estimate.  No curse-of-dimensionality, etc.
-
-[Slope Effects]{.alert} - must deal with selection bias
-
-* Nonparametrically estimate derivative of $m_\Delta(d)$
-
-* [For $ACR(d)$:]{.alert-blue} Under strong parallel trends, derivative is equal to $ACR(d)$
-
-* [For $ACR^o$:]{.alert-blue} Average $ACR(D)$ over $D>0$; i.e., $ACR^o = \E[ACR(D)|D>0]$
-
-[Additional Comments:]{.alert}
-
-2. It's relatively straightforward to extend this strategy to settings with multiple periods and variation in treatment timing by extending existing work about a staggered, binary treatment
-
+Changing the estimation strategy helps with the weights, but it does not fix the issues related to standard vs. strong parallel trends
 
 # 4. Empirical Application {visibility="uncounted"}
-
 
 ## Empirical Application {#empirical-application-short}
 
@@ -534,25 +566,72 @@ Other issues can arise in more complicated cases
 
 [Outcome:]{.alert} Hospital's capital-labor ratio
 
-[Focus:]{.alert} Comparison of estimates of $ACR^o$ to $\beta^{twfe}$
+[Focus:]{.alert} Comparison of estimates of $\ACR^o$ to $\beta^{twfe}$
 
-* They are both weighted averages of $ACR(d)$, only the weights differ
+* They are both weighted averages of $\ACR(d)$, only the weights differ
 
-<br><br>
+## Empirical Application 
 
-[More details](#empirical-application-details)
+This is a simplified version of Acemoglu and Finkelstein (2008)
 
-## ACR(d) Plot
+1983 Medicare reform that eliminated labor subsidies for hospitals
+
+* Medicare moved to the Prospective Payment System (PPS) which replaced "full cost reimbursement" with "partial cost reimbursement" which eliminated reimbursements for labor (while maintaining reimbursements for capital expenses)
+
+* Rough idea: This changes relative factor prices which suggests hospitals may adjust by changing their input mix.  Could also have implications for technology adoption, etc.
+
+* In the paper, we provide some theoretical arguments concerning properties of production functions that suggests conditions for strong parallel trends to hold.
+
+
+## Data
+
+Annual hospital-reported data from the American Hospital Association, 1980-1986
+
+Outcome is capital/labor ratio
+
+* proxy using the depreciation share of total operating expenses (avg. 4.5%)
+* our setup: collapse to two periods by taking average in pre-treatment periods and average in post-treatment periods
+
+Dose is "exposure" to the policy
+
+* the fraction of Medicare patients in the period before the policy was implemented
+* roughly 15% of hospitals are untreated (have essentially no Medicare patients)
+  * AF provide results both using and not using these hospitals as (good) it is useful to have untreated hospitals (bad) they are fairly different (includes federal, long-term, psychiatric, children's, and rehabilitation hospitals)
+
+## Bin Scatter 
+
+<center> <img src="img/cdd_af_scatter.png" width=70% /> </center>
+
+
+## ATT(d|d) Plot
+
+<center> <img src="img/cdd_new_estimator_att.JPG" width=90% /> </center>
+
+$\widehat{\ATT}^{\texttt{loc}} = 0.80~~(\textrm{s.e}.=0.05)$ 
+
+## ACRT(d) Plot
 
 <center> <img src="img/cdd_af_acr.JPG" width=90% /> </center>
 
 ## Results
 
-<center> <img src="img/table_est_blank.png" width=70% /> </center>
+<br>
+
+| Approach  | Estimate | Std. Error | Data         |
+|:----------|---------:|-----------:|:-------------|
+| TWFE      |          |            | full         |
+| TWFE      |          |            | no untreated |
+| $\ACRT^{\texttt{glob}}$  |          |            | either       |
 
 ## Results {visibility="uncounted"}
 
-<center> <img src="img/table_est_results.png" width=70% /> </center>
+<br>
+
+| Approach  | Estimate | Std. Error | Data         |
+|:----------|---------:|-----------:|:-------------|
+| TWFE      |     1.14 |       0.10 | full         |
+| TWFE      |     0.25 |       0.18 | no untreated |
+| $\ACRT^{\texttt{glob}}$  |    -0.08 |       0.19 | either       |
 
 <!--
 
@@ -560,19 +639,19 @@ $TWFE$: 1.14 (s.e.: 0.10)
 
 * "Given that the average hospital has a 38 percent Medicare share prior to PPS, this estimate suggests that in its first three years, the introduction of PPS was associated with an increase in the depreciation share of about 0.42 (=1.13*0.38)...corresponds to a sizable 10 percent increase in the capital-labor ratio of the average Medicare share hospital."
 
-* Probably most natural comparison for this parameter is $\widehat{ATT}(d=0.38|d=0.38) = 0.87$ (s.e.: 0.09).
+* Probably most natural comparison for this parameter is $\widehat{\ATT}(d=0.38|d=0.38) = 0.87$ (s.e.: 0.09).
 
 
 Can also use the TWFE estimate to think about causal responses
 
-* $\widehat{ACRT}^o:$ -0.078 (s.e.: ??)
+* $\widehat{\ACRT}^o:$ -0.078 (s.e.: ??)
 
 
 Finally, if only want to exploit variation in the dose
 
 * $TWFE$ (no untreated): 0.25 (s.e. 0.18)
 
-* Our approach: $ATT(d|d)$ not available in this case, $ACRT^o$ does not change
+* Our approach: $\ATT(d|d)$ not available in this case, $\ACRT^o$ does not change
 
 -->
 
@@ -589,31 +668,84 @@ Finally, if only want to exploit variation in the dose
 
 <!--[Back](#application-medicare-reform-and-capitallabor-ratios)-->
 
+# 5. Extensions
+
+## 1. Multiple Periods and Variation in Treatment Timing
+
+Staggered treatment adoption has received a lot of attention in the literature on DiD with a binary treatment [@goodman-bacon-2021,@chaisemartin-dhaultfoeuille-2020,@callaway-santanna-2021]
+
+Extending the previous results to settings with a continuous, staggered treatment (i.e., once it turns on, the treatment keeps the same amount) is relatively straightforward:
+
+* Following @callaway-santanna-2021, can focus on identifying "group-time-dose" parameters, e.g., $\ATT(d, g, t \mid d, g)$ (under parallel trends) or $\ACRT(d, g, t \mid g)$ (under strong parallel trends)
+* The parameters can be averaged together into an event study-type parameter or an aggregated treatment effect parameter as a function of the dose.
+* TWFE regressions end up suffering from a combination of the issues that arise in the staggered binary treatment case and the issues that arise in the continuous treatment case.
+
+## $ATT^{\texttt{loc}}(e)$ Event Study
+
+![](img/cdd_es_att.png)
+
+## $ACRT^{\texttt{glob}}(e)$ Event Study
+
+![](img/cdd_es_acrt.png)
+
+## 2. Including Covariates
+
+Including covariates in the parallel trends assumption often makes it more plausible [@heckman-ichimura-todd-1997;@abadie-2005;@caetano-callaway-2025]
+
+Conceptually, it's straightforward to extend the previous results to include covariates, but the main challenge is operationalizing it.
+
+@haddad-huber-zhang-2024 use kernel-based estimators combined with double/debiased machine learning, allowing flexible, data-adaptive adjustment for covariates.
+
+
+
+
+## 2. Alternative Building Block Parameters
+
+The discussion above used level effects ($\ATT$'s) and slope effects ($\ACRT$'s) as the "building block" parameters.
+
+An alternative building block parameter is the "scaled level" parameter:
+
+$$ \frac{\ATT(d \mid d)}{d} = \frac{\E[Y_{t=2}(d) - Y_{t=2}(0) \mid D=d]}{d} $$
+
+This is the average treatment effect per unit of dose.  This parameter shows up in [@chaisemartin-ciccia-dhaultfoeuille-knau-2024;@chaisemartin-dhaultfoeuille-pasquier-sow-vazquez-2025].
+
+* You can average these to get an overall "per unit of dose" effect.  Since it doesn't involve comparisons across dose, it does not contain selection bias.
+* Can show that the TWFE regression coefficient is a weighted average of these scaled level parameters but the weights can be negative.
+
+## 3. Units Treated in the First Period
+
+Above, we considered the case where $D_{t=1} = 0$ for all units.  It's common to have continuous treatments where all units experience some dose across all periods.
+
+The key issue in this case is whether or not there are any [stayers]{.alert}---units that do not have change their dosage over time.
+
+* If yes, then the previous results effectively carry over to this case.  You can proceed by, for each initial dose, applying the same sort of arguments as above but with initial dose as the "untreated" group.
+  * The main complication is how to pool information across different initial doses.
+  * See @chaisemartin-dhaultfoeuille-pasquier-sow-vazquez-2025 for one approach.
+* If no, then at least arguably, this is no longer DiD as it does not fit into the pre-post/staggered research design.
+
+## 4. Doses Change across Time
+
+Previously, even in the staggered adoption case, we assumed that the dose was constant across time.  In many applications, the dose may change across time too.
+
+The previous ideas basically carry over to this case too, but there are come complications:
+
+* What's the target parameter?  If the dose changes over time, are we going for the treatment effect relative to being untreated or the treatment effect relative to the previous dose?  This affects what comparison group to use.
+* Applying the same types of arguments will result in very high dimensional target parameters, e.g., an $\ATT$ for an entire treatment sequence.  How should these be aggregated?
 
 ## Conclusion
 
 * There are a number of challenges to implementing/interpreting DiD with a continuous treatment
 
-* The extension to multiple periods and variation in treatment timing is relatively straightforward (at least proceeds along the "expected" lines)
+* In my view, the main new issue here is that justifying interpreting comparisons across different doses as causal effects requires stronger assumptions than most researchers probably think that they are making
 
-* But (in my view) the main new issue here is that <span class="alert">justifying interpreting comparisons across different doses as causal effects requires stronger assumptions than most researchers probably think that they are making</span>
+* [Link to paper:]{.alert} [[published](https://www.aeaweb.org/articles?id=10.1257/aer.20240137)] [[arXiv](https://arxiv.org/abs/2107.02637)]
 
-* Link to paper: [https://arxiv.org/abs/2107.02637](https://arxiv.org/abs/2107.02637)
+* [Code]{.alert-blue}: R `contdid` package available on CRAN
 
-
-<!--
-* <mark>Other Summaries:</mark> &nbsp; (i) [Five minute summary](https://bcallaway11.github.io/posts/five-minute-did-continuous-treatment) &nbsp; &nbsp; &nbsp;  (ii) [Pedro's Twitter](https://twitter.com/pedrohcgs/status/1415915759960690696)
--->
 
 # Thank you
 
 [brantly.callaway@uga.edu](mailto:brantly.callaway@uga.edu)
-
-
-<!--
-* <mark>Code:</mark> in progress
-
--->
 
 # Appendix {visibility="uncounted"}
 
@@ -621,61 +753,6 @@ Finally, if only want to exploit variation in the dose
 
 ::: {#refs}
 :::
-
-## Can you relax strong parallel trends? {visibility="uncounted"}
-
-Some ideas:
-
-* It could be reasonable to assume that you know the sign of the selection bias.  This can lead to (possibly) informative bounds on differences/derivatives/etc. between $ATT(d|d)$ parameters
-
-. . .
-
-* If interest is mainly in $ACRT$'s, then can weaken the assumption to something like "local" strong parallel trends
-
-. . .
-
-* Strong parallel trends may be more plausible after conditioning on some covariates.
-
-  * For length of school closure, strong parallel trends probably more plausible conditional on being a rural county in the Southeast or conditional on being a college town in the Midwest.
-
-  <!-- this probably does not fully rationalize recovering ATT(d), but could allow for some cross-dose comparisons...-->
-
-[Back](#additional-comments)
-
-## Positive Side-Comments: No untreated units {visibility="uncounted"}
-
-It's possible to do some versions of DiD with a continuous treatment without having access to a fully untreated group.
-
-  * In this case, it is not possible to recover level effects like $ATT(d|d)$.
-
-  * However, notice that $$\begin{aligned}& \E[\Delta Y | D=d_h] - \E[\Delta Y | D=d_l] \\ &\hspace{50pt}= \Big(\E[\Delta Y | D=d_h] - \E[\Delta Y(0) | D=d_h]\Big) - \Big(\E[\Delta Y | D=d_l]-\E[\Delta Y(0) | D=d_l]\Big) \\ &\hspace{50pt}= ATT(d_h|d_h) - ATT(d_l|d_l)\end{aligned}$$
-
-  * In words: comparing path of outcomes for those that experienced dose $d_h$ to path of outcomes among those that experienced dose $d_l$ (and not relying on having an untreated group) delivers the difference between their $ATT$'s.
-
-  * Still face issues related to selection bias / strong parallel trends though
-
-[Back](#additional-comments)
-
-
-## Positive Side-Comments: Alternative approaches {visibility="uncounted"}
-
-Strategies like binarizing the treatment can still work (though be careful!)
-
-  * If you classify units as being treated or untreated, you can recover the $ATT^o$ by comparing mean outcome for treated relative to untreated.
-
-  * On the other hand, if you classify units as being "high" treated, "low" treated, or untreated &mdash; our arguments imply that selection bias terms can come up when comparing effects for "high" to "low"
-
-[Back](#additional-comments)
-
-## Negative Side-Comment: Pre-testing {visibility="uncounted"}
-
-That the expressions for $ATT(d)$ and $ATT(d|d)$ are exactly the same also means that we cannot use pre-treatment periods to try to distinguish between "standard" and "strong" parallel trends.
-In particular, the relevant information that we have for testing each one is the same
-
-* In effect, the only testable implication of strong parallel trends in pre-treatment periods is standard parallel trends.
-
-[Back](#additional-comments)
-
 
 
 ## Ex. Mixture of Normals Dose {visibility="uncounted"}
@@ -736,59 +813,3 @@ ggpubr::ggarrange(density_plot,weights_plot, nrow=1)
 ```
 
 [Back](#issues)
-
-## Empirical Application {#empirical-application-details visibility="uncounted"}
-
-This is a simplified version of Acemoglu and Finkelstein (2008)
-
-1983 Medicare reform that eliminated labor subsidies for hospitals
-
-* Medicare moved to the Prospective Payment System (PPS) which replaced "full cost reimbursement" with "partial cost reimbursement" which eliminated reimbursements for labor (while maintaining reimbursements for capital expenses)
-
-* Rough idea: This changes relative factor prices which suggests hospitals may adjust by changing their input mix.  Could also have implications for technology adoption, etc.
-
-* In the paper, we provide some theoretical arguments concerning properties of production functions that suggests that strong parallel trends holds.
-
-
-## Data {visibility="uncounted"}
-
-Annual hospital-reported data from the American Hospital Association, 1980-1986
-
-. . .
-
-Outcome is capital/labor ratio
-
-* proxy using the depreciation share of total operating expenses (avg. 4.5%)
-
-* our setup: collapse to two periods by taking average in pre-treatment periods and average in post-treatment periods
-
-Dose is "exposure" to the policy
-
-* the fraction of Medicare patients in the period before the policy was implemented
-
-* roughly 15% of hospitals are untreated (have essentially no Medicare patients)
-
-  * AF provide results both using and not using these hospitals as (good) it is useful to have untreated hospitals (bad) they are fairly different (includes federal, long-term, psychiatric, children's, and rehabilitation hospitals)
-
-
-
-## Bin Scatter  {visibility="uncounted"}
-
-<center> <img src="img/cdd_af_scatter.png" width=70% /> </center>
-
-
-## ATT(d) Plot {visibility="uncounted"}
-
-<center> <img src="img/cdd_new_estimator_att.JPG" width=90% /> </center>
-
-$\widehat{ATT}^o = 0.80~~(\textrm{s.e}.=0.05)$ [Back](#empirical-application-short)
-
-## Other Related Work
-
-* **Haddad, Huber, and Zhang (2024)** study DiD with time-varying continuous treatments and multiple periods.
-
-* Their approach compares two nonzero treatment doses and allows for covariate adjustment and past treatment histories.
-
-* They use kernel-based estimators combined with double/debiased machine learning, allowing flexible, data-adaptive adjustment for covariates.
-
-* Their framework is complementary to the two-period panel-data setting considered here. [@haddad-huber-zhang-2024]
