@@ -1,0 +1,70 @@
+---
+title: "Mini-Course on Panel Data Causal Inference with a Continuous Treatment"
+subtitle: "Session 0: Introduction"
+format:
+  revealjs:
+    theme: [default, united.scss]
+    menu:
+      side: left
+    slide-number: true
+    date-format: long
+    callout-icon: false
+    embed-resources: true
+author:
+  - name: Brantly Callaway
+    affiliation: University of Georgia
+    email: brantly.callaway@uga.edu
+date: September 18, 2026
+bibliography:
+  - refs.bib
+  - this_refs.bib
+knitr:
+  opts_chunk:
+    echo: true
+---
+
+## Overview of the Course
+
+```{r echo=FALSE}
+library(revealEquations)
+```
+
+$\newcommand{\E}{\mathbb{E}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\var}{\mathrm{var}}
+\newcommand{\cov}{\mathrm{cov}}
+\newcommand{\Var}{\mathrm{var}}
+\newcommand{\Cov}{\mathrm{cov}}
+\newcommand{\Corr}{\mathrm{corr}}
+\newcommand{\corr}{\mathrm{corr}}
+\newcommand{\L}{\mathrm{L}}
+\renewcommand{\P}{\mathrm{P}}
+\newcommand{\ACR}{\mathrm{ACR}}
+\newcommand{\ATT}{\mathrm{ATT}}
+\newcommand{\ACRT}{\mathrm{ACRT}}
+\newcommand{\independent}{{\perp\!\!\!\perp}}
+\newcommand{\indicator}[1]{ \mathbf{1}\{#1\} }$
+
+0. Introduction to difference-in-differences
+
+1. Difference-in-differences with a continuous treatment
+
+2. Assessing strong parallel trends via close comparison groups
+
+3. Shift-share designs
+
+## Materials for the Course
+
+[Available on my website:]{.alert} [https://www.bcallaway11.github.io/26-ULL](https://www.bcallaway11.github.io/26-ULL)
+
+* All slides
+* Links to main reference papers for each topic
+
+# (Brief) Introduction to Difference-in-Differences with a Continuous Treatment {visibility="uncounted"}
+
+# Appendix {visibility="uncounted"}
+
+## References {visibility="uncounted"}
+
+::: {#refs}
+:::

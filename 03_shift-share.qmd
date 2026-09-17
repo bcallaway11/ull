@@ -1,5 +1,5 @@
 ---
-title: "Shift-Share Instruments"
+title: "Shift-Share Designs"
 subtitle: "Session 3"
 format:
   revealjs:
@@ -43,13 +43,16 @@ $\newcommand{\E}{\mathbb{E}}
 \newcommand{\indicator}[1]{ \mathbf{1}\{#1\} }
 \newcommand{\ATT}{\text{ATT}}
 \newcommand{\ACR}{\text{ACR}}$
-[Shift-share]{.alert} (aka Bartik) designs
+[Shift-share]{.alert} (aka Bartik) variables are created as combinations of
 
-* [Shares]{.alert-blue} --- how exposed each unit is to each sector
-* [Shifts]{.alert-green} --- aggregate, sector-level shocks
+* [Shares]{.alert-blue} --- how exposed each unit is to a common shocks
+* [Shifts]{.alert-green} --- common, aggregate-level shocks
+
+Combining these creates a single variable capturing how "exposed" a unit is to some shocks
 
 [This session:]{.alert} An overview of shift-share designs for causal inference
 
+* These variables are often used to address endogeneity concerns in applications
 * Emphasize that there are strong connections between shift-share and difference-in-differences with a continuous treatment from previous sessions.
 
 ## Plan for this Session
@@ -127,10 +130,6 @@ $\newcommand{\E}{\mathbb{E}}
 
 ##
 
-![](img/downes/downes-fig4.png){fig-align="center"}
-
-##
-
 ![](img/downes/downes-fig5.png){fig-align="center"}
 
 ## Simplified Setting
@@ -147,11 +146,11 @@ Start with a simplified setting similar to the one we have been considering:
 
 This is directly related to our earlier discussion of continuous treatments.  Here the worry is that parallel trends and/or strong parallel trends is violated:
 
-$\text{Parallel Trends: } \E[\Delta Y(0) \mid D=d] \neq \E[\Delta Y(0) \mid D=0]$
+$\text{Violation of Parallel Trends: } \E[\Delta Y(0) \mid D=d] \neq \E[\Delta Y(0) \mid D=0]$
 
 or
 
-$\text{Strong Parallel Trends: } \E[\Delta Y(d) \mid D=d'] \neq \E[\Delta Y(d) \mid D=d]$
+$\text{Violation of Strong Parallel Trends: } \E[\Delta Y(d) \mid D=d'] \neq \E[\Delta Y(d) \mid D=d]$
 
 
 # 2. Constructing shift-share variables {visibility="uncounted"}
@@ -175,13 +174,13 @@ This is a decomposition and holds by definition.
 
 Next, we can decompose the industry share variable $s_{ijt=2}$ and the industry unionization rate $r_{ijt=2}$ as follows:
 
-$$s_{ijt=2} = s_{ijt=1} + \Delta s_{ij}$$
+$$s_{ijt=2} = \color{red}{s_{ijt=1}} + \Delta s_{ij}$$
 
-where $s_{ijt=1}$ is the share of county $i$'s employment in industry $j$ at time $t=1$ (pre-NLRA) and $\Delta s_{ij}$ is the change in that share from $t=1$ to $t=2$.
+where $\color{red}{s_{ijt=1}}$ is the share of county $i$'s employment in industry $j$ at time $t=1$ (pre-NLRA) and $\Delta s_{ij}$ is the change in that share from $t=1$ to $t=2$.
 
-$$r_{ijt=2} = r_{jt=2} + \tilde{r}_{ijt=2}$$
+$$r_{ijt=2} = \color{blue}{r_{jt=2}} + \tilde{r}_{ijt=2}$$
 
-where $r_{jt=2}$ is the national unionization rate in industry $j$ at time $t=2$ and $\tilde{r}_{ijt=2}$ is the unionization rate remainder in county $i$ for industry $j$ at time $t=2$.
+where $\color{blue}{r_{jt=2}}$ is the national unionization rate in industry $j$ at time $t=2$ and $\tilde{r}_{ijt=2}$ is the unionization rate remainder in county $i$ for industry $j$ at time $t=2$.
 
 Roughly, the idea of a shift-share variable is that $s_{ijt=1}$ and/or $r_{jt=2}$ are more likely to be exogenous than the treatment $D_{it=2}$ itself.
 
@@ -190,16 +189,15 @@ Roughly, the idea of a shift-share variable is that $s_{ijt=1}$ and/or $r_{jt=2}
 We can now construct a shift-share variable as follows:
 $$ B_{i} = \sum_{j=1}^J s_{ijt=1} \times r_{jt=2} $$
 
-(this is following the notation in @goldsmith-sorkin-swift-2020, you can think of $B$ standing for "Bartik")
+This is following the notation in @goldsmith-sorkin-swift-2020, you can think of $B$ standing for "Bartik"
 
 ## Constructing a shift-share variable
 
 @downes-2024 writes the same equation as:
 $$SSIV_{it} = \sum_{j=1}^J \underbrace{\textrm{IndShare}^{1910}_{ij}}_{\textrm{share}} \times \underbrace{\textrm{NatlUnionRate}_{jt}}_{\textrm{shift}}$$
 
-* [Shifts:]{.alert} national, industry-level union membership rates over time
-
 * [Shares:]{.alert-blue} local industry composition, measured in 1910, before the NLRA
+* [Shifts:]{.alert} national, industry-level union membership rates over time
 
 ## Constructing a shift-share variable
 
@@ -258,58 +256,78 @@ IV-type assumptions:
 These are exactly the same type of assumption as you would see in the IV literature, applied to the shares.
 
 
-## Causal Effects
+## Causal Effect of the Shares
 
 Under exogeneity of the shares, it immediately holds that, e.g.,
 
-$$ \E[\Delta Y \mid S_1 = s_1, S_2 = s_2] - \E[\Delta Y \mid S_1 = s_1', S_2 = s_2'] = \underbrace{\E[Y(D(s_1, s_2)) - Y(D(s_1', s_2'))]}_{\text{causal effect of shares}} $$
+$$ \E[\Delta Y \mid S_1 = s_1, S_2 = s_2] - \E[\Delta Y \mid S_1 = s_1', S_2 = s_2'] = \underbrace{\E[Y_{t=2}(s_1, s_2) - Y_{t=2}(s_1', s_2')]}_{\text{causal effect of shares}} $$
+
+where $Y_{t=2}(s_1, s_2) := Y_{t=2}(D(s_1, s_2))$ is the potential outcome if the shares were set to $s_1$ and $s_2$.
 
 i.e., we can compare the trend in outcomes across counties with different shares and interpret that as a causal effect of different shares.
 
-## Causal Effects
+## Limitations of Previous Result
 
 However, the expression on the previous slide
 
 * Does not use the shift-share variable,
 * Does not really tell us anything about the causal effect of unionization, just the causal effect of different shares,
-* It is hard to operationalize.
+* It is hard to operationalize, especially when the number of industries is large.
 
-## Causal Effects
+## Alternative Estimand
 
-Instead consider:
+Instead, a natural estimand to consider is:
 
-$$
-\begin{aligned}
-\E[\Delta Y \mid B = b+1] - \E[\Delta Y \mid B = b] &= \E[Y(D(S_1,S_2)) \mid B = b+1] - \E[Y(D(S_1,S_2)) \mid B = b] \\
-\end{aligned}
-$$
+$$ \E[\Delta Y \mid B = b+1] - \E[\Delta Y \mid B = b] $$
 
-This holds and is easy to show from the previous assumptions.  However, the right hand side is not exactly what we want either.  The composition of shares at $B=b+1$ could be much different from the composition of shares at $B=b$, which could explain the difference in outcomes.
+which is the difference in trends in outcomes across counties with different values of the shift-share variable.
 
-We can additionally assume that $D(s_1,s_2) = D(b)$ for all $s_1, s_2$ such that $s_1 r_1 + s_2 r_2 = b$.  i.e., the amount of unionization in a county is invariant to the particular shares, as long as the shift-share variable is the same, in which case we recover
+## Interpreting Shift-Share Estimand
 
-$$\E[Y(b+1) - Y(b)]$$
+It is straightforward to show that, under the previous assumptions, the previous estimand is equal to
+$$\E\Big[ \E[Y_{t=2}(S_1,S_2)] \Bigm| B = b+1\Big] - \E\Big[ \E[Y_{t=2}(S_1,S_2)] \Bigm| B = b\Big]$$
+
+This is not exactly what we want, though:
+
+* We are averaging over shares for $B=b+1$ and $B=b$, but we are not really comparing across marginal changes in the shares
+* The composition of shares at $B=b+1$ could be much different from the composition of shares at $B=b$.
+
+## Shift-Share Aggregation Assumption
+
+We can additionally assume that
+
+$$D(s_1,s_2) = D(b)$$
+
+for all $s_1, s_2$ such that $s_1 r_1 + s_2 r_2 = b$. In other words, the amount of unionization in a county is invariant to the particular shares, as long as the shift-share variable is the same.
+
+This allows us to causally interpret comparisons of counties with $B=b+1$ to counties with $B=b$ even if they have substantially different underlying shares
+
+Then, it immediately follows that
+
+$$\E[\Delta Y \mid B = b+1] - \E[\Delta Y \mid B = b] =\E[Y_{t=2}(b+1) - Y_{t=2}(b)]$$
 
 which is the causal effect of a marginal increase in the shift-share variable.
 
-##
+## Connection to Strong Parallel Trends
 
-Then, we can write
+There's a close connection between the previous result and strong parallel trends.
 
-* $Y_{it=2}(b) := Y_{it=2}(D(b))$ is the potential outcome for county $i$ at time $t=2$ if the shift-share variable were set to $b$
+Notice that we are making comparisons across dose, so we need more than just parallel trends in "unexposed" potential outcomes.
 
-$\text{Parallel Trends: } \E[\Delta Y(0) \mid B=b] = \E[\Delta Y(0) \mid B=0]$
+$$\text{Parallel Trends: } \E[\Delta Y(0) \mid B=b] = \E[\Delta Y(0) \mid B=0]$$
 
-$\text{Strong Parallel Trends: } \E[\Delta Y(b) \mid B=b'] = \E[\Delta Y(b) \mid B=b]$
+But the previous assumptions imply a version of strong parallel trends in terms of the shift-share variable:
 
-This means that we can immediately recover the causal effect of the shift-share variable on the outcome, i.e., the causal effect of differential exposure
+$$\text{Strong Parallel Trends: } \E[\Delta Y(b) \mid B=b'] = \E[\Delta Y(b) \mid B=b]$$
+
+This is exactly what rationalizes comparing trends in outcomes across counties with different values of the shift-share variable as being causal effects of exposure.
 
 ##
 
 ![](img/downes/downes-fig8.png){fig-align="center"}
 
 
-## Causal Effects
+## Using the Shift-Share Variable as an Instrument
 
 To recover the causal effect of the treatment, a natural estimand is the derivatve version of the Wald estimand:
 
@@ -326,21 +344,21 @@ Relevance typically holds in shift-share IV applications (the shift-share variab
 
 Returning to the two counties we considered before.  Cameron County was more exposed to the NLRA than Forest County.  By 1960, union membership was 26.3% in Cameron vs. 7.7% in Forest.
 
-## Causal Effects
+## Interpreting $\tau(b)$
 
 Unfortunately, with a continuous treatment and continuous instrument, we know that [@angrist-graddy-imbens-2000],
 $$\tau(b) = \frac{\E[Y'(D(b)) D'(b)]}{\E[D'(b)]} \neq ACR(d)$$
 
-nor is $\E[\tau(B)] = ACR^O$.
+nor is $\E[\tau(B)] = \E[ACR(D)]$.
 
 i.e., $\tau(b)$ is a weighted average of the causal response to the treatment (the $Y'$ term in the expression), but the weights are $D'(b)/\E[D'(b)]$, which are not constant across units.
 
 * The weights are non-negative under monotonicity
-* $\tau(b)$ gives more weight to units that respond more to the shift-share variable.
+* $\tau(b)$ gives more weight to units whose treatment respond more to the shift-share variable.
 
-## Causal Effects
+## Two-Stage Least Squares
 
-It is more common in empirical work to run the use $B_i$ as an instrument for $D_i$ and estimate a linear model by two-stage least squares (2SLS).  In this case,
+It is more common in empirical work to use $B_i$ as an instrument for $D_i$ and estimate a linear model by two-stage least squares (2SLS).  In this case,
 
 $$\beta_{2sls} = \int w(b) \; \tau(b) \; db$$
 
@@ -374,7 +392,7 @@ The other main approach is to assume the [shifts are exogenous]{.alert} and the 
 
 1. Count the shifts---few suggests shares path, while many (dozens+) suggests shifts path
 
-2. Are shares tailored or generic?---tailored to this channel suggests shares path, shares that could proxy many shocks suggestsshifts path
+2. Are shares tailored or generic?---tailored to this channel suggests shares path, shares that could proxy many shocks suggests shifts path
 
 3. Which story can you say with a straight face: *"each share alone would satisfy parallel trends"* or *"this shock is as-good-as-random and only reaches units through the treatment"*?
 

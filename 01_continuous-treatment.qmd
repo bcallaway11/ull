@@ -23,7 +23,7 @@ knitr:
     echo: true
 ---
 
-## Overview for the Course
+## This Session
 
 ```{r echo=FALSE}
 library(revealEquations)
@@ -45,55 +45,46 @@ $\newcommand{\E}{\mathbb{E}}
 \newcommand{\independent}{{\perp\!\!\!\perp}}
 \newcommand{\indicator}[1]{ \mathbf{1}\{#1\} }$
 
-1. Difference-in-differences with a continuous treatment
 
-2. Assessing strong parallel trends via close comparison groups
+Difference-in-differences with a continuous treatment (or multi-valued discrete) treatment
 
-3. Shift-share designs
-
-## This Session
-
-Difference-in-differences with a continuous treatment
-
-Main reference: @callaway-goodman-santanna-2026
-
-
+[Main reference:]{.alert} @callaway-goodman-santanna-2026
 
 ## Introduction
 
 Most recent work on DiD has focused on settings with a binary, staggered treatment
 
 
-[This paper:]{.alert} Move from a setting with a binary treatment case to one with a [continuous treatment]{.alert-blue} ("dose")
+[This session:]{.alert} Move from a binary treatment to a [continuous treatment]{.alert-blue} ("dose")
 
 
 Some of the arguments involve extending ideas from the binary, staggered treatment case to a setting with continuous treatment
 
 * But we will also face new conceptual issues in this case that do not show up in a setting with a binary treatment
-  
 
-[Running Example:]{.alert-green} 
+
+[Running Example:]{.alert-green}
 
 * Effect of $\underbrace{\textrm{length of school closures}}_{\textrm{continuous treatment}}$ (during Covid) on $\underbrace{\textrm{students' test scores}}_{\textrm{outcome}}$
 * e.g., @ager-eriksson-karger-nencka-thomasson-2024, @gillitzer-prasas-2023, among others
 
 
-## What exactly is a continuous treatment?
+## What Exactly Is a Continuous Treatment?
 
-For today, mostly emphasize a continuous treatment, but our results also apply to other settings (with trivial modifications):
+For today, we mostly emphasize a continuous treatment, but our results also apply to other settings (with trivial modifications):
 
 * [Multi-valued treatments]{.alert} (e.g., effect of state-level minimum wage policies on employment)
 
 * [Binary policy variable with differential exposure]{.alert-blue} (application in the paper: a binary Medicare policy where different hospitals had more exposure to the policy)
 
-## What's not a continuous treatment?
+## What's Not a Continuous Treatment?
 
 [Fuzzy DiD]{.alert} - binary treatment but the researcher observes aggregate data, often using policy changes as an instrument
 
 * Example: Study union wage-premium (at individual level) using state-level data and exploiting variation in the amount of unionization across different locations
 * See @chaisemartin-dhaultfoeuille-2018 and @miyaji-2025
 
-## Narrowing the scope of the talk
+## Narrowing the Scope of the Talk
 
 We will focus on a setting with a [panel data pre-post research design]{.alert}
 
@@ -106,7 +97,7 @@ We will return to extensions where
 * All units become treated in the second period
 * Units can be already treated in the first period
 
-## This session
+## Plan for This Session
 
 <br> <br>
 
@@ -121,7 +112,7 @@ We will return to extensions where
 5. Extensions
 
 
-# 1. Identification: What's the same as for a binary treatment? {visibility="uncounted"}
+# 1. Identification: What's the Same as for a Binary Treatment? {visibility="uncounted"}
 
 
 
@@ -153,7 +144,7 @@ $$\ATT(d \mid d) := \E[Y_{t=2}(d) - Y_{t=2}(0) \mid D=d]$$
 
 
 
-## Parameters of Interest (ACR-type)
+## Parameters of Interest (ACRT-type)
 
 [Slope Effects]{.alert} (Average Causal Response on the Treated)
 
@@ -165,7 +156,7 @@ $$\ACRT(d \mid d) := \frac{\partial \ATT(l \mid d)}{\partial l} \Big|_{l=d}$$
 
 Notice that $\ATT(d \mid d)$ and $\ACRT(d \mid d)$ are functional parameters
 
-* This is different from $Y_{it} = \theta_t + \eta_i + \beta^{twfe} D_{it} + e_{it}$
+* This is different from targeting a single number, like $\beta^{twfe}$ in $Y_{it} = \theta_t + \eta_i + \beta^{twfe} D_{it} + e_{it}$
 
 We can view $\ATT(d \mid d)$ and $\ACRT(d \mid d)$ as the ["building blocks"]{.alert} for a more aggregated parameter.
 
@@ -211,16 +202,16 @@ Under parallel trends,
 "
 
 eqlist <- list("\\ATT(d \\mid d) &= \\E[Y_{t=2}(d) - Y_{t=2}(0) \\mid D=d] \\hspace{150pt}",
-               "&= \\E[Y_{t=2}(d) - Y_{t=1}(0) \\mid D=d] - \\E[Y_{t=2}(0) - Y_{t=1}(0) \\mid D=d]",
-               "&= \\E[\\Delta Y \\mid D=d] - \\E[\\Delta Y \\mid D=0]")
+  "&= \\E[Y_{t=2}(d) - Y_{t=1}(0) \\mid D=d] - \\E[Y_{t=2}(0) - Y_{t=1}(0) \\mid D=d]",
+  "&= \\E[\\Delta Y \\mid D=d] - \\E[\\Delta Y \\mid D=0]")
 
 after <- "[This is exactly what you would expect]{.alert}
 
 "
-step_by_step_eq(eqlist=eqlist,
-                before=before,
-                after=after,
-                title=title)
+step_by_step_eq(eqlist = eqlist,
+  before = before,
+  after = after,
+  title = title)
 ```
 
 ## Identification {visibility="uncounted"}
@@ -238,10 +229,10 @@ $$\ATT^{\texttt{loc}} = \E[\Delta Y | D>0] - \E[\Delta Y | D=0]$$
 
 
 
-# 2. Identification: What's different from a binary treatment? {visibility="uncounted"}
+# 2. Identification: What's Different from a Binary Treatment? {visibility="uncounted"}
 
 
-## Are we done?
+## Are We Done?
 
 
 <mark>Unfortunately, no</mark>
@@ -249,7 +240,7 @@ $$\ATT^{\texttt{loc}} = \E[\Delta Y | D>0] - \E[\Delta Y | D=0]$$
 [Most empirical work with a continuous treatment wants to think about how causal responses vary across dose]{.alert}
 
 
-* Plot treatment effects as a function of dose and ask: does more dose tends to increase/decrease/not affect outcomes?
+* Plot treatment effects as a function of dose and ask: does more dose tend to increase/decrease/not affect outcomes?
 
 ::: {.notes}
 
@@ -289,8 +280,8 @@ close_div <- "```{=html}\n</div>\n```\n\n"
 before <- paste0(before, open_div)
 
 eqlist <- list("& \\ATT(d_h \\mid d_h) - \\ATT(d_l \\mid d_l) \\hspace{350pt}",
-               "& \\hspace{25pt} = \\E[Y_{t=2}(d_h)-Y_{t=2}(d_l) \\mid D=d_h] + \\E[Y_{t=2}(d_l) - Y_{t=2}(0) \\mid D=d_h] - \\E[Y_{t=2}(d_l) - Y_{t=2}(0) \\mid D=d_l]",
-               "& \\hspace{25pt} = \\underbrace{\\E[Y_{t=2}(d_h) - Y_{t=2}(d_l) \\mid D=d_h]}_{\\textrm{Causal Response}} + \\underbrace{\\ATT(d_l \\mid d_h) - \\ATT(d_l \\mid d_l)}_{\\textrm{Selection Bias}}")
+  "& \\hspace{25pt} = \\E[Y_{t=2}(d_h)-Y_{t=2}(d_l) \\mid D=d_h] + \\E[Y_{t=2}(d_l) - Y_{t=2}(0) \\mid D=d_h] - \\E[Y_{t=2}(d_l) - Y_{t=2}(0) \\mid D=d_l]",
+  "& \\hspace{25pt} = \\underbrace{\\E[Y_{t=2}(d_h) - Y_{t=2}(d_l) \\mid D=d_h]}_{\\textrm{Causal Response}} + \\underbrace{\\ATT(d_l \\mid d_h) - \\ATT(d_l \\mid d_l)}_{\\textrm{Selection Bias}}")
 
 after <- "
 
@@ -305,18 +296,17 @@ after <- "
 "
 after <- paste0(close_div, after)
 
-step_by_step_eq(eqlist=eqlist,
-                before=before,
-                after=after,
-                title=title)
-
+step_by_step_eq(eqlist = eqlist,
+  before = before,
+  after = after,
+  title = title)
 ```
 
 ## Interpretation Issues
 
 [Intuition]{.alert}
 
-* Difference-in-differences identification strategies result in $\ATT(d|d)$ parameters.  These are <span class="highlight">local parameters</span> and difficult to compare to each
+* Difference-in-differences identification strategies result in $\ATT(d|d)$ parameters.  These are <span class="highlight">local parameters</span> and difficult to compare to each other
 
 * This explanation is similar to thinking about LATEs with two different instruments
 
@@ -328,7 +318,7 @@ step_by_step_eq(eqlist=eqlist,
 
 * If you want to compare them to each other, it will come with the cost of additional (structural) assumptions
 
-## Less local target parameters
+## Less Local Target Parameters
 
 To be able to make comparisons across different doses, we need target parameters that are "less local":
 
@@ -344,9 +334,9 @@ We can also consider aggregated versions of these parameters
 
 ## Strong Parallel Trends Assumption
 
-For all doses `d` $\in \mathcal{D}$
+For all doses $d \in \mathcal{D}$,
 
-$$\mathbb{E}[Y_{t=2}(d) - Y_{t=1}(0) \mid D>0] = \mathbb{E}[Y_{t=2}(d) - Y_{t=1}(0) \mid D=d]$$
+$$\E[Y_{t=2}(d) - Y_{t=1}(0) \mid D>0] = \E[Y_{t=2}(d) - Y_{t=1}(0) \mid D=d]$$
 
 :::
 
@@ -377,8 +367,8 @@ If we maintain standard parallel trends, strong parallel trends is equivalent to
 #               "&= \\E[Y_{t=2}(d) - Y_{t=2}(0) \\mid D=l] = ATT(d|l)")
 
 eqlist <- list("\\ATT(d|d) &= \\E[Y_{t=2}(d) - Y_{t=1}(0) \\mid D=d] - \\E[Y_{t=2}(0) - Y_{t=1}(0) \\mid D=d] \\hspace{200pt} \\",
-               "&= \\E[Y_{t=2}(d) - Y_{t=1}(0) \\mid D>0] - \\E[Y_{t=2}(0) - Y_{t=1}(0) \\mid D > 0] \\",
-               "&= \\E[Y_{t=2}(d) - Y_{t=2}(0) \\mid D>0] = \\ATT(d)")
+  "&= \\E[Y_{t=2}(d) - Y_{t=1}(0) \\mid D>0] - \\E[Y_{t=2}(0) - Y_{t=1}(0) \\mid D > 0] \\",
+  "&= \\E[Y_{t=2}(d) - Y_{t=2}(0) \\mid D>0] = \\ATT(d)")
 
 after <- "
 
@@ -395,11 +385,10 @@ RHS is exactly the same expression as for $\\ATT(d|d)$ under standard PT, but he
 
 "
 
-step_by_step_eq(title=title,
-                before=before,
-                eqlist=eqlist,
-                after=after)
-
+step_by_step_eq(title = title,
+  before = before,
+  eqlist = eqlist,
+  after = after)
 ```
 
 
@@ -415,7 +404,7 @@ before <- "ATT(d) parameters do not suffer from the same issues as ATT(d|d) para
 "
 
 eqlist <- list("\\ATT(d_h) - \\ATT(d_l) &= \\E[Y_{t=2}(d_h) - Y_{t=2}(0) | D>0] - \\E[Y_{t=2}(d_l) - Y_{t=2}(0)|D>0]",
-              "&= \\underbrace{\\E[Y_{t=2}(d_h) - Y_{t=2}(d_l)|D>0]}_{\\textrm{Causal Response}}")
+  "&= \\underbrace{\\E[Y_{t=2}(d_h) - Y_{t=2}(d_l)|D>0]}_{\\textrm{Causal Response}}")
 
 after <- "
 
@@ -435,23 +424,23 @@ $$
 
 "
 
-step_by_step_eq(eqlist=eqlist,
-                before=before,
-                after=after,
-                title=title)
+step_by_step_eq(eqlist = eqlist,
+  before = before,
+  after = after,
+  title = title)
 ```
 
 ## Additional Discussion
 
-1. Can you relax strong parallel trends?
+1. Can You Relax Strong Parallel Trends?
 
-2. No untreated units
+2. No Untreated Units
 
 3. Binarizing the Treatment
 
-4. Pre-testing
+4. Pre-Testing
 
-## Can you relax strong parallel trends?
+## Can You Relax Strong Parallel Trends?
 
 Some ideas:
 
@@ -463,7 +452,7 @@ Some ideas:
   <!-- this probably does not fully rationalize recovering ATT(d), but could allow for some cross-dose comparisons...-->
 
 
-## No untreated units
+## No Untreated Units
 
 It's possible to do some versions of DiD with a continuous treatment without having access to a fully untreated group.
 
@@ -480,12 +469,12 @@ It's possible to do some versions of DiD with a continuous treatment without hav
 
 Strategies like binarizing the treatment can still work (though be careful!)
 
-  * If you classify units as being treated or untreated, you can recover the $\ATT^o$ by comparing mean outcome for treated relative to untreated.
+  * If you classify units as being treated or untreated, you can recover $\ATT^{\texttt{loc}}$ by comparing mean outcome for treated relative to untreated.
 
   * On the other hand, if you classify units as being "high" treated, "low" treated, or untreated &mdash; our arguments imply that selection bias terms can come up when comparing effects for "high" to "low"
 
 
-## Pre-testing
+## Pre-Testing
 
 That the expressions for $\ATT(d)$ and $\ATT(d|d)$ are exactly the same also means that we cannot use pre-treatment periods to try to distinguish between "standard" and "strong" parallel trends.
 
@@ -495,10 +484,10 @@ Or, alternatively, we only observe untreated potential outcomes in pre-treatment
 
 It is straightforward/familiar to identify $\ATT(d \mid d)$ parameters with a multi-valued or continuous dose
 
-However, comparison of $\ATT(d\mid d)$ parameters across different doses are hard to interpret
+However, comparisons of $\ATT(d\mid d)$ parameters across different doses are hard to interpret
 
 - They include selection bias terms
-- This issues extends to identifying ACRT parameters
+- This issue extends to identifying $\ACRT$ parameters
 - These issues extend to TWFE regressions
 
 This suggests targeting $\ATT(d)$ parameters
@@ -508,7 +497,7 @@ This suggests targeting $\ATT(d)$ parameters
 
 # 3. Reverse Engineering TWFE Regressions {visibility="uncounted"}
 
-## TWFE Regressions in this Context
+## TWFE Regressions in This Context
 
 Consider the same TWFE regression as before:
 \begin{align*}
@@ -528,19 +517,19 @@ About the weights: they are all positive, but have some strange properties (e.g.
 * $\implies$ even under strong parallel trends, $\beta^{twfe} \neq \ACRT^{\texttt{glob}}$.
 
 
-## TWFE Regressions in this Context
+## TWFE Regressions in This Context
 
 Other issues can arise in more complicated cases
 
-* For example, suppose you have a staggered continuous treatment, then you will *additionally* get issues that are analogous to the ones we discussed earlier for a binary staggered treatment
+* For example, suppose you have a staggered continuous treatment, then you will *additionally* get issues that are analogous to the ones that arise with a binary staggered treatment
 
 * In general, things get worse for TWFE regressions with more complications
 
-## Estimation - What Should You Do?
+## Estimation --- What Should You Do?
 
 [Level Effects]{.alert} - no issues related to selection bias
 
-* [For $\ATT^{\texttt{loc}}$:]{.alert-blue} Binarize treatment, $\ATT^o = \E[\Delta Y \mid D > 0] - \E[\Delta Y \mid D=0]$.
+* [For $\ATT^{\texttt{loc}}$:]{.alert-blue} Binarize treatment, $\ATT^{\texttt{loc}} = \E[\Delta Y \mid D > 0] - \E[\Delta Y \mid D=0]$.
 * [For $\ATT(d \mid d)$:]{.alert-blue} Nonparametrically estimate $m_\Delta(d) = \E[\Delta Y \mid D=d]-\E[\Delta Y \mid D=0]$
   * This is not actually too hard to estimate.  No curse-of-dimensionality, etc.
 
@@ -558,7 +547,7 @@ Changing the estimation strategy helps with the weights, but it does not fix the
 
 ## Empirical Application {#empirical-application-short}
 
-[Application:]{.alert} Simplified version of Acemoglu and Finkelstein (2008)
+[Application:]{.alert} Simplified version of @acemoglu-finkelstein-2008
 
 [Setting:]{.alert} 1983 Medicare reform that eliminated labor subsidies for hospitals
 
@@ -566,13 +555,13 @@ Changing the estimation strategy helps with the weights, but it does not fix the
 
 [Outcome:]{.alert} Hospital's capital-labor ratio
 
-[Focus:]{.alert} Comparison of estimates of $\ACR^o$ to $\beta^{twfe}$
+[Focus:]{.alert} Comparison of estimates of $\ACRT^{\texttt{glob}}$ to $\beta^{twfe}$
 
-* They are both weighted averages of $\ACR(d)$, only the weights differ
+* They are both weighted averages of $\ACRT(d)$, only the weights differ
 
-## Empirical Application 
+## Empirical Application
 
-This is a simplified version of Acemoglu and Finkelstein (2008)
+This is a simplified version of @acemoglu-finkelstein-2008
 
 1983 Medicare reform that eliminated labor subsidies for hospitals
 
@@ -596,9 +585,9 @@ Dose is "exposure" to the policy
 
 * the fraction of Medicare patients in the period before the policy was implemented
 * roughly 15% of hospitals are untreated (have essentially no Medicare patients)
-  * AF provide results both using and not using these hospitals as (good) it is useful to have untreated hospitals (bad) they are fairly different (includes federal, long-term, psychiatric, children's, and rehabilitation hospitals)
+  * AF report results both with and without these hospitals: having untreated hospitals is useful, but they are fairly different (federal, long-term, psychiatric, children's, and rehabilitation hospitals)
 
-## Bin Scatter 
+## Bin Scatter
 
 <center> <img src="img/cdd_af_scatter.png" width=70% /> </center>
 
@@ -607,7 +596,7 @@ Dose is "exposure" to the policy
 
 <center> <img src="img/cdd_new_estimator_att.JPG" width=90% /> </center>
 
-$\widehat{\ATT}^{\texttt{loc}} = 0.80~~(\textrm{s.e}.=0.05)$ 
+$\widehat{\ATT}^{\texttt{loc}} = 0.80~~(\textrm{s.e}.=0.05)$
 
 ## ACRT(d) Plot
 
@@ -656,7 +645,7 @@ Finally, if only want to exploit variation in the dose
 -->
 
 
-## Density weights vs. TWFE weights
+## Density Weights vs. TWFE Weights
 
 <center> <img src="img/cdd_af_acr_weights.PNG" width=100% /> </center>
 
@@ -668,11 +657,11 @@ Finally, if only want to exploit variation in the dose
 
 <!--[Back](#application-medicare-reform-and-capitallabor-ratios)-->
 
-# 5. Extensions
+# 5. Extensions {visibility="uncounted"}
 
 ## 1. Multiple Periods and Variation in Treatment Timing
 
-Staggered treatment adoption has received a lot of attention in the literature on DiD with a binary treatment [@goodman-bacon-2021,@chaisemartin-dhaultfoeuille-2020,@callaway-santanna-2021]
+Staggered treatment adoption has received a lot of attention in the literature on DiD with a binary treatment [@goodman-bacon-2021; @chaisemartin-dhaultfoeuille-2020; @callaway-santanna-2021]
 
 Extending the previous results to settings with a continuous, staggered treatment (i.e., once it turns on, the treatment keeps the same amount) is relatively straightforward:
 
@@ -680,11 +669,11 @@ Extending the previous results to settings with a continuous, staggered treatmen
 * The parameters can be averaged together into an event study-type parameter or an aggregated treatment effect parameter as a function of the dose.
 * TWFE regressions end up suffering from a combination of the issues that arise in the staggered binary treatment case and the issues that arise in the continuous treatment case.
 
-## $ATT^{\texttt{loc}}(e)$ Event Study
+## $\ATT^{\texttt{loc}}(e)$ Event Study
 
 ![](img/cdd_es_att.png)
 
-## $ACRT^{\texttt{glob}}(e)$ Event Study
+## $\ACRT^{\texttt{glob}}(e)$ Event Study
 
 ![](img/cdd_es_acrt.png)
 
@@ -696,10 +685,7 @@ Conceptually, it's straightforward to extend the previous results to include cov
 
 @haddad-huber-zhang-2024 use kernel-based estimators combined with double/debiased machine learning, allowing flexible, data-adaptive adjustment for covariates.
 
-
-
-
-## 2. Alternative Building Block Parameters
+## 3. Alternative Building Block Parameters
 
 The discussion above used level effects ($\ATT$'s) and slope effects ($\ACRT$'s) as the "building block" parameters.
 
@@ -712,22 +698,22 @@ This is the average treatment effect per unit of dose.  This parameter shows up 
 * You can average these to get an overall "per unit of dose" effect.  Since it doesn't involve comparisons across dose, it does not contain selection bias.
 * Can show that the TWFE regression coefficient is a weighted average of these scaled level parameters but the weights can be negative.
 
-## 3. Units Treated in the First Period
+## 4. Units Treated in the First Period
 
 Above, we considered the case where $D_{t=1} = 0$ for all units.  It's common to have continuous treatments where all units experience some dose across all periods.
 
-The key issue in this case is whether or not there are any [stayers]{.alert}---units that do not have change their dosage over time.
+The key issue in this case is whether or not there are any [stayers]{.alert}---units that do not change their dose over time.
 
 * If yes, then the previous results effectively carry over to this case.  You can proceed by, for each initial dose, applying the same sort of arguments as above but with initial dose as the "untreated" group.
   * The main complication is how to pool information across different initial doses.
   * See @chaisemartin-dhaultfoeuille-pasquier-sow-vazquez-2025 for one approach.
 * If no, then at least arguably, this is no longer DiD as it does not fit into the pre-post/staggered research design.
 
-## 4. Doses Change across Time
+## 5. Doses Change across Time
 
 Previously, even in the staggered adoption case, we assumed that the dose was constant across time.  In many applications, the dose may change across time too.
 
-The previous ideas basically carry over to this case too, but there are come complications:
+The previous ideas basically carry over to this case too, but there are some complications:
 
 * What's the target parameter?  If the dose changes over time, are we going for the treatment effect relative to being untreated or the treatment effect relative to the previous dose?  This affects what comparison group to use.
 * Applying the same types of arguments will result in very high dimensional target parameters, e.g., an $\ATT$ for an entire treatment sequence.  How should these be aggregated?
@@ -743,7 +729,7 @@ The previous ideas basically carry over to this case too, but there are come com
 * [Code]{.alert-blue}: R `contdid` package available on CRAN
 
 
-# Thank you
+# Thank You
 
 [brantly.callaway@uga.edu](mailto:brantly.callaway@uga.edu)
 
@@ -753,63 +739,3 @@ The previous ideas basically carry over to this case too, but there are come com
 
 ::: {#refs}
 :::
-
-
-## Ex. Mixture of Normals Dose {visibility="uncounted"}
-
-```{r echo=FALSE, message=FALSE, warning=FALSE, fig.width=15}
-library(mixtools)
-library(ggplot2)
-draws <- rnormmix(1000,lambda=c(.5,.5),mu=c(5,12),sigma=c(1,1))
-dgrid <- seq(min(draws), max(draws), length.out=100)#seq(quantile(draws,.01), quantile(draws,.99), length.out=100)
-meanD <- mean(draws)
-varD <- var(draws)
-ED_l <- function(l) mean(draws[draws >= l])
-PD_l <- function(l) mean(1*(draws>=l))
-w_l <- function(l) (ED_l(l) - meanD)*PD_l(l)/varD
-waits <- sapply(dgrid, w_l)
-plot_df <- data.frame(weight=waits, D=dgrid)
-weights_plot <- ggplot(plot_df, aes(x=D,y=weight)) +
-  geom_line(color="blue", lwd=1.3) +
-  labs(title="TWFE Weights") +
-  theme_minimal() +
-  ylim(c(0,.2)) +
-  xlim(c(1,16))
-density_plot <- ggplot(data=data.frame(D=draws), aes(x=D)) +
-  geom_density(color="red", lwd=1.3) +
-  labs(title="Density of Dose") +
-  theme_minimal() +
-  ylim(c(0,.2)) +
-  xlim(c(1,16))
-ggpubr::ggarrange(density_plot,weights_plot, nrow=1)
-```
-
-[Back](#issues)
-
-## Ex. Exponential Dose {visibility="uncounted"}
-```{r echo=FALSE, warning=FALSE, fig.width=15}
-draws <- rexp(1000, rate=1)
-dgrid <- seq(min(draws), max(draws), length.out=100)#seq(quantile(draws,.01), quantile(draws,.99), length.out=100)
-meanD <- mean(draws)
-varD <- var(draws)
-ED_l <- function(l) mean(draws[draws >= l])
-PD_l <- function(l) mean(1*(draws>=l))
-w_l <- function(l) (ED_l(l) - meanD)*PD_l(l)/varD
-waits <- sapply(dgrid, w_l)
-plot_df <- data.frame(weight=waits, D=dgrid)
-weights_plot <- ggplot(plot_df, aes(x=D,y=weight)) +
-  geom_line(color="blue", lwd=1.3) +
-  labs(title="TWFE Weights") +
-  theme_minimal() +
-  ylim(c(0,1)) +
-  xlim(c(0,7))
-density_plot <- ggplot(data=data.frame(D=draws), aes(x=D)) +
-  geom_density(color="red", lwd=1.3) +
-  labs(title="Density of Dose") +
-  theme_minimal() +
-  ylim(c(0,1)) +
-  xlim(c(0,7))
-ggpubr::ggarrange(density_plot,weights_plot, nrow=1)
-```
-
-[Back](#issues)

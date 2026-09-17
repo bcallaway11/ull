@@ -1,5 +1,5 @@
 ---
-title: "Assessing strong parallel trends via close comparison groups"
+title: "Assessing Strong Parallel Trends via Close Comparison Groups"
 subtitle: "Session 2"
 format:
   revealjs:
@@ -40,8 +40,8 @@ $\newcommand{\E}{\mathbb{E}}
 \renewcommand{\P}{\mathrm{P}}
 \newcommand{\independent}{{\perp\!\!\!\perp}}
 \newcommand{\indicator}[1]{ \mathbf{1}\{#1\} }
-\newcommand{\ATT}{\text{ATT}}$
-[Session 1:]{.alert} interpreting comparisons across doses as causal effects
+\newcommand{\ATT}{\text{ATT}}
+\newcommand{\ACR}{\text{ACR}}$[Session 1:]{.alert} interpreting comparisons across doses as causal effects
 required [strong parallel trends]{.alert-blue} --- a substantially stronger
 assumption than most researchers realize they are invoking
 
@@ -53,7 +53,7 @@ assumption than most researchers realize they are invoking
 
 
 
-## Plan for this Session
+## Plan for This Session
 
 <br> <br> <br>
 
@@ -63,7 +63,7 @@ assumption than most researchers realize they are invoking
 
 3. Empirical application
 
-# 1. Setup and discussion of strong parallel trends {visibility="uncounted"}
+# 1. Setup and Discussion of Strong Parallel Trends {visibility="uncounted"}
 
 ## Setup
 
@@ -80,7 +80,7 @@ The most common way to "more primitively" motivate the parallel trends assumptio
 ::: {.callout-note}
 ## Latent Unconfoundedness
 
-$$\big( Y_{it=1}(0), Y_{it=2}(0) \big) \;\independent\; \indicator{D_i > 0} \;\mid\; \eta_i$$
+$$\big( Y_{it=1}(0), Y_{it=2}(0) \big) \;\independent\; D_i \;\mid\; \eta_i$$
 
 where $\eta_i$ is time-invariant unobserved heterogeneity (i.e., a unit fixed effect)
 
@@ -96,14 +96,14 @@ The most common way to "more primitively" motivate the parallel trends assumptio
 ::: {.callout-note}
 ## Latent Unconfoundedness
 
-$$\big( Y_{it=1}(0), Y_{it=2}(0) \big) \;\independent\; \indicator{D_i > 0} \;\mid\; \eta_i$$
+$$\big( Y_{it=1}(0), Y_{it=2}(0) \big) \;\independent\; D_i \;\mid\; \eta_i$$
 
 where $\eta_i$ is time-invariant unobserved heterogeneity (i.e., a unit fixed effect)
 
 :::
 
 * Alternatively, you can view this as "selection into being treated on time-invariant unobservables":
-$$ \indicator{D_i > 0} = m_0(\eta_i) + u_i \text{ with } u_i \independent \eta_i $$
+$$ \indicator{D_i > 0} = m_0(\eta_i) + u_i \text{ with } u_i \independent \big(Y_{it=1}(0), Y_{it=2}(0)\big) \bigm| \eta_i $$
 * No restrictions on selection into a particular dose at all
 
 ## Motivating Parallel Trends {visibility="uncounted"}
@@ -133,7 +133,21 @@ $$\big\{Y_{i,t=1}(0),\, Y_{i,t=2}(d) : d \in \mathcal{D}\big\} \;\independent\; 
 
 * Extends latent unconfoundedness to holds for all potential outcomes, not just untreated ones
 * Up to $\eta_i$ being unobserved, it is exactly the same assumption that you would see in the literature on continous treatment and dose response functions [@hirano-imbens-2004]
-* "Selection into dose on time-invariant unobservables"
+
+## Motivating Strong Parallel Trends {visibility="uncounted"}
+
+We can extend the notion of latent unconfoundedness as follows:
+
+::: {.callout-note}
+## Latent Unconfoundedness for Dose
+
+$$\big\{Y_{i,t=1}(0),\, Y_{i,t=2}(d) : d \in \mathcal{D}\big\} \;\independent\; D_i \;\mid\; \eta_i$$
+:::
+
+* "Selection into dose on time-invariant unobservables":
+$$D_i = m(\eta_i) + v_i \text{ with } v_i \independent \big(Y_{it=1}(0), Y_{it=2}(d) \big) \bigm| \eta_i$$
+* Conditional on $\eta_i$, does not allow for units that experience dose $d$ to have systematically better outcomes at dose $d$ than units that experienced a different dose.
+
 
 ## Motivating Strong Parallel Trends
 
@@ -146,9 +160,8 @@ $$Y_{i,t}(d) = \theta_{t,d} + \beta_{t,d} \,\eta_i + e_{i,t}(d)$$
 :::
 
 * Additive separability for parallel trends
-* Coefficient on $\eta_i$ can vary with $d$, just like we would do in a linear model for untreated potential outcomes if $\eta_i$ were observed
-* No tricks
-* Parallel trends needs that $\theta_{t=2,d=0} = \theta_{t=1,d=0}$ and $\beta_{t=2,d=0} = \beta_{t=1,d=0}$. What about strong parallel trends?
+* Coefficient on $\eta_i$ can vary with $t$ and/or $d$
+* No tricks---this is exactly the same setup we would have in a linear model for potential outcomes if $\eta_i$ were observed
 
 ## School Closures Example
 
@@ -161,9 +174,12 @@ Back to Session 1's running example where $dose$ = length of Covid school closur
 * $\beta_{t=2,d}$: how strongly baseline ability $\eta_i$ [translates into]{.alert-green} test scores, *given* closure length $d$ --- i.e., varies with $d$ if high ability schools respond differently to different lengths of closures than low ability schools
   * Would be increasing in $d$ if high ability schools are more resilient to long closures than low ability schools.
 
+
+<!--
+
 ```{r echo=FALSE, results="asis"}
 
-title <- "Does strong parallel trends hold in this model?"
+title <- "Does Strong Parallel Trends Hold in This Model?"
 
 before <- "Consider $\\Delta Y(d) := Y_{t=2}(d) - Y_{t=1}(0)$.  Taking $\\E[\\cdot \\mid D=l]$:
 
@@ -194,10 +210,12 @@ step_by_step_eq(eqlist = eqlist,
   title = title)
 ```
 
+-->
 
-## Does strong parallel trends hold in this model?
 
-Appyling the same argument as in Session 1:
+## Does Strong Parallel Trends Hold in This Model?
+
+Applying the same argument as in Session 1:
 $$
   \begin{aligned}
     \E[\Delta Y \mid D=d_h] - \E[\Delta Y \mid D=d_l] &= \ATT(d_h|d_h) - \ATT(d_l|d_l) \\
@@ -206,13 +224,13 @@ $$
   \end{aligned}
 $$
 
-* Learning about $\beta_{t=2,d_l}$ directly does not seem possbile---e.g., $\E[\Delta Y \mid D=d_l] - \E[\Delta Y \mid D=0]$ includes $\beta_{t=2,d_l}$ but also differences in $\E[\eta \mid D=d_l]$ and $\E[\eta \mid D=0]$, which are unobserved
+* Learning about $\beta_{t=2,d_l}$ directly does not seem possible---e.g., $\E[\Delta Y \mid D=d_l] - \E[\Delta Y \mid D=0]$ includes $\beta_{t=2,d_l}$ but also differences in $\E[\eta \mid D=d_l]$ and $\E[\eta \mid D=0]$, which are unobserved
 
 * Making assumptions about $\beta_{t=2,d_l}$ would also be difficult to justify and infeasible to check in practice
 
-## Does strong parallel trends hold in this model? {visibility="uncounted"}
+## Does Strong Parallel Trends Hold in This Model? {visibility="uncounted"}
 
-Appyling the same argument as in Session 1:
+Applying the same argument as in Session 1:
 $$
   \begin{aligned}
     \E[\Delta Y \mid D=d_h] - \E[\Delta Y \mid D=d_l] &= \ATT(d_h|d_h) - \ATT(d_l|d_l) \\
@@ -224,7 +242,7 @@ $$
 * Instead, we will think about trying to determine the plausibility of "no selection" holding (i.e., $\E[\eta \mid D=d_h] - \E[\eta \mid D=d_l] = 0$).
 
 
-# 2. Close comparison groups {visibility="uncounted"}
+# 2. Close Comparison Groups {visibility="uncounted"}
 
 ## Background
 
@@ -237,7 +255,7 @@ In @callaway-dyal-santanna-tsyawo-2025, we introduce a notion of "close comparis
 * If you can find such groups, you can get very robust identification of causal effects (i.e., robustness to the identification strategy)
 
 
-## CCGs adapted to a continuous treatment setting
+## CCGs Adapted to a Continuous Treatment Setting
 
 As discussed above, difference-in-differences attempts to allow for selection on time-invariant unobservables by differencing them out.
 
@@ -283,7 +301,7 @@ In a similar fashion to using pre-treatment periods to validate the parallel tre
 * Find regions where the pre-treatment mean is flat, or
 * Find regions where the pre-treatment mean is flat conditional on covariates
 
-It rationalizes interpreting those regions as being regions where strong parallel trends is plausible, and suggests that we can recover locally comparable causal effects in those regions, e.g., $ACR(d)$ in these regions.
+It rationalizes interpreting those regions as being regions where strong parallel trends is plausible, and suggests that we can recover locally comparable causal effects in those regions, e.g., $\ACR(d)$ in these regions.
 
 <!--
 
@@ -329,18 +347,18 @@ Many DiD applications observe disaggregated units, but the policy is chosen at a
 
 -->
 
-# 4. Empirical illustration {visibility="uncounted"}
+# 3. Empirical Illustration {visibility="uncounted"}
 
 ## Application
 
-Same empirical setting as Session 1: [Acemoglu and Finkelstein (2008)]{.alert-blue} --- the 1983 Medicare PPS reform. Dose = hospital's pre-reform Medicare share; outcome = capital-labor ratio (depreciation share)
+Same empirical setting as Session 1:
 
-[A departure from Session 1 (and from the paper itself):]{.alert} there, pre/post periods were *averaged* into two periods --- pre = avg(1980-83), post = avg(1984-86)
-
-Here, use single [adjacent years]{.alert-blue} instead, anchored at 1982 as a base period:
-
-* 1982 vs.\ 1983, 1984, 1985, 1986
-* plus two more placebos marching up to 1982: 1980 vs.\ 1981, 1981 vs.\ 1982
+* @acemoglu-finkelstein-2008's study of the 1983 Medicare PPS reform.
+* Dose = hospital's pre-reform Medicare share
+* outcome = capital-labor ratio (depreciation share)
+* In session 1, we mainly looked at average outcomes before and after the treatment, but here we will use adjacent years instead, using 1982 as the base period.
+  * Treatment effects: 1982 vs.\ 1983, 1984, 1985, 1986
+  * Plus two more placebos marching up to 1982: 1980 vs.\ 1981, 1981 vs.\ 1982
 
 ## Results: ATT(d|d) {visibility="uncounted"}
 
@@ -380,7 +398,7 @@ Here, use single [adjacent years]{.alert-blue} instead, anchored at 1982 as a ba
 
 ## Pre-Test: ATT(d|d) {visibility="uncounted"}
 
-[Two of three fail]{.alert} --- 1980-81 is close to 0, but 1981-82 ($\widehat{ATT}=-0.22$) and 1982-83 ($\widehat{ATT}=+0.20$) are both significant, in *opposite* directions
+[Two of three fail]{.alert} --- 1980-81 is close to 0, but 1981-82 ($\widehat{\ATT}=-0.22$) and 1982-83 ($\widehat{\ATT}=+0.20$) are both significant, in *opposite* directions
 
 * 1982-83 could reflect anticipation: PPS was legislated in April 1983, months before its October 1983 effective date
 * 1981-82 has no such story --- both years are firmly pre-treatment. This looks like genuine year-to-year instability, not just anticipation
@@ -410,7 +428,7 @@ Next, we check for regions of close comparison groups
 
 ## ACR(d): Close Comparison Region
 
-Same ACR(d) curves as before, now with the canonical region (dose $0.35$-$0.70$) highlighted, plus its density-weighted average  (i.e., a local $ACR$ in the close comparison region)
+Same ACR(d) curves as before, now with the canonical region (dose $0.35$-$0.70$) highlighted, plus its density-weighted average  (i.e., a local $\ACR$ in the close comparison region)
 
 ## ACR(d): Close Comparison Region {visibility="uncounted"}
 
@@ -435,6 +453,25 @@ Same ACR(d) curves as before, now with the canonical region (dose $0.35$-$0.70$)
 ## ACR(d): Close Comparison Region {visibility="uncounted"}
 
 <center><img src="img/s2_acr_1982_1986_shaded.png" width=80%/></center>
+
+## Summary of Application
+
+It appears that:
+
+1. Parallel trends seems to be violated in pre-treatment periods
+2. Checking the levels of pre-treatment outcomes as a function of the dose suggested that there were pockets of no selection
+3. Cross-dose comparisons are more likely to deliver causal effects in those pockets (i.e., a local version of strong parallel trends)
+4. The estimates were noisy, but often negative.  They don't provide any evidence that the Medicare policy increased capital labor ratios.
+
+## Conclusion
+
+Using pre-treatment periods to assess the plausibility of strong parallel trends is challenging because only untreated potential outcomes are observed in those periods.
+
+However, the levels of outcomes in pre-treatment periods across different dose groups provides evidence about difference in the unobserved heterogeneity driving their outcomes.
+
+If differences in observed pre-treatment levels of outcomes are small, it suggests that differences in unobservables are small too.
+
+If differences in unobservables are small, then strong parallel trends is more plausible, and cross-dose comparisons of trends in outcomes can be interpreted as approximately causal in those regions.
 
 # Appendix {visibility="uncounted"}
 
