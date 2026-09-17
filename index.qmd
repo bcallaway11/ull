@@ -29,9 +29,7 @@ Date created: 2026-09-10
 
 ## Sessions
 
-**0. Introduction to Difference-in-Differences**
-
-[[Slides](00_mini_course_overview.html)]
+**0. Introduction to Difference-in-Differences** [[Slides](00_mini_course_overview.html)]
 
 * "Difference-in-Differences Designs: A Practitioner's Guide" ([Published](https://www.aeaweb.org/articles?id=10.1257%2Fjel.20251650), *Journal of Economic Literature*, 2026) ([Working Paper](https://arxiv.org/pdf/2503.13323))
 
@@ -39,23 +37,17 @@ Date created: 2026-09-10
 
 * `R did` package [Website](https://bcallaway11.github.io/did)
 
-**1. Difference-in-Differences with a Continuous Treatment**
-
-[[Slides](01_continuous-treatment.html)]
+**1. Difference-in-Differences with a Continuous Treatment** [[Slides](01_continuous-treatment.html)]
 
 * "Difference-in-Differences with a Continuous Treatment" ([Published](https://www.aeaweb.org/articles?id=10.1257%2Faer.20240137), forthcoming at the *American Economic Review*) ([Working Paper](https://arxiv.org/abs/2107.02637))
 
 * The `contdid` R package (difference-in-differences with a continuous treatment): [GitHub](https://github.com/bcallaway11/contdid)
 
-**2. Assessing Strong Parallel Trends via Close Comparison Groups**
-
-[[Slides](02_comparison-groups.html)]
+**2. Assessing Strong Parallel Trends via Close Comparison Groups** [[Slides](02_comparison-groups.html)]
 
 * "Beyond Parallel Trends: An Identification-Strategy-Robust Approach to Causal Inference with Panel Data" ([Working Paper](https://arxiv.org/abs/2511.21977))
 
-**3. Shift-Share Designs**
-
-[[Slides](03_shift-share.html)]
+**3. Shift-Share Designs** [[Slides](03_shift-share.html)]
 
 * Goldsmith-Pinkham, Sorkin, and Swift. "Bartik Instruments: What, When, Why, and How." ([Published](https://www.aeaweb.org/articles?id=10.1257%2Faer.20181047), *American Economic Review*, 2020) ([Working Paper](https://www.nber.org/papers/w24408))
 
