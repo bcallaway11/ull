@@ -93,7 +93,7 @@ We will focus on a setting with a [panel data pre-post research design]{.alert}
 
 We will return to extensions where
 
-* More periods
+* More periods and variation in treatment timing
 * All units become treated in the second period
 * Units can be already treated in the first period
 
@@ -124,7 +124,7 @@ We will return to extensions where
 
 - [Treatment:]{.alert} $D_i$
 
-- [Potential outcomes:]{.alert} $Y_{it=2}(d)$
+- [Potential outcomes:]{.alert} $Y_{it}(d)$
 
 - [Observed outcomes:]{.alert} $Y_{it=2}$ and $Y_{it=1}$
 
@@ -178,8 +178,22 @@ We can view $\ATT(d \mid d)$ and $\ACRT(d \mid d)$ as the ["building blocks"]{.a
 
 For all $d \in \mathcal{D}_+$,
 
-$$\E[\Delta Y(0) | D=d] = \E[\Delta Y(0) | D=0]$$
+$$\E[\Delta Y(0) \mid D=d] = \E[\Delta Y(0) \mid D=0]$$
 :::
+
+## Identification
+
+::: {.callout-note}
+## Parallel Trends Assumption
+
+For all $d \in \mathcal{D}_+$,
+
+$$\E[\Delta Y(0) \mid D=d] = \E[\Delta Y(0) \mid D=0]$$
+:::
+
+* This is the natural way to extend the parallel trends assumption from the binary treatment setting to the continuous treatment setting
+* In @acemoglu-finkelstein-2008:
+![](img/af/af-pt.png)
 
 ```{r echo=FALSE, results="asis"}
 
@@ -221,11 +235,11 @@ step_by_step_eq(eqlist = eqlist,
 
 For all $d \in \mathcal{D}_+$,
 
-$$\E[\Delta Y(0) | D=d] = \E[\Delta Y(0) | D=0]$$
+$$\E[\Delta Y(0) \mid D=d] = \E[\Delta Y(0) \mid D=0]$$
 :::
 
 Using similar arguments, you can show
-$$\ATT^{\texttt{loc}} = \E[\Delta Y | D>0] - \E[\Delta Y | D=0]$$
+$$\ATT^{\texttt{loc}} = \E[\Delta Y \mid D>0] - \E[\Delta Y \mid D=0]$$
 
 
 
@@ -239,8 +253,11 @@ $$\ATT^{\texttt{loc}} = \E[\Delta Y | D>0] - \E[\Delta Y | D=0]$$
 
 [Most empirical work with a continuous treatment wants to think about how causal responses vary across dose]{.alert}
 
+* Plot treatment effects as a function of dose and ask: does more dose cause outcomes to increase/decrease/no effect?
 
-* Plot treatment effects as a function of dose and ask: does more dose tend to increase/decrease/not affect outcomes?
+* Important because distinguishing between different theories often involves making comparisons across doses
+  * Smoking Example
+
 
 ::: {.notes}
 
@@ -248,7 +265,24 @@ oftentimes, our theory will have implications about effects at different values 
 
 :::
 
+## Are We Done? {visibility="uncounted"}
+
+<mark>Unfortunately, no</mark>
+
+[Most empirical work with a continuous treatment wants to think about how causal responses vary across dose]{.alert}
+
+* Empirical work very often interprets TWFE regressions in terms of causal responses (slope parameters):
+  * @goodman-bacon-2018: "After Medicaid, nonwhite child mortality fell by 1.4 percent (s.e. = 0.34; table 3) for each percentage point difference in initial AFDC rates."
+
+  <!-- treatment: initial AFDC rate/threshold at state level, outcome: child mortality -->
+
 * Average causal response parameters *inherently* involve comparisons across slightly different doses
+
+## Are We Done? {visibility="uncounted"}
+
+<mark>Unfortunately, no</mark>
+
+[Most empirical work with a continuous treatment wants to think about how causal responses vary across dose]{.alert}
 
 There are [new issues]{.alert-blue} related to comparing $\ATT(d \mid d)$ at different doses and interpreting these differences as [causal effects]{.alert-green}
 
@@ -312,7 +346,13 @@ step_by_step_eq(eqlist = eqlist,
 
 * Thus, comparing $\ATT(d \mid d)$ across different values is tricky and not for free
 
-[What can you do?]{.alert-blue}
+## Examples
+
+
+
+## Interpretation Issues
+
+[What can you do?]{.alert-green}
 
 * One idea, just recover $\ATT(d \mid d)$ and interpret it cautiously (interpret it by itself not relative to different values of $d$)
 
@@ -326,7 +366,9 @@ $$ \ATT(d) := \E[Y_{t=2}(d) - Y_{t=2}(0) \mid D>0] \qquad \qquad \ACRT(d) := \fr
 
 These involve the level effect or slope effect at $d$ (like the previous parameters), but they are causal effect parameters for the entire treated population (not just the local group that actually experienced dose $d$)
 
-We can also consider aggregated versions of these parameters
+We can also consider aggregated versions of these parameters:
+
+$$\ATT^{\texttt{glob}} = \E[ATT(D) \mid D>0]  \quad \quad \ACRT^{\texttt{glob}} = \E[\ACRT(D) \mid D>0]$$
 
 ## Introduce Stronger Assumptions
 
@@ -343,10 +385,10 @@ $$\E[Y_{t=2}(d) - Y_{t=1}(0) \mid D>0] = \E[Y_{t=2}(d) - Y_{t=1}(0) \mid D=d]$$
 ::: {.fragment}
 
 * This is notably different from "Standard" Parallel Trends
-* Non-nested with "Standard" Parallel Trends, but likely stronger
 * It involves potential outcomes for all values of the dose (not just untreated potential outcomes)
-* Allows for selection into the treatment but no selection into the amount of treatment
+* Rules out selection into the amount of treatment
 * All treated dose groups would have experienced the same path of outcomes had they been assigned the same dose
+* Non-nested with "Standard" Parallel Trends, but likely stronger
 
 :::
 
@@ -458,7 +500,7 @@ It's possible to do some versions of DiD with a continuous treatment without hav
 
   * In this case, it is not possible to recover level effects like $\ATT(d|d)$.
 
-  * However, notice that $$\begin{aligned}& \E[\Delta Y | D=d_h] - \E[\Delta Y | D=d_l] \\ &\hspace{50pt}= \Big(\E[\Delta Y | D=d_h] - \E[\Delta Y(0) | D=d_h]\Big) - \Big(\E[\Delta Y | D=d_l]-\E[\Delta Y(0) | D=d_l]\Big) \\ &\hspace{50pt}= \ATT(d_h|d_h) - \ATT(d_l|d_l)\end{aligned}$$
+  * However, notice that $$\begin{aligned}& \E[\Delta Y | D=d_h] - \E[\Delta Y | D=d_l] \\ &\hspace{20pt}= \Big(\E[\Delta Y | D=d_h] - \E[\Delta Y(0) | D=d_h]\Big) - \Big(\E[\Delta Y | D=d_l]-\E[\Delta Y(0) | D=d_l]\Big) \\ &\hspace{20pt}= \ATT(d_h|d_h) - \ATT(d_l|d_l)\end{aligned}$$
 
   * In words: comparing path of outcomes for those that experienced dose $d_h$ to path of outcomes among those that experienced dose $d_l$ (and not relying on having an untreated group) delivers the difference between their $\ATT$'s.
 
