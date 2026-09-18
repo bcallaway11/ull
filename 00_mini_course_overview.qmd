@@ -920,7 +920,7 @@ attO <- did::aggte(attgt, type = "group")
 
 ```{r}
 #| echo: false
-modelsummary(list(attO), gof_omit = ".*", coef_map = c("ATT(Average)" = "$ATT^o$"))
+modelsummary(list(attO), gof_omit = ".*", coef_map = c("ATT(Average)" = "\\(ATT^o\\)"))
 ```
 
 
