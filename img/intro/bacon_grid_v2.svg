@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="0 0 680 260" font-family="system-ui, -apple-system, sans-serif">
+
+<text font-size="11" fill="#9ca3af" x="153" y="14" text-anchor="end">Group</text>
+
+<text font-size="13" font-weight="600" fill="#374151" x="153" y="52"  text-anchor="end" dominant-baseline="central">2</text>
+<text font-size="13" font-weight="600" fill="#374151" x="153" y="100" text-anchor="end" dominant-baseline="central">3</text>
+<text font-size="13" font-weight="600" fill="#374151" x="153" y="148" text-anchor="end" dominant-baseline="central">4</text>
+<text font-size="13" font-weight="600" fill="#374151" x="153" y="196" text-anchor="end" dominant-baseline="central">Never</text>
+
+<rect x="160" y="28"  width="100" height="48" fill="#f3f4f6" stroke="#9ca3af" stroke-width="0.75"/>
+<rect x="260" y="28"  width="100" height="48" fill="#fed7aa" stroke="#9ca3af" stroke-width="0.75"/>
+<rect x="360" y="28"  width="100" height="48" fill="#fed7aa" stroke="#9ca3af" stroke-width="0.75"/>
+<rect x="460" y="28"  width="100" height="48" fill="#fed7aa" stroke="#9ca3af" stroke-width="0.75"/>
+
+<rect x="160" y="76"  width="100" height="48" fill="#f3f4f6" stroke="#9ca3af" stroke-width="0.75"/>
+<rect x="260" y="76"  width="100" height="48" fill="#f3f4f6" stroke="#9ca3af" stroke-width="0.75"/>
+<rect x="360" y="76"  width="100" height="48" fill="#fed7aa" stroke="#9ca3af" stroke-width="0.75"/>
+<rect x="460" y="76"  width="100" height="48" fill="#fed7aa" stroke="#9ca3af" stroke-width="0.75"/>
+
+<rect x="160" y="124" width="100" height="48" fill="#f3f4f6" stroke="#9ca3af" stroke-width="0.75"/>
+<rect x="260" y="124" width="100" height="48" fill="#f3f4f6" stroke="#9ca3af" stroke-width="0.75"/>
+<rect x="360" y="124" width="100" height="48" fill="#f3f4f6" stroke="#9ca3af" stroke-width="0.75"/>
+<rect x="460" y="124" width="100" height="48" fill="#fed7aa" stroke="#9ca3af" stroke-width="0.75"/>
+
+<rect x="160" y="172" width="100" height="48" fill="#f3f4f6" stroke="#9ca3af" stroke-width="0.75"/>
+<rect x="260" y="172" width="100" height="48" fill="#f3f4f6" stroke="#9ca3af" stroke-width="0.75"/>
+<rect x="360" y="172" width="100" height="48" fill="#f3f4f6" stroke="#9ca3af" stroke-width="0.75"/>
+<rect x="460" y="172" width="100" height="48" fill="#f3f4f6" stroke="#9ca3af" stroke-width="0.75"/>
+
+<path d="M260 28 L260 76 L360 76 L360 124 L460 124 L460 172" fill="none" stroke="#ea580c" stroke-width="2.5" stroke-linejoin="miter"/>
+
+<text font-size="13" font-weight="600" fill="#374151" x="210" y="232" text-anchor="middle">1</text>
+<text font-size="13" font-weight="600" fill="#374151" x="310" y="232" text-anchor="middle">2</text>
+<text font-size="13" font-weight="600" fill="#374151" x="410" y="232" text-anchor="middle">3</text>
+<text font-size="13" font-weight="600" fill="#374151" x="510" y="232" text-anchor="middle">4</text>
+<text font-size="11" fill="#9ca3af" x="360" y="250" text-anchor="middle">Time period</text>
+
+</svg>

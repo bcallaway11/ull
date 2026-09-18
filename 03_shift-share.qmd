@@ -15,6 +15,7 @@ author:
     affiliation: University of Georgia
     email: brantly.callaway@uga.edu
 date: September 18, 2026
+csl: author-date.csl
 bibliography:
   - refs.bib
   - this_refs.bib
@@ -55,7 +56,7 @@ Combining these creates a single variable capturing how "exposed" a unit is to s
 * These variables are often used to address endogeneity concerns in applications
 * Emphasize that there are strong connections between shift-share and difference-in-differences with a continuous treatment from previous sessions.
 
-## Plan for this Session
+## Plan for This Session
 
 <br>
 
@@ -67,9 +68,9 @@ Combining these creates a single variable capturing how "exposed" a unit is to s
 
 4. Extensions
 
-# 1. Introduction to shift-share designs and an application {visibility="uncounted"}
+# 1. Introduction to Shift-Share Designs and an Application {visibility="uncounted"}
 
-## Main reference papers
+## Main Reference Papers
 
 1. @goldsmith-sorkin-swift-2020
 
@@ -140,7 +141,7 @@ Start with a simplified setting similar to the one we have been considering:
 * No units treated in the first period---this almost holds in the application, but not quite
   * Important to relax later as many shift-share applications involve aggregated data where it is uncommon for there to be a period where units are fully untreated.
 
-## @downes-2024's main concern
+## @downes-2024's Main Concern
 
 [Endogeneity:]{.alert} locations with tight labor markets may experience higher unionization *but* a tight labor market may also affect the trend in county fertility even without unionization.
 
@@ -153,10 +154,10 @@ or
 $\text{Violation of Strong Parallel Trends: } \E[\Delta Y(d) \mid D=d'] \neq \E[\Delta Y(d) \mid D=d]$
 
 
-# 2. Constructing shift-share variables {visibility="uncounted"}
+# 2. Constructing Shift-Share Variables {visibility="uncounted"}
 
 
-## Constructing a shift-share variable
+## Constructing a Shift-Share Variable
 
 To start with, notice that
 
@@ -170,7 +171,7 @@ where
 
 This is a decomposition and holds by definition.
 
-## Constructing a shift-share variable
+## Constructing a Shift-Share Variable
 
 Next, we can decompose the industry share variable $s_{ijt=2}$ and the industry unionization rate $r_{ijt=2}$ as follows:
 
@@ -184,14 +185,14 @@ where $\color{blue}{r_{jt=2}}$ is the national unionization rate in industry $j$
 
 Roughly, the idea of a shift-share variable is that $s_{ijt=1}$ and/or $r_{jt=2}$ are more likely to be exogenous than the treatment $D_{it=2}$ itself.
 
-## Constructing a shift-share variable
+## Constructing a Shift-Share Variable
 
 We can now construct a shift-share variable as follows:
 $$ B_{i} = \sum_{j=1}^J s_{ijt=1} \times r_{jt=2} $$
 
 This is following the notation in @goldsmith-sorkin-swift-2020, you can think of $B$ standing for "Bartik"
 
-## Constructing a shift-share variable
+## Constructing a Shift-Share Variable
 
 @downes-2024 writes the same equation as:
 $$SSIV_{it} = \sum_{j=1}^J \underbrace{\textrm{IndShare}^{1910}_{ij}}_{\textrm{share}} \times \underbrace{\textrm{NatlUnionRate}_{jt}}_{\textrm{shift}}$$
@@ -199,7 +200,7 @@ $$SSIV_{it} = \sum_{j=1}^J \underbrace{\textrm{IndShare}^{1910}_{ij}}_{\textrm{s
 * [Shares:]{.alert-blue} local industry composition, measured in 1910, before the NLRA
 * [Shifts:]{.alert} national, industry-level union membership rates over time
 
-## Constructing a shift-share variable
+## Constructing a Shift-Share Variable
 
 $B_i$ represents the "exposure" of different counties to unionization:
 
@@ -215,7 +216,7 @@ $B_i$ represents the "exposure" of different counties to unionization:
 ![](img/downes/downes-fig7b.png){fig-align="center"}
 
 
-## Variation in $B_i$: An example
+## Variation in $B_i$: An Example
 
 @downes-2024 gives a concrete two-county example:
 
@@ -229,9 +230,9 @@ This implies that these two counties were differently exposed to the NLRA shock.
 
 ![](img/downes/downes-figa4.png){fig-align="center"}
 
-# 3. Causal effects {visibility="uncounted"}
+# 3. Causal Effects {visibility="uncounted"}
 
-## What does the shift-share being exogenous mean?
+## What Does the Shift-Share Being Exogenous Mean?
 
 The way that @goldsmith-sorkin-swift-2020 discuss exogeneity of the shift-share variable is through [exogeneity of the shares]{.alert}.
 
@@ -242,7 +243,7 @@ For simplicity, think about the case with two industries $j=1,2$:
 * $D(s_{1}, s_{2})$---the unionization rate in a particular county in the second period if the shares were set to $s_{1}$ and $s_{2}$.
 * $Y_{it=2}(d,s_{1},s_{2})$---the potential outcome for county $i$ at time $t=2$ if the treatment were set to $d$ and the shares were set to $s_{1}$ and $s_{2}$.
 
-## What does the shift-share being exogenous mean?
+## What Does the Shift-Share Being Exogenous Mean?
 
 The way that @goldsmith-sorkin-swift-2020 discuss exogeneity of the shift-share variable is through [exogeneity of the shares]{.alert}.
 
@@ -380,13 +381,13 @@ In settings where units are already treated in the first period, my understandin
   * i.e., the potential outcome only depends on the change in treatment, not the level of treatment.
   * Would birthrates be the same in a county that went from 0% to 10% unionized as if it had gone from 20% to 30% unionized?  This seems like a strong assumption.
 
-## Extension 2: Identification through exogenous shifts
+## Extension 2: Identification through Exogenous Shifts
 
 I emphasized the "exogenous shares" approach to identification from @goldsmith-sorkin-swift-2020, but this is really only half of the literature.
 
 The other main approach is to assume the [shifts are exogenous]{.alert} and the shares are allowed to be endogenous, as in @borusyak-hull-jaravel-2022
 
-## Should you argue for exogenous shares or shifts?
+## Should You Argue for Exogenous Shares or Shifts?
 
 @borusyak-hull-jaravel-2025 provide a checklist for deciding if you should argue for exogenous shares or shifts.
 
@@ -394,10 +395,10 @@ The other main approach is to assume the [shifts are exogenous]{.alert} and the 
 
 2. Are shares tailored or generic?---tailored to this channel suggests shares path, shares that could proxy many shocks suggests shifts path
 
-3. Which story can you say with a straight face: *"each share alone would satisfy parallel trends"* or *"this shock is as-good-as-random and only reaches units through the treatment"*?
+3. Which is more plausible: *"each share alone would satisfy parallel trends"* or *"this shock is as-good-as-random and only reaches units through the treatment"*?
 
 
-## Exogenous shifts example
+## Exogenous Shifts Example
 
 [Example:]{.alert} @autor-dorn-hanson-2013 "China shock"
 
@@ -405,7 +406,7 @@ The other main approach is to assume the [shifts are exogenous]{.alert} and the 
 * Can't credibly argue "nothing else differential is happening" conditional on this share---too many other unobserved industry shocks load on the same exposure variable
 * The shock side is easier to defend: industry-level China productivity growth (proxied by China's import growth *to other countries*) is driven by forces no single US region could plausibly affect
 
-## Exogenous shares example
+## Exogenous Shares Example
 
 [Example:]{.alert} Card (1990), Mariel Boatlift / immigrant-enclave designs
 
@@ -413,7 +414,7 @@ The other main approach is to assume the [shifts are exogenous]{.alert} and the 
 * Natural parallel-trends story: absent the shock, migrant vs.\ native labor demand would have trended similarly across high- and low-exposure enclaves
 * Only one real shift here (a single migration wave) --- too few shifts for the exogenous-shifts approach to even apply
 
-# Thank you
+# Thank You
 
 [brantly.callaway@uga.edu](mailto:brantly.callaway@uga.edu)
 

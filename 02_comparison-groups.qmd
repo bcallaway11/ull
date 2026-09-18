@@ -15,6 +15,7 @@ author:
     affiliation: University of Georgia
     email: brantly.callaway@uga.edu
 date: September 18, 2026
+csl: author-date.csl
 bibliography:
   - refs.bib
   - this_refs.bib
@@ -67,11 +68,30 @@ assumption than most researchers realize they are invoking
 
 ## Setup
 
-Same [staggered panel data continuous treatment design]{.alert} as Session 1:
+Same [pre-post research design with a continuous treatment]{.alert} as Session 1:
 
 * Two periods $t=1,2$;
 * No one treated at $t=1$;
 * Continuous dose $D_i$ realized at $t=2$
+
+In order to make the argument that the levels of pre-treatment outcomes are informative about strong parallel trends, we need to think some more about where parallel trends and strong parallel trends come from. →
+
+## Motivating Parallel Trends
+
+The most common way to "more primitively" motivate the parallel trends assumption is as a combination of the following two assumptions [@ashenfelter-card-1985;@angrist-krueger-1999;@ghanem-santanna-wuthrich-2024; @marx-tamer-tang-2025]:
+
+::: {.callout-note}
+## Latent Unconfoundedness
+
+$$\big( Y_{it=1}(0), Y_{it=2}(0) \big) \;\independent\; D_i \;\mid\; \eta_i$$
+
+where $\eta_i$ is time-invariant unobserved heterogeneity (i.e., a unit fixed effect)
+
+:::
+
+* [Unconfoundedness]{.alert} - because this corresponds to the type of unconfoundedness that is very common for observational causal inference
+
+* [Latent]{.alert-blue} - because the confounder is unobserved
 
 ## Motivating Parallel Trends
 
@@ -103,7 +123,7 @@ where $\eta_i$ is time-invariant unobserved heterogeneity (i.e., a unit fixed ef
 :::
 
 * Alternatively, you can view this as "selection into being treated on time-invariant unobservables":
-$$ \indicator{D_i > 0} = m_0(\eta_i) + u_i \text{ with } u_i \independent \big(Y_{it=1}(0), Y_{it=2}(0)\big) \bigm| \eta_i $$
+$$ \indicator{D_i > 0} = m_0(\eta_i) + u_{it} \text{ with } u_{it} \independent \big(Y_{it=1}(0), Y_{it=2}(0)\big) \bigm| \eta_i $$
 * No restrictions on selection into a particular dose at all
 
 ## Motivating Parallel Trends {visibility="uncounted"}
@@ -133,6 +153,7 @@ $$\big\{Y_{i,t=1}(0),\, Y_{i,t=2}(d) : d \in \mathcal{D}\big\} \;\independent\; 
 
 * Extends latent unconfoundedness to holds for all potential outcomes, not just untreated ones
 * Up to $\eta_i$ being unobserved, it is exactly the same assumption that you would see in the literature on continous treatment and dose response functions [@hirano-imbens-2004]
+* If $\eta_i$ were observed, we could compare units with the same $\eta_i$ but different doses to recover $\ATT(d)$
 
 ## Motivating Strong Parallel Trends {visibility="uncounted"}
 
@@ -145,8 +166,8 @@ $$\big\{Y_{i,t=1}(0),\, Y_{i,t=2}(d) : d \in \mathcal{D}\big\} \;\independent\; 
 :::
 
 * "Selection into dose on time-invariant unobservables":
-$$D_i = m(\eta_i) + v_i \text{ with } v_i \independent \big(Y_{it=1}(0), Y_{it=2}(d) \big) \bigm| \eta_i$$
-* Conditional on $\eta_i$, does not allow for units that experience dose $d$ to have systematically better outcomes at dose $d$ than units that experienced a different dose.
+$$D_i = m(\eta_i) + v_{it} \text{ with } v_{it} \independent \big(Y_{it=1}(0), Y_{it=2}(d) \big) \bigm| \eta_i$$
+* Distribution of $\eta_i$ can systematically vary across dose groups, but other unobservables that affect potential outcomes cannot vary systematically across dose groups
 
 
 ## Motivating Strong Parallel Trends
@@ -213,20 +234,6 @@ step_by_step_eq(eqlist = eqlist,
 -->
 
 
-## Does Strong Parallel Trends Hold in This Model?
-
-Applying the same argument as in Session 1:
-$$
-  \begin{aligned}
-    \E[\Delta Y \mid D=d_h] - \E[\Delta Y \mid D=d_l] &= \ATT(d_h|d_h) - \ATT(d_l|d_l) \\
-    &=  \underbrace{(\theta_{t=2,d_h} - \theta_{t=2,d_l}) + (\beta_{t=2,d_h} - \beta_{t=2,d_l}) \E[\eta \mid D=d_h]}_{\textrm{Causal Response}} \\
-    &+ \underbrace{\beta_{t=2,d_l} \Big( \E[\eta \mid D=d_h] - \E[\eta \mid D=d_l] \Big)}_{\textrm{Selection Bias}}
-  \end{aligned}
-$$
-
-* Learning about $\beta_{t=2,d_l}$ directly does not seem possible---e.g., $\E[\Delta Y \mid D=d_l] - \E[\Delta Y \mid D=0]$ includes $\beta_{t=2,d_l}$ but also differences in $\E[\eta \mid D=d_l]$ and $\E[\eta \mid D=0]$, which are unobserved
-
-* Making assumptions about $\beta_{t=2,d_l}$ would also be difficult to justify and infeasible to check in practice
 
 ## Does Strong Parallel Trends Hold in This Model? {visibility="uncounted"}
 
@@ -239,7 +246,9 @@ $$
   \end{aligned}
 $$
 
-* Instead, we will think about trying to determine the plausibility of "no selection" holding (i.e., $\E[\eta \mid D=d_h] - \E[\eta \mid D=d_l] = 0$).
+* We would like for the selection bias term to be equal to 0.
+
+* In particular, we will consider looking for dose groups where there is no selection (on the time-invariant unobservables) into the dose (i.e., $\E[\eta \mid D=d_h] - \E[\eta \mid D=d_l] = 0$).
 
 
 # 2. Close Comparison Groups {visibility="uncounted"}
@@ -257,33 +266,32 @@ In @callaway-dyal-santanna-tsyawo-2025, we introduce a notion of "close comparis
 
 ## CCGs Adapted to a Continuous Treatment Setting
 
-As discussed above, difference-in-differences attempts to allow for selection on time-invariant unobservables by differencing them out.
-
-But we can look at the level of pre-treatment outcomes to inform us about the distribution of unobservables across dose groups.
+The idea here is that, if we can find range(s) of dose groups that are close comparison groups for each other (i.e., have the same pre-treatment level of outcomes), then it will suggest that strong parallel trends holds (locally) for those dose groups.
 
 
 ```{r echo=FALSE, results="asis"}
 
-title <- "Same Pre-Treatment Mean Implies Same Mean of \\boldsymbol{\\eta}"
+title <- "Close Comparsion Dose Groups"
 
-before <- "For some dose group $l$, its mean of untreated potential outcomes is given by:
+before <- "Suppose we two dose groups $d_h$ and $d_l$ that have the same pre-treatment levels of outcomes, $$\\E[Y_{t=1} \\mid D=d_h] = \\E[Y_{t=1} \\mid D=d_l]$$
 
 . . .
+
+Then,
+
 "
 
-eqlist <- list("\\E[Y_{t=1} \\mid D=l] &= \\E[Y_{t=1}(0) \\mid D=l] \\hspace{150pt}", "&= \\theta_1 + \\E[\\eta \\mid D=l]")
+eqlist <- list("\\E[Y_{t=1} \\mid D=d_h] &= \\E[Y_{t=1}(0) \\mid D=d_h] = \\theta_1 + \\E[\\eta \\mid D=d_h]", "\\E[Y_{t=1} \\mid D=d_l] &= \\E[Y_{t=1}(0) \\mid D=d_l] = \\theta_1 + \\E[\\eta \\mid D=d_l]")
 
 after <- "
 
 . . .
 
-Since $\\theta_1$ is the same for every $l$:
+Thus, close comparison dose groups satisfy:
 
 $$\\E[Y_{t=1} \\mid D=l] = \\E[Y_{t=1} \\mid D=d] \\quad\\iff\\quad \\E[\\eta \\mid D=l] = \\E[\\eta \\mid D=d]$$
 
-In other words, dose groups with the same pre-treatment mean of outcomes have the same mean of unobservables $\\eta_i$...
-
-If they have the same mean of $\\eta_i$, then the selection-bias terms above vanish, and strong parallel trends holds (at least locally)
+[If they have the same mean of $\\eta_i$, then the selection-bias terms above vanish, and strong parallel trends holds (at least locally)}{.alert}
 
 "
 
@@ -359,6 +367,19 @@ Same empirical setting as Session 1:
 * In session 1, we mainly looked at average outcomes before and after the treatment, but here we will use adjacent years instead, using 1982 as the base period.
   * Treatment effects: 1982 vs.\ 1983, 1984, 1985, 1986
   * Plus two more placebos marching up to 1982: 1980 vs.\ 1981, 1981 vs.\ 1982
+
+## Results
+
+1. Post-treatment $\ATT(d|d)$
+
+2. Post-treatment $\ACR(d)$
+
+3. Pre-treatment $\ATT(d|d)$
+
+4. Pre-test for same pre-treatment levels of outcomes
+
+5. Post-treatment $\ACR(d)$ in close comparison region
+
 
 ## Results: ATT(d|d) {visibility="uncounted"}
 
@@ -461,17 +482,16 @@ It appears that:
 1. Parallel trends seems to be violated in pre-treatment periods
 2. Checking the levels of pre-treatment outcomes as a function of the dose suggested that there were pockets of no selection
 3. Cross-dose comparisons are more likely to deliver causal effects in those pockets (i.e., a local version of strong parallel trends)
-4. The estimates were noisy, but often negative.  They don't provide any evidence that the Medicare policy increased capital labor ratios.
+4. The estimates were noisy, and close to zero or slightly negative (substantially different than the positive estimates from the TWFE regression).  They don't provide any evidence that the Medicare policy increased capital labor ratios.
 
 ## Conclusion
 
 Using pre-treatment periods to assess the plausibility of strong parallel trends is challenging because only untreated potential outcomes are observed in those periods.
 
-However, the levels of outcomes in pre-treatment periods across different dose groups provides evidence about difference in the unobserved heterogeneity driving their outcomes.
+However, the levels of outcomes in pre-treatment periods across different dose groups provides evidence about difference in the time-invariant unobservables driving their outcomes.
 
-If differences in observed pre-treatment levels of outcomes are small, it suggests that differences in unobservables are small too.
-
-If differences in unobservables are small, then strong parallel trends is more plausible, and cross-dose comparisons of trends in outcomes can be interpreted as approximately causal in those regions.
+  * If differences in observed pre-treatment levels of outcomes are small, it suggests that differences in unobservables are small too.
+  * If differences in unobservables are small, then strong parallel trends is more plausible, and cross-dose comparisons of trends in outcomes can be interpreted as approximately causal in those regions.
 
 # Appendix {visibility="uncounted"}
 

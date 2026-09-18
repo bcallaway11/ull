@@ -491,6 +491,7 @@ margin: 0 0.8em 0.2em -1em;  vertical-align: middle;
 div.csl-bib-body { }
 div.csl-entry {
 clear: both;
+margin-bottom: 0em;
 }
 .hanging-indent div.csl-entry {
 margin-left:2em;
@@ -1065,16 +1066,36 @@ Brantly Callaway
 </section>
 <section id="setup" class="slide level2">
 <h2>Setup</h2>
-<p>Same <span class="alert">staggered panel data continuous treatment design</span> as Session 1:</p>
+<p>Same <span class="alert">pre-post research design with a continuous treatment</span> as Session 1:</p>
 <ul>
 <li>Two periods <span class="math inline">\(t=1,2\)</span>;</li>
 <li>No one treated at <span class="math inline">\(t=1\)</span>;</li>
 <li>Continuous dose <span class="math inline">\(D_i\)</span> realized at <span class="math inline">\(t=2\)</span></li>
 </ul>
+<p>In order to make the argument that the levels of pre-treatment outcomes are informative about strong parallel trends, we need to think some more about where parallel trends and strong parallel trends come from. →</p>
 </section>
 <section id="motivating-parallel-trends" class="slide level2">
 <h2>Motivating Parallel Trends</h2>
-<p>The most common way to “more primitively” motivate the parallel trends assumption is as a combination of the following two assumptions <span class="citation" data-cites="ashenfelter-card-1985 angrist-krueger-1999 ghanem-santanna-wuthrich-2024 marx-tamer-tang-2025">(<a href="#/references" role="doc-biblioref" onclick>Ashenfelter and Card 1985</a>; <a href="#/references" role="doc-biblioref" onclick>Angrist and Krueger 1999</a>; <a href="#/references" role="doc-biblioref" onclick>Ghanem et al. 2024</a>; <a href="#/references" role="doc-biblioref" onclick>Marx et al. 2025</a>)</span>:</p>
+<p>The most common way to “more primitively” motivate the parallel trends assumption is as a combination of the following two assumptions <span class="citation" data-cites="ashenfelter-card-1985 angrist-krueger-1999 ghanem-santanna-wuthrich-2024 marx-tamer-tang-2025">(<a href="#/references" role="doc-biblioref" onclick>Ashenfelter and Card 1985</a>; <a href="#/references" role="doc-biblioref" onclick>Angrist and Krueger 1999</a>; <a href="#/references" role="doc-biblioref" onclick>Ghanem, Sant’Anna, and Wüthrich 2024</a>; <a href="#/references" role="doc-biblioref" onclick>Marx, Tamer, and Tang 2025</a>)</span>:</p>
+<div class="callout callout-note no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Latent Unconfoundedness</strong></p>
+</div>
+<div class="callout-content">
+<p><span class="math display">\[\big( Y_{it=1}(0), Y_{it=2}(0) \big) \;\independent\; D_i \;\mid\; \eta_i\]</span></p>
+<p>where <span class="math inline">\(\eta_i\)</span> is time-invariant unobserved heterogeneity (i.e., a unit fixed effect)</p>
+</div>
+</div>
+</div>
+<ul>
+<li><p><span class="alert">Unconfoundedness</span> - because this corresponds to the type of unconfoundedness that is very common for observational causal inference</p></li>
+<li><p><span class="alert-blue">Latent</span> - because the confounder is unobserved</p></li>
+</ul>
+</section>
+<section id="motivating-parallel-trends-1" class="slide level2">
+<h2>Motivating Parallel Trends</h2>
+<p>The most common way to “more primitively” motivate the parallel trends assumption is as a combination of the following two assumptions <span class="citation" data-cites="ashenfelter-card-1985 angrist-krueger-1999 ghanem-santanna-wuthrich-2024 marx-tamer-tang-2025">(<a href="#/references" role="doc-biblioref" onclick>Ashenfelter and Card 1985</a>; <a href="#/references" role="doc-biblioref" onclick>Angrist and Krueger 1999</a>; <a href="#/references" role="doc-biblioref" onclick>Ghanem, Sant’Anna, and Wüthrich 2024</a>; <a href="#/references" role="doc-biblioref" onclick>Marx, Tamer, and Tang 2025</a>)</span>:</p>
 <div class="callout callout-note no-icon callout-titled callout-style-default">
 <div class="callout-body">
 <div class="callout-title">
@@ -1091,9 +1112,9 @@ Brantly Callaway
 <li>The previous comparison is infeasible, though, because <span class="math inline">\(\eta_i\)</span> is unobserved</li>
 </ul>
 </section>
-<section id="motivating-parallel-trends-1" class="slide level2" data-visibility="uncounted">
+<section id="motivating-parallel-trends-2" class="slide level2" data-visibility="uncounted">
 <h2>Motivating Parallel Trends</h2>
-<p>The most common way to “more primitively” motivate the parallel trends assumption is as a combination of the following two assumptions <span class="citation" data-cites="ashenfelter-card-1985 angrist-krueger-1999 ghanem-santanna-wuthrich-2024 marx-tamer-tang-2025">(<a href="#/references" role="doc-biblioref" onclick>Ashenfelter and Card 1985</a>; <a href="#/references" role="doc-biblioref" onclick>Angrist and Krueger 1999</a>; <a href="#/references" role="doc-biblioref" onclick>Ghanem et al. 2024</a>; <a href="#/references" role="doc-biblioref" onclick>Marx et al. 2025</a>)</span>:</p>
+<p>The most common way to “more primitively” motivate the parallel trends assumption is as a combination of the following two assumptions <span class="citation" data-cites="ashenfelter-card-1985 angrist-krueger-1999 ghanem-santanna-wuthrich-2024 marx-tamer-tang-2025">(<a href="#/references" role="doc-biblioref" onclick>Ashenfelter and Card 1985</a>; <a href="#/references" role="doc-biblioref" onclick>Angrist and Krueger 1999</a>; <a href="#/references" role="doc-biblioref" onclick>Ghanem, Sant’Anna, and Wüthrich 2024</a>; <a href="#/references" role="doc-biblioref" onclick>Marx, Tamer, and Tang 2025</a>)</span>:</p>
 <div class="callout callout-note no-icon callout-titled callout-style-default">
 <div class="callout-body">
 <div class="callout-title">
@@ -1106,13 +1127,13 @@ Brantly Callaway
 </div>
 </div>
 <ul>
-<li>Alternatively, you can view this as “selection into being treated on time-invariant unobservables”: <span class="math display">\[ \indicator{D_i &gt; 0} = m_0(\eta_i) + u_i \text{ with } u_i \independent \big(Y_{it=1}(0), Y_{it=2}(0)\big) \bigm| \eta_i \]</span></li>
+<li>Alternatively, you can view this as “selection into being treated on time-invariant unobservables”: <span class="math display">\[ \indicator{D_i &gt; 0} = m_0(\eta_i) + u_{it} \text{ with } u_{it} \independent \big(Y_{it=1}(0), Y_{it=2}(0)\big) \bigm| \eta_i \]</span></li>
 <li>No restrictions on selection into a particular dose at all</li>
 </ul>
 </section>
-<section id="motivating-parallel-trends-2" class="slide level2" data-visibility="uncounted">
+<section id="motivating-parallel-trends-3" class="slide level2" data-visibility="uncounted">
 <h2>Motivating Parallel Trends</h2>
-<p>The most common way to “more primitively” motivate the parallel trends assumption is as a combination of the following two assumptions <span class="citation" data-cites="ashenfelter-card-1985 angrist-krueger-1999 ghanem-santanna-wuthrich-2024 marx-tamer-tang-2025">(<a href="#/references" role="doc-biblioref" onclick>Ashenfelter and Card 1985</a>; <a href="#/references" role="doc-biblioref" onclick>Angrist and Krueger 1999</a>; <a href="#/references" role="doc-biblioref" onclick>Ghanem et al. 2024</a>; <a href="#/references" role="doc-biblioref" onclick>Marx et al. 2025</a>)</span>:</p>
+<p>The most common way to “more primitively” motivate the parallel trends assumption is as a combination of the following two assumptions <span class="citation" data-cites="ashenfelter-card-1985 angrist-krueger-1999 ghanem-santanna-wuthrich-2024 marx-tamer-tang-2025">(<a href="#/references" role="doc-biblioref" onclick>Ashenfelter and Card 1985</a>; <a href="#/references" role="doc-biblioref" onclick>Angrist and Krueger 1999</a>; <a href="#/references" role="doc-biblioref" onclick>Ghanem, Sant’Anna, and Wüthrich 2024</a>; <a href="#/references" role="doc-biblioref" onclick>Marx, Tamer, and Tang 2025</a>)</span>:</p>
 <div class="callout callout-note no-icon callout-titled callout-style-default">
 <div class="callout-body">
 <div class="callout-title">
@@ -1144,6 +1165,7 @@ Brantly Callaway
 <ul>
 <li>Extends latent unconfoundedness to holds for all potential outcomes, not just untreated ones</li>
 <li>Up to <span class="math inline">\(\eta_i\)</span> being unobserved, it is exactly the same assumption that you would see in the literature on continous treatment and dose response functions <span class="citation" data-cites="hirano-imbens-2004">(<a href="#/references" role="doc-biblioref" onclick>Hirano and Imbens 2004</a>)</span></li>
+<li>If <span class="math inline">\(\eta_i\)</span> were observed, we could compare units with the same <span class="math inline">\(\eta_i\)</span> but different doses to recover <span class="math inline">\(\ATT(d)\)</span></li>
 </ul>
 </section>
 <section id="motivating-strong-parallel-trends-1" class="slide level2" data-visibility="uncounted">
@@ -1160,8 +1182,8 @@ Brantly Callaway
 </div>
 </div>
 <ul>
-<li>“Selection into dose on time-invariant unobservables”: <span class="math display">\[D_i = m(\eta_i) + v_i \text{ with } v_i \independent \big(Y_{it=1}(0), Y_{it=2}(d) \big) \bigm| \eta_i\]</span></li>
-<li>Conditional on <span class="math inline">\(\eta_i\)</span>, does not allow for units that experience dose <span class="math inline">\(d\)</span> to have systematically better outcomes at dose <span class="math inline">\(d\)</span> than units that experienced a different dose.</li>
+<li>“Selection into dose on time-invariant unobservables”: <span class="math display">\[D_i = m(\eta_i) + v_{it} \text{ with } v_{it} \independent \big(Y_{it=1}(0), Y_{it=2}(d) \big) \bigm| \eta_i\]</span></li>
+<li>Distribution of <span class="math inline">\(\eta_i\)</span> can systematically vary across dose groups, but other unobservables that affect potential outcomes cannot vary systematically across dose groups</li>
 </ul>
 </section>
 <section id="motivating-strong-parallel-trends-2" class="slide level2">
@@ -1234,7 +1256,7 @@ Neither of these seems likely to hold...
 
 -->
 </section>
-<section id="does-strong-parallel-trends-hold-in-this-model" class="slide level2">
+<section id="does-strong-parallel-trends-hold-in-this-model" class="slide level2" data-visibility="uncounted">
 <h2>Does Strong Parallel Trends Hold in This Model?</h2>
 <p>Applying the same argument as in Session 1: <span class="math display">\[
   \begin{aligned}
@@ -1244,21 +1266,8 @@ Neither of these seems likely to hold...
   \end{aligned}
 \]</span></p>
 <ul>
-<li><p>Learning about <span class="math inline">\(\beta_{t=2,d_l}\)</span> directly does not seem possible—e.g., <span class="math inline">\(\E[\Delta Y \mid D=d_l] - \E[\Delta Y \mid D=0]\)</span> includes <span class="math inline">\(\beta_{t=2,d_l}\)</span> but also differences in <span class="math inline">\(\E[\eta \mid D=d_l]\)</span> and <span class="math inline">\(\E[\eta \mid D=0]\)</span>, which are unobserved</p></li>
-<li><p>Making assumptions about <span class="math inline">\(\beta_{t=2,d_l}\)</span> would also be difficult to justify and infeasible to check in practice</p></li>
-</ul>
-</section>
-<section id="does-strong-parallel-trends-hold-in-this-model-1" class="slide level2" data-visibility="uncounted">
-<h2>Does Strong Parallel Trends Hold in This Model?</h2>
-<p>Applying the same argument as in Session 1: <span class="math display">\[
-  \begin{aligned}
-    \E[\Delta Y \mid D=d_h] - \E[\Delta Y \mid D=d_l] &amp;= \ATT(d_h|d_h) - \ATT(d_l|d_l) \\
-    &amp;=  \underbrace{(\theta_{t=2,d_h} - \theta_{t=2,d_l}) + (\beta_{t=2,d_h} - \beta_{t=2,d_l}) \E[\eta \mid D=d_h]}_{\textrm{Causal Response}} \\
-    &amp;+ \underbrace{\beta_{t=2,d_l} \Big( \E[\eta \mid D=d_h] - \E[\eta \mid D=d_l] \Big)}_{\textrm{Selection Bias}}
-  \end{aligned}
-\]</span></p>
-<ul>
-<li>Instead, we will think about trying to determine the plausibility of “no selection” holding (i.e., <span class="math inline">\(\E[\eta \mid D=d_h] - \E[\eta \mid D=d_l] = 0\)</span>).</li>
+<li><p>We would like for the selection bias term to be equal to 0.</p></li>
+<li><p>In particular, we will consider looking for dose groups where there is no selection (on the time-invariant unobservables) into the dose (i.e., <span class="math inline">\(\E[\eta \mid D=d_h] - \E[\eta \mid D=d_l] = 0\)</span>).</p></li>
 </ul>
 </section></section>
 <section>
@@ -1268,7 +1277,7 @@ Neither of these seems likely to hold...
 </section>
 <section id="background" class="slide level2">
 <h2>Background</h2>
-<p>In <span class="citation" data-cites="callaway-dyal-santanna-tsyawo-2025">Callaway et al. (<a href="#/references" role="doc-biblioref" onclick>2025</a>)</span>, we introduce a notion of “close comparison groups”</p>
+<p>In <span class="citation" data-cites="callaway-dyal-santanna-tsyawo-2025">Callaway, Dyal, Sant’Anna, and Tsyawo (<a href="#/references" role="doc-biblioref" onclick>2025</a>)</span>, we introduce a notion of “close comparison groups”</p>
 <ul>
 <li><p>Setting of that paper: binary treatment, multiple pre-treatment periods, multiple comparison groups, looking for a way to relax the parallel trends assumption, and we look for pockets of simple identification</p></li>
 <li><p>Groups that are “alike” in terms of pre-treatment levels of outcomes are “close comparison groups”</p></li>
@@ -1277,34 +1286,34 @@ Neither of these seems likely to hold...
 </section>
 <section id="ccgs-adapted-to-a-continuous-treatment-setting" class="slide level2">
 <h2>CCGs Adapted to a Continuous Treatment Setting</h2>
-<p>As discussed above, difference-in-differences attempts to allow for selection on time-invariant unobservables by differencing them out.</p>
-<p>But we can look at the level of pre-treatment outcomes to inform us about the distribution of unobservables across dose groups.</p>
+<p>The idea here is that, if we can find range(s) of dose groups that are close comparison groups for each other (i.e., have the same pre-treatment level of outcomes), then it will suggest that strong parallel trends holds (locally) for those dose groups.</p>
 </section>
-<section id="same-pre-treatment-mean-implies-same-mean-of" class="slide level2">
-<h2>Same Pre-Treatment Mean Implies Same Mean of </h2>
-<p>For some dose group <span class="math inline">\(l\)</span>, its mean of untreated potential outcomes is given by:</p>
+<section id="close-comparsion-dose-groups" class="slide level2">
+<h2>Close Comparsion Dose Groups</h2>
+<p>Suppose we two dose groups <span class="math inline">\(d_h\)</span> and <span class="math inline">\(d_l\)</span> that have the same pre-treatment levels of outcomes, <span class="math display">\[\E[Y_{t=1} \mid D=d_h] = \E[Y_{t=1} \mid D=d_l]\]</span></p>
 <div class="fragment">
+<p>Then,</p>
 <p><span class="math display">\[
 \begin{aligned}
-\E[Y_{t=1} \mid D=l] &amp;= \E[Y_{t=1}(0) \mid D=l] \hspace{150pt}
+\E[Y_{t=1} \mid D=d_h] &amp;= \E[Y_{t=1}(0) \mid D=d_h] = \theta_1 + \E[\eta \mid D=d_h]
 \end{aligned}
 \]</span></p>
 </div>
 </section>
-<section id="same-pre-treatment-mean-implies-same-mean-of-1" class="slide level2" data-visibility="uncounted">
-<h2>Same Pre-Treatment Mean Implies Same Mean of </h2>
-<p>For some dose group <span class="math inline">\(l\)</span>, its mean of untreated potential outcomes is given by:</p>
+<section id="close-comparsion-dose-groups-1" class="slide level2" data-visibility="uncounted">
+<h2>Close Comparsion Dose Groups</h2>
+<p>Suppose we two dose groups <span class="math inline">\(d_h\)</span> and <span class="math inline">\(d_l\)</span> that have the same pre-treatment levels of outcomes, <span class="math display">\[\E[Y_{t=1} \mid D=d_h] = \E[Y_{t=1} \mid D=d_l]\]</span></p>
+<p>Then,</p>
 <p><span class="math display">\[
 \begin{aligned}
-\E[Y_{t=1} \mid D=l] &amp;= \E[Y_{t=1}(0) \mid D=l] \hspace{150pt}\\
-&amp;= \theta_1 + \E[\eta \mid D=l]
+\E[Y_{t=1} \mid D=d_h] &amp;= \E[Y_{t=1}(0) \mid D=d_h] = \theta_1 + \E[\eta \mid D=d_h]\\
+\E[Y_{t=1} \mid D=d_l] &amp;= \E[Y_{t=1}(0) \mid D=d_l] = \theta_1 + \E[\eta \mid D=d_l]
 \end{aligned}
 \]</span></p>
 <div class="fragment">
-<p>Since <span class="math inline">\(\theta_1\)</span> is the same for every <span class="math inline">\(l\)</span>:</p>
+<p>Thus, close comparison dose groups satisfy:</p>
 <p><span class="math display">\[\E[Y_{t=1} \mid D=l] = \E[Y_{t=1} \mid D=d] \quad\iff\quad \E[\eta \mid D=l] = \E[\eta \mid D=d]\]</span></p>
-<p>In other words, dose groups with the same pre-treatment mean of outcomes have the same mean of unobservables <span class="math inline">\(\eta_i\)</span>…</p>
-<p>If they have the same mean of <span class="math inline">\(\eta_i\)</span>, then the selection-bias terms above vanish, and strong parallel trends holds (at least locally)</p>
+<p>[If they have the same mean of <span class="math inline">\(\eta_i\)</span>, then the selection-bias terms above vanish, and strong parallel trends holds (at least locally)}{.alert}</p>
 </div>
 </section>
 <section id="implications" class="slide level2">
@@ -1378,6 +1387,16 @@ Many DiD applications observe disaggregated units, but the policy is chosen at a
 <li>Plus two more placebos marching up to 1982: 1980 vs. 1981, 1981 vs. 1982</li>
 </ul></li>
 </ul>
+</section>
+<section id="results" class="slide level2">
+<h2>Results</h2>
+<ol type="1">
+<li><p>Post-treatment <span class="math inline">\(\ATT(d|d)\)</span></p></li>
+<li><p>Post-treatment <span class="math inline">\(\ACR(d)\)</span></p></li>
+<li><p>Pre-treatment <span class="math inline">\(\ATT(d|d)\)</span></p></li>
+<li><p>Pre-test for same pre-treatment levels of outcomes</p></li>
+<li><p>Post-treatment <span class="math inline">\(\ACR(d)\)</span> in close comparison region</p></li>
+</ol>
 </section>
 <section id="results-attdd" class="slide level2" data-visibility="uncounted">
 <h2>Results: ATT(d|d)</h2>
@@ -1518,15 +1537,17 @@ Many DiD applications observe disaggregated units, but the policy is chosen at a
 <li>Parallel trends seems to be violated in pre-treatment periods</li>
 <li>Checking the levels of pre-treatment outcomes as a function of the dose suggested that there were pockets of no selection</li>
 <li>Cross-dose comparisons are more likely to deliver causal effects in those pockets (i.e., a local version of strong parallel trends)</li>
-<li>The estimates were noisy, but often negative. They don’t provide any evidence that the Medicare policy increased capital labor ratios.</li>
+<li>The estimates were noisy, and close to zero or slightly negative (substantially different than the positive estimates from the TWFE regression). They don’t provide any evidence that the Medicare policy increased capital labor ratios.</li>
 </ol>
 </section>
 <section id="conclusion" class="slide level2">
 <h2>Conclusion</h2>
 <p>Using pre-treatment periods to assess the plausibility of strong parallel trends is challenging because only untreated potential outcomes are observed in those periods.</p>
-<p>However, the levels of outcomes in pre-treatment periods across different dose groups provides evidence about difference in the unobserved heterogeneity driving their outcomes.</p>
-<p>If differences in observed pre-treatment levels of outcomes are small, it suggests that differences in unobservables are small too.</p>
-<p>If differences in unobservables are small, then strong parallel trends is more plausible, and cross-dose comparisons of trends in outcomes can be interpreted as approximately causal in those regions.</p>
+<p>However, the levels of outcomes in pre-treatment periods across different dose groups provides evidence about difference in the time-invariant unobservables driving their outcomes.</p>
+<ul>
+<li>If differences in observed pre-treatment levels of outcomes are small, it suggests that differences in unobservables are small too.</li>
+<li>If differences in unobservables are small, then strong parallel trends is more plausible, and cross-dose comparisons of trends in outcomes can be interpreted as approximately causal in those regions.</li>
+</ul>
 </section></section>
 <section>
 <section id="appendix" class="title-slide slide level1 center" data-visibility="uncounted">
@@ -1536,27 +1557,27 @@ Many DiD applications observe disaggregated units, but the policy is chosen at a
 <section id="references" class="slide level2 smaller scrollable" data-visibility="uncounted">
 <h2>References</h2>
 
-<div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
 <div id="ref-acemoglu-finkelstein-2008" class="csl-entry" role="listitem">
 Acemoglu, Daron, and Amy Finkelstein. 2008. <span>“Input and Technology Choices in Regulated Industries: Evidence from the Health Care Sector.”</span> <em>Journal of Political Economy</em> 116 (5): 837–80.
 </div>
 <div id="ref-angrist-krueger-1999" class="csl-entry" role="listitem">
-Angrist, Joshua D, and Alan B Krueger. 1999. <span>“Empirical Strategies in Labor Economics.”</span> In <em>Handbook of Labor Economics</em>, vol. 3. Elsevier.
+Angrist, Joshua D, and Alan B Krueger. 1999. <span>“Empirical Strategies in Labor Economics.”</span> In <em>Handbook of Labor Economics</em>, 3:1277–1366. Elsevier.
 </div>
 <div id="ref-ashenfelter-card-1985" class="csl-entry" role="listitem">
 Ashenfelter, Orley, and David Card. 1985. <span>“Using the Longitudinal Structure of Earnings to Estimate the Effect of Training Programs.”</span> <em>The Review of Economics and Statistics</em> 67 (4): 648–60.
 </div>
 <div id="ref-callaway-dyal-santanna-tsyawo-2025" class="csl-entry" role="listitem">
-Callaway, Brantly, Derek Dyal, Pedro HC Sant’Anna, and Emmanuel S Tsyawo. 2025. <span>“Beyond Parallel Trends: An Identification-Strategy-Robust Approach to Causal Inference with Panel Data.”</span> Unpublished manuscript.
+Callaway, Brantly, Derek Dyal, Pedro HC Sant’Anna, and Emmanuel S Tsyawo. 2025. <span>“Beyond Parallel Trends: An Identification-Strategy-Robust Approach to Causal Inference with Panel Data.”</span>
 </div>
 <div id="ref-ghanem-santanna-wuthrich-2024" class="csl-entry" role="listitem">
-Ghanem, Dalia, Pedro H. C. Sant’Anna, and Kaspar Wüthrich. 2024. <span>“Selection and Parallel Trends.”</span> Unpublished manuscript.
+Ghanem, Dalia, Pedro H. C. Sant’Anna, and Kaspar Wüthrich. 2024. <span>“Selection and Parallel Trends.”</span>
 </div>
 <div id="ref-hirano-imbens-2004" class="csl-entry" role="listitem">
 Hirano, Keisuke, and Guido W Imbens. 2004. <span>“The Propensity Score with Continuous Treatments.”</span> <em>Applied Bayesian Modeling and Causal Inference from Incomplete-Data Perspectives</em> 226164: 73–84.
 </div>
 <div id="ref-marx-tamer-tang-2025" class="csl-entry" role="listitem">
-Marx, Philip, Elie Tamer, and Xun Tang. 2025. <span>“Heterogeneous Treatment Effects via Linear Dynamic Panel Data Models.”</span> Unpublished manuscript.
+Marx, Philip, Elie Tamer, and Xun Tang. 2025. <span>“Heterogeneous Treatment Effects via Linear Dynamic Panel Data Models.”</span>
 </div>
 </div>
 </section></section>

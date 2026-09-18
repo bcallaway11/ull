@@ -15,6 +15,7 @@ author:
     affiliation: University of Georgia
     email: brantly.callaway@uga.edu
 date: September 18, 2026
+csl: author-date.csl
 bibliography:
   - refs.bib
   - this_refs.bib

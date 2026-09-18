@@ -15,6 +15,7 @@ author:
     affiliation: University of Georgia
     email: brantly.callaway@uga.edu
 date: September 18, 2026
+csl: author-date.csl
 bibliography:
   - refs.bib
   - this_refs.bib
@@ -42,6 +43,7 @@ $\newcommand{\E}{\mathbb{E}}
 \newcommand{\ACR}{\mathrm{ACR}}
 \newcommand{\ATT}{\mathrm{ATT}}
 \newcommand{\ACRT}{\mathrm{ACRT}}
+\newcommand{\T}{\mathrm{T}}
 \newcommand{\independent}{{\perp\!\!\!\perp}}
 \newcommand{\indicator}[1]{ \mathbf{1}\{#1\} }$
 
@@ -100,7 +102,7 @@ subtitle: "Session 1: Introduction to Difference-in-Differences"-->
 5. Alternative Identification Strategies
 -->
 
-## Main References for this Session
+## Main References for This Session
 
 * @baker-callaway-cunningham-goodman-santanna-2026, *Journal of Economic Literature*
 * @callaway-2023, *Handbook of Labor, Human Resources, and Population Economics*
@@ -264,7 +266,7 @@ TE heterogeneity is the main cause of the issues with TWFE regressions that have
 
 ::: {.column width="50%"}
 
-<img src="mt-3.png" height="100%">
+<img src="img/intro/mt-3.png" height="100%">
 
 :::
 
@@ -721,7 +723,7 @@ One main contribution of recent work on DiD has been to diagnose and understand 
 
 ## What Can Go Wrong with TWFE Regression? {visibility="uncounted"}
 
-![](bacon_grid_v2.svg)
+![](img/intro/bacon_grid_v2.svg)
 
 
 ## What Can Go Wrong with TWFE Regression?
@@ -780,7 +782,7 @@ Second, under parallel trends:
 
 ## Other New Approaches
 
-[Regression based:]{.alert} @sun-abraham-2021, @wooldridge-2021
+[Regression based:]{.alert} @sun-abraham-2021, @wooldridge-2025
 
   * Include a large number of interaction terms in a TWFE regression
   * The coefficients on the interation terms correspond to $\ATT(g,t)$
@@ -791,7 +793,7 @@ Second, under parallel trends:
   * Impute (i.e., predict) untreated potential outcomes in post-treatment periods
   * Estimate $\ATT(g,t)$ as the difference between observed and imputed outcomes
 
-["Stacked" regression:]{.alert} @dube-girardi-jorda-taylor-2023
+["Stacked" regression:]{.alert} @dube-girardi-jorda-taylor-2025
 
   * For each group $g$, construct its "clean comparison group", form a new dataset
   * Stack each of these new datasets together and run a TWFE regression
@@ -808,11 +810,11 @@ Second, under parallel trends:
   * e.g., by default assuming parallel trends across more time periods or not, trading off robustness and efficiency.
   * sometimes different default target parameters
 
-## Other New Approaches {#cs-advantages visibility="uncounted"}
+## Other New Approaches {#cs-advantages}
 
 [Important differences:]{.alert}
 
-* CS does better with respect to including covariates (see @caetano-callaway-2024)
+* CS does better with respect to including covariates (see @caetano-callaway-2025)
   * Doubly robust estimation / immediate connections with machine learning
 * CS follows the "forward engineering" approach discussed above
   * Suppose you wanted to use a custom comparison group, this is obvious with CS, but not necessarily with other approaches
@@ -823,7 +825,7 @@ Second, under parallel trends:
 
 # [Part 4]{.alert-blue}<br><br> Empirical Example {visibility="uncounted"}
 
-## Empirical Example: Minimum Wages and Employment {visibility="uncounted"}
+## Empirical Example: Minimum Wages and Employment
 
 - Use county-level data from 2003-2007 during a period where the federal minimum wage was flat
 - Exploit minimum wage changes across states
@@ -834,7 +836,7 @@ Second, under parallel trends:
   * not worry much about issues like clustered standard errors
   * not worry about variation in the amount of the minimum wage change (or whether it keeps changing) across states
 
-## Empirical Example: Minimum Wages and Employment {visibility="uncounted"}
+## Empirical Example: Minimum Wages and Employment
 
 [Goal: ]{.alert}
 
@@ -863,7 +865,7 @@ data3 <- subset(mw_data_ch2, year >= 2003)
 ```
 
 
-## TWFE Regression {visibility="uncounted"}
+## TWFE Regression
 
 ```{r}
 #| echo: false
@@ -880,7 +882,7 @@ modelsummary(list(twfe_res2), gof_omit = ".*")
 ```
 
 
-## $\mathbf{\ATT(g,t)}$ (Callaway and Sant'Anna) {visibility="uncounted"}
+## $\mathbf{\ATT(g,t)}$ (Callaway and Sant'Anna)
 
 ```{r}
 #| warning: false
@@ -899,8 +901,9 @@ attgt <- did::att_gt(yname = "lemp",
 ggdid(attgt, ylim = c(-.2, .05))
 ```
 
-## Event Study {visibility="uncounted"}
+## Event Study
 ```{r}
+#| echo: false
 attes <- aggte(attgt, type = "dynamic")
 ggdid(attes)
 ```
@@ -908,7 +911,7 @@ ggdid(attes)
 <!-- [Back](#compute-atto) -->
 
 
-## $\mathbf{\ATT^o}$ {#compute-ATTo visibility="uncounted"}
+## $\mathbf{\ATT^o}$ {#compute-ATTo}
 
 ```{r}
 #| echo: false
@@ -917,18 +920,20 @@ attO <- did::aggte(attgt, type = "group")
 
 ```{r}
 #| echo: false
-modelsummary(list(attO), gof_omit = ".*")
+modelsummary(list(attO), gof_omit = ".*", coef_map = c("ATT(Average)" = "$ATT^o$"))
 ```
 
 
 <!-- [[Event Study](#event-study)] -->
 
 
-## Comments {visibility="uncounted"}
+## Comments
 
 The differences between the CS estimates and the TWFE estimates are fairly large here: the CS estimate is about 50% larger than the TWFE estimate, though results are qualitatively similar.
 
-## de Chaisemartin and d'Haultfoeuille weights {visibility="uncounted"}
+The differences are fully explained by differences in the weighting schemes. →
+
+## de Chaisemartin and d'Haultfoeuille Weights
 
 ```{r echo=FALSE, fig.align="center", fig.width=10, fig.height=8}
 tw_res <- twfeweights::twfe_weights(attgt)
@@ -945,7 +950,7 @@ ggplot(data = tw,
 
 
 
-## $\mathbf{\ATT^o}$ weights {visibility="uncounted"}
+## $\mathbf{\ATT^o}$ Weights
 
 ```{r echo=FALSE, fig.align="center", fig.width=10, fig.height=8}
 wO_res <- attO_weights(attgt)
@@ -962,7 +967,7 @@ ggplot(data = wO,
 
 
 
-## Weight Comparison {visibility="uncounted"}
+## Weight Comparison
 
 ```{r echo=FALSE, fig.align="center", fig.width=10, fig.height=8}
 plot_df <- cbind.data.frame(tw, wOgt = wO$weight)
@@ -982,7 +987,7 @@ ggplot(plot_df, aes(x = wTWFEgt, y = attgt, color = g.t)) +
 
 
 
-## Discussion {visibility="uncounted"}
+## Discussion
 
 [To summarize:]{.alert} $ATT^o = -0.057$ while $\alpha^{TWFE} = -0.038$.  This difference can be fully accounted for
 
@@ -1002,7 +1007,7 @@ pre_bias / twfe_bias # bias from pre-treatment PTA violations
 (twfe_post - attO_est) / twfe_bias # bias from TWFE weights instead of ATT^o weights
 ```
 
-## Discussion {visibility="uncounted"}
+## Discussion
 
 [In my experience:]{.alert} this is fairly representative of how much new DiD approaches matter relative to TWFE regressions.
 
@@ -1011,7 +1016,7 @@ pre_bias / twfe_bias # bias from pre-treatment PTA violations
   * More TE Het $\implies$ more sensitivity to weighting schemes
   * Just looking at TWFE regression does not give insight into how much TE Het there is
 
-## Additional Comments on Weights {#weights-comments visibility="uncounted"}
+## Additional Comments on Weights {#weights-comments}
 
 There has been a lot concern about [negative weights]{.alert} (both in econometrics and empirical work).
 
@@ -1028,7 +1033,7 @@ There has been a lot concern about [negative weights]{.alert} (both in econometr
 
 :::
 
-## "Simple" Aggregation {visibility="uncounted"}
+## "Simple" Aggregation
 
 Besides the violations of parallel trends in pre-treatment periods, these weights are further away from $ATT^o$ than the TWFE regression weights are!
 
@@ -1088,7 +1093,7 @@ In fact, you calculate $ATT^{simple} = -0.065$ (13% larger in magnitude that $AT
 
 # Appendix {visibility="uncounted"}
 
-## How do we choose among identifying assumptions? {#why-pt visibility="uncounted"}
+## How Do We Choose among Identifying Assumptions? {#why-pt visibility="uncounted"}
 
 [View \#1:]{.alert} Parallel trends as a purely reduced form assumption
 
@@ -1103,7 +1108,7 @@ But this is certainly not the only possibility:
 In my view, these seem like fair points
 
 
-## How do we choose among identifying asssumptions? {visibility="uncounted"}
+## How Do We Choose among Identifying Assumptions? {visibility="uncounted"}
 
 [View \#2:]{.alert} Models that lead to parallel trends assumption.  We'll focus on untreated potential outcomes:
 $$Y_{it}(0) = \theta_t + \eta_i + e_{it}$$
@@ -1118,7 +1123,7 @@ Many economic models have this sort of flavor, that the important thing driving 
 * No restrictions on treatment effect heterogeneity
 * Can allow for some self-selection into treatment
 
-## How do we choose among identifying asssumptions? {visibility="uncounted"}
+## How Do We Choose among Identifying Assumptions? {visibility="uncounted"}
 
 [View \#2:]{.alert} Models that lead to parallel trends assumption.  We'll focus on untreated potential outcomes:
 $$Y_{it}(0) = \theta_t + \eta_i + e_{it}$$
@@ -1134,7 +1139,7 @@ Many economic models have this sort of flavor, that the important thing driving 
 * May not be plausible for limited dependent variables
 * Also related to results in @roth-santanna-2023 (about parallel trends and functional form) and @ghanem-santanna-wuthrich-2024 (about selection and parallel trends) &nbsp; [[Back](#did-with-two-periods-1)]
 
-## How do these results work? {#twfe-explanation visibility="uncounted"}
+## How Do These Results Work? {#twfe-explanation visibility="uncounted"}
 
 Consider a simplified setting where $\T=2$, but we allow for there to be units that are already treated in the first period.
 
@@ -1219,12 +1224,12 @@ Also, as they point out, a sufficient condition for the weights to be non-negati
 
 1. @callaway-santanna-2021, R: `did`, Stata: `csdid`, Python: `csdid`
 2. @sun-abraham-2021, R: `fixest`, Stata: `eventstudyinteract`
-3. @wooldridge-2021, R: `etwfe`, Stata: `JWDiD`
+3. @wooldridge-2025, R: `etwfe`, Stata: `JWDiD`
 4. @gardner-thakral-to-yap-2023 / @borusyak-jaravel-spiess-2024, R: `did2s`, Stata: `did2s` and `did_imputation`
 
 <span class="alert">Not including:</span>
 
-1. "Stacked Regression" (@cengiz-dube-lindner-zipperer-2019, @dube-girardi-jorda-taylor-2023), Stata: `stackedev`
+1. "Stacked Regression" (@cengiz-dube-lindner-zipperer-2019, @dube-girardi-jorda-taylor-2025), Stata: `stackedev`
 2. @chaisemartin-dhaultfoeuille-2020, R: `DIDmultiplegt`, Stata: `did_multiplegt`
 
 :::{.notes}
@@ -1388,7 +1393,7 @@ The other major source of differences in estimates across procedures is [differe
 4. Handle covariates in different ways
     * By default, imputation (effectively) uses changes in the covariates over time in estimation
     * CS includes the level of the time-varying covariate in period $g-1$.
-    * In @caetano-callaway-2024, we consider including both changes and levels of covariates
+    * In @caetano-callaway-2025, we consider including both changes and levels of covariates
 
 <!--
 
@@ -1457,6 +1462,7 @@ summary(att_simple)
 ```{r echo=FALSE, eval=FALSE}
 att_simple_est <- aggte(attgt, type="simple")$overall.att #-0.0646
 (att_simple_est - attO_est) / attO_est
+```
 
 ```{r echo=FALSE, fig.align="center", fig.width=10, fig.height=8}
 # calculate att^simple weights
